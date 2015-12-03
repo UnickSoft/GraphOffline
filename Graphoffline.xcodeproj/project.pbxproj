@@ -1,0 +1,362 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		683D16E71C0B6CBC00C804DF /* DijkstraShortPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D16E41C0B6CBC00C804DF /* DijkstraShortPath.cpp */; };
+		683D16EA1C0B6CC400C804DF /* CGIProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D16E81C0B6CC400C804DF /* CGIProcessor.cpp */; };
+		683D16F41C0B6CCE00C804DF /* CaseFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D16EC1C0B6CCE00C804DF /* CaseFunctions.cpp */; };
+		683D16F51C0B6CCE00C804DF /* ConsoleParams.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D16EE1C0B6CCE00C804DF /* ConsoleParams.cpp */; };
+		683D16F61C0B6CCE00C804DF /* YString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D16F21C0B6CCE00C804DF /* YString.cpp */; };
+		683D16FB1C0B6CD900C804DF /* Graph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D16F71C0B6CD900C804DF /* Graph.cpp */; };
+		683D17001C0B6CE600C804DF /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D16FE1C0B6CE600C804DF /* pugixml.cpp */; };
+		683D17051C0B6CF100C804DF /* GraphMLReporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D17021C0B6CF100C804DF /* GraphMLReporter.cpp */; };
+		683D170D1C0B6E4000C804DF /* GraphOffline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D170C1C0B6E4000C804DF /* GraphOffline.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		68EBA7821C0B6C1000F83F7E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		683D16E41C0B6CBC00C804DF /* DijkstraShortPath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DijkstraShortPath.cpp; path = algorithm/DijkstraShortPath.cpp; sourceTree = SOURCE_ROOT; };
+		683D16E51C0B6CBC00C804DF /* DijkstraShortPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DijkstraShortPath.h; path = algorithm/DijkstraShortPath.h; sourceTree = SOURCE_ROOT; };
+		683D16E61C0B6CBC00C804DF /* IAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IAlgorithm.h; path = algorithm/IAlgorithm.h; sourceTree = SOURCE_ROOT; };
+		683D16E81C0B6CC400C804DF /* CGIProcessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CGIProcessor.cpp; sourceTree = SOURCE_ROOT; };
+		683D16E91C0B6CC400C804DF /* CGIProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGIProcessor.h; sourceTree = SOURCE_ROOT; };
+		683D16EB1C0B6CCE00C804DF /* Buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Buffer.h; path = common/Buffer.h; sourceTree = SOURCE_ROOT; };
+		683D16EC1C0B6CCE00C804DF /* CaseFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CaseFunctions.cpp; path = common/CaseFunctions.cpp; sourceTree = SOURCE_ROOT; };
+		683D16ED1C0B6CCE00C804DF /* CaseFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CaseFunctions.h; path = common/CaseFunctions.h; sourceTree = SOURCE_ROOT; };
+		683D16EE1C0B6CCE00C804DF /* ConsoleParams.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConsoleParams.cpp; path = common/ConsoleParams.cpp; sourceTree = SOURCE_ROOT; };
+		683D16EF1C0B6CCE00C804DF /* ConsoleParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConsoleParams.h; path = common/ConsoleParams.h; sourceTree = SOURCE_ROOT; };
+		683D16F01C0B6CCE00C804DF /* FileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileReader.h; path = common/FileReader.h; sourceTree = SOURCE_ROOT; };
+		683D16F11C0B6CCE00C804DF /* RefCounter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RefCounter.h; path = common/RefCounter.h; sourceTree = SOURCE_ROOT; };
+		683D16F21C0B6CCE00C804DF /* YString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = YString.cpp; path = common/YString.cpp; sourceTree = SOURCE_ROOT; };
+		683D16F31C0B6CCE00C804DF /* YString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YString.h; path = common/YString.h; sourceTree = SOURCE_ROOT; };
+		683D16F71C0B6CD900C804DF /* Graph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Graph.cpp; path = graph/Graph.cpp; sourceTree = SOURCE_ROOT; };
+		683D16F81C0B6CD900C804DF /* Graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Graph.h; path = graph/Graph.h; sourceTree = SOURCE_ROOT; };
+		683D16F91C0B6CD900C804DF /* IGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IGraph.h; path = graph/IGraph.h; sourceTree = SOURCE_ROOT; };
+		683D16FA1C0B6CD900C804DF /* IRelease.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IRelease.h; path = graph/IRelease.h; sourceTree = SOURCE_ROOT; };
+		683D16FC1C0B6CE600C804DF /* foreach.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = foreach.hpp; path = pugixml/foreach.hpp; sourceTree = SOURCE_ROOT; };
+		683D16FD1C0B6CE600C804DF /* pugiconfig.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = pugiconfig.hpp; path = pugixml/pugiconfig.hpp; sourceTree = SOURCE_ROOT; };
+		683D16FE1C0B6CE600C804DF /* pugixml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pugixml.cpp; path = pugixml/pugixml.cpp; sourceTree = SOURCE_ROOT; };
+		683D16FF1C0B6CE600C804DF /* pugixml.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = pugixml.hpp; path = pugixml/pugixml.hpp; sourceTree = SOURCE_ROOT; };
+		683D17011C0B6CF100C804DF /* ConsoleReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConsoleReporter.h; path = report/ConsoleReporter.h; sourceTree = SOURCE_ROOT; };
+		683D17021C0B6CF100C804DF /* GraphMLReporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GraphMLReporter.cpp; path = report/GraphMLReporter.cpp; sourceTree = SOURCE_ROOT; };
+		683D17031C0B6CF100C804DF /* GraphMLReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphMLReporter.h; path = report/GraphMLReporter.h; sourceTree = SOURCE_ROOT; };
+		683D17041C0B6CF100C804DF /* IReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IReporter.h; path = report/IReporter.h; sourceTree = SOURCE_ROOT; };
+		683D170C1C0B6E4000C804DF /* GraphOffline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphOffline.cpp; sourceTree = SOURCE_ROOT; };
+		68EBA7841C0B6C1000F83F7E /* Graphoffline */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Graphoffline; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		68EBA7811C0B6C1000F83F7E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		683D17061C0B6D1900C804DF /* Reports */ = {
+			isa = PBXGroup;
+			children = (
+				683D17011C0B6CF100C804DF /* ConsoleReporter.h */,
+				683D17021C0B6CF100C804DF /* GraphMLReporter.cpp */,
+				683D17031C0B6CF100C804DF /* GraphMLReporter.h */,
+				683D17041C0B6CF100C804DF /* IReporter.h */,
+			);
+			name = Reports;
+			sourceTree = "<group>";
+		};
+		683D17071C0B6D3A00C804DF /* XMLParser */ = {
+			isa = PBXGroup;
+			children = (
+				683D16FC1C0B6CE600C804DF /* foreach.hpp */,
+				683D16FD1C0B6CE600C804DF /* pugiconfig.hpp */,
+				683D16FE1C0B6CE600C804DF /* pugixml.cpp */,
+				683D16FF1C0B6CE600C804DF /* pugixml.hpp */,
+			);
+			name = XMLParser;
+			sourceTree = "<group>";
+		};
+		683D17081C0B6D4E00C804DF /* Utilites */ = {
+			isa = PBXGroup;
+			children = (
+				683D16EB1C0B6CCE00C804DF /* Buffer.h */,
+				683D16EC1C0B6CCE00C804DF /* CaseFunctions.cpp */,
+				683D16ED1C0B6CCE00C804DF /* CaseFunctions.h */,
+				683D16EE1C0B6CCE00C804DF /* ConsoleParams.cpp */,
+				683D16EF1C0B6CCE00C804DF /* ConsoleParams.h */,
+				683D16F01C0B6CCE00C804DF /* FileReader.h */,
+				683D16F11C0B6CCE00C804DF /* RefCounter.h */,
+				683D16F21C0B6CCE00C804DF /* YString.cpp */,
+				683D16F31C0B6CCE00C804DF /* YString.h */,
+			);
+			name = Utilites;
+			sourceTree = "<group>";
+		};
+		683D17091C0B6D6800C804DF /* Algorithms */ = {
+			isa = PBXGroup;
+			children = (
+				683D16E41C0B6CBC00C804DF /* DijkstraShortPath.cpp */,
+				683D16E51C0B6CBC00C804DF /* DijkstraShortPath.h */,
+				683D16E61C0B6CBC00C804DF /* IAlgorithm.h */,
+			);
+			name = Algorithms;
+			sourceTree = "<group>";
+		};
+		683D170A1C0B6D8800C804DF /* Graph */ = {
+			isa = PBXGroup;
+			children = (
+				683D16F71C0B6CD900C804DF /* Graph.cpp */,
+				683D16F81C0B6CD900C804DF /* Graph.h */,
+				683D16F91C0B6CD900C804DF /* IGraph.h */,
+				683D16FA1C0B6CD900C804DF /* IRelease.h */,
+			);
+			name = Graph;
+			sourceTree = "<group>";
+		};
+		683D170B1C0B6D9600C804DF /* CGI */ = {
+			isa = PBXGroup;
+			children = (
+				683D16E81C0B6CC400C804DF /* CGIProcessor.cpp */,
+				683D16E91C0B6CC400C804DF /* CGIProcessor.h */,
+			);
+			name = CGI;
+			sourceTree = "<group>";
+		};
+		68EBA7741C0B6BAA00F83F7E = {
+			isa = PBXGroup;
+			children = (
+				68EBA7861C0B6C1000F83F7E /* Graphoffline */,
+				68EBA7851C0B6C1000F83F7E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		68EBA7851C0B6C1000F83F7E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				68EBA7841C0B6C1000F83F7E /* Graphoffline */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		68EBA7861C0B6C1000F83F7E /* Graphoffline */ = {
+			isa = PBXGroup;
+			children = (
+				683D17061C0B6D1900C804DF /* Reports */,
+				683D17071C0B6D3A00C804DF /* XMLParser */,
+				683D170A1C0B6D8800C804DF /* Graph */,
+				683D17081C0B6D4E00C804DF /* Utilites */,
+				683D170B1C0B6D9600C804DF /* CGI */,
+				683D17091C0B6D6800C804DF /* Algorithms */,
+				683D170C1C0B6E4000C804DF /* GraphOffline.cpp */,
+			);
+			path = Graphoffline;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		68EBA7831C0B6C1000F83F7E /* Graphoffline */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 68EBA7891C0B6C1000F83F7E /* Build configuration list for PBXNativeTarget "Graphoffline" */;
+			buildPhases = (
+				68EBA7801C0B6C1000F83F7E /* Sources */,
+				68EBA7811C0B6C1000F83F7E /* Frameworks */,
+				68EBA7821C0B6C1000F83F7E /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Graphoffline;
+			productName = Graphoffline;
+			productReference = 68EBA7841C0B6C1000F83F7E /* Graphoffline */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		68EBA7751C0B6BAA00F83F7E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0710;
+				TargetAttributes = {
+					68EBA7831C0B6C1000F83F7E = {
+						CreatedOnToolsVersion = 7.1.1;
+					};
+				};
+			};
+			buildConfigurationList = 68EBA7781C0B6BAA00F83F7E /* Build configuration list for PBXProject "Graphoffline" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 68EBA7741C0B6BAA00F83F7E;
+			productRefGroup = 68EBA7851C0B6C1000F83F7E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				68EBA7831C0B6C1000F83F7E /* Graphoffline */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		68EBA7801C0B6C1000F83F7E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				683D16EA1C0B6CC400C804DF /* CGIProcessor.cpp in Sources */,
+				683D16F51C0B6CCE00C804DF /* ConsoleParams.cpp in Sources */,
+				683D17051C0B6CF100C804DF /* GraphMLReporter.cpp in Sources */,
+				683D16E71C0B6CBC00C804DF /* DijkstraShortPath.cpp in Sources */,
+				683D16F61C0B6CCE00C804DF /* YString.cpp in Sources */,
+				683D170D1C0B6E4000C804DF /* GraphOffline.cpp in Sources */,
+				683D17001C0B6CE600C804DF /* pugixml.cpp in Sources */,
+				683D16FB1C0B6CD900C804DF /* Graph.cpp in Sources */,
+				683D16F41C0B6CCE00C804DF /* CaseFunctions.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		68EBA7791C0B6BAA00F83F7E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+			};
+			name = Debug;
+		};
+		68EBA77A1C0B6BAA00F83F7E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+			};
+			name = Release;
+		};
+		68EBA78A1C0B6C1000F83F7E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		68EBA78B1C0B6C1000F83F7E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		68EBA7781C0B6BAA00F83F7E /* Build configuration list for PBXProject "Graphoffline" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				68EBA7791C0B6BAA00F83F7E /* Debug */,
+				68EBA77A1C0B6BAA00F83F7E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		68EBA7891C0B6C1000F83F7E /* Build configuration list for PBXNativeTarget "Graphoffline" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				68EBA78A1C0B6C1000F83F7E /* Debug */,
+				68EBA78B1C0B6C1000F83F7E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 68EBA7751C0B6BAA00F83F7E /* Project object */;
+}
