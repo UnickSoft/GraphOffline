@@ -48,7 +48,6 @@
 		683D16F71C0B6CD900C804DF /* Graph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Graph.cpp; path = graph/Graph.cpp; sourceTree = SOURCE_ROOT; };
 		683D16F81C0B6CD900C804DF /* Graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Graph.h; path = graph/Graph.h; sourceTree = SOURCE_ROOT; };
 		683D16F91C0B6CD900C804DF /* IGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IGraph.h; path = graph/IGraph.h; sourceTree = SOURCE_ROOT; };
-		683D16FA1C0B6CD900C804DF /* IRelease.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IRelease.h; path = graph/IRelease.h; sourceTree = SOURCE_ROOT; };
 		683D16FC1C0B6CE600C804DF /* foreach.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = foreach.hpp; path = pugixml/foreach.hpp; sourceTree = SOURCE_ROOT; };
 		683D16FD1C0B6CE600C804DF /* pugiconfig.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = pugiconfig.hpp; path = pugixml/pugiconfig.hpp; sourceTree = SOURCE_ROOT; };
 		683D16FE1C0B6CE600C804DF /* pugixml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pugixml.cpp; path = pugixml/pugixml.cpp; sourceTree = SOURCE_ROOT; };
@@ -126,7 +125,6 @@
 				683D16F71C0B6CD900C804DF /* Graph.cpp */,
 				683D16F81C0B6CD900C804DF /* Graph.h */,
 				683D16F91C0B6CD900C804DF /* IGraph.h */,
-				683D16FA1C0B6CD900C804DF /* IRelease.h */,
 			);
 			name = Graph;
 			sourceTree = "<group>";

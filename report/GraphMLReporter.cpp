@@ -29,79 +29,80 @@ const char* xmlGraphNodeHightlight     = "<data key=\"hightlightNode\">%d</data>
 
 #define MAX_NODE_CHAR 128
 #define MAX_ID 32
-      
-char* GraphMLReporter::GetReport(IAlgorithmResult* pAlgorithm, IGraph* pGraph)
+
+IndexType GraphMLReporter::GetReport(const IAlgorithmResult* pAlgorithm, const IGraph* pGraph,
+                                     char* buffer, IndexType bufferSize)
 {
-  char* resultBuffer = NULL;
-  if (pAlgorithm && pGraph)
-  {
-    std::string result = xmlStartShort;
-    char graphHeader[MAX_NODE_CHAR]  = {0};
-    sprintf(graphHeader, xmlGraphHeaderMask, pAlgorithm->GetResult());
-    result += graphHeader;
+    IndexType res = 0;
+    if (pAlgorithm && pGraph)
+    {
+        std::string result = xmlStartShort;
+        char graphHeader[MAX_NODE_CHAR]  = {0};
+        sprintf(graphHeader, xmlGraphHeaderMask, pAlgorithm->GetResult());
+        result += graphHeader;
+        
+        std::map<ObjectId, bool> hightlightNodes;
+        for (int i = 0; i < pAlgorithm->GetHightlightNodesCount(); i++)
+        {
+            hightlightNodes[pAlgorithm->GetHightlightNode(i)] = true;
+        }
+        
+        for (int i = 0; i < pGraph->GetNodesCount(); i++)
+        {
+            char* strNodeStrId[MAX_ID] = {0};
+            pGraph->GetNodeStrId(pGraph->GetNode(i), (char *)strNodeStrId, MAX_ID);
+            
+            char graphNode[MAX_NODE_CHAR]  = {0};
+            sprintf(graphNode, xmlGraphNodeStart, strNodeStrId);
+            result += graphNode;
+            // Low dist
+            sprintf(graphNode, xmlGraphNodeLowestDistance, pAlgorithm->GetProperty(pGraph->GetNode(i), "lowestDistance"));
+            result += graphNode;
+            
+            // Hightlight or not
+            sprintf(graphNode, xmlGraphNodeHightlight, (hightlightNodes.count(pGraph->GetNode(i)) > 0));
+            result += graphNode;
+            
+            result += xmlGraphNodeEnd;
+        }
+        
+        for (int i = 0; i < pAlgorithm->GetHightlightEdgesCount(); i++)
+        {
+            NodesEdge edge = pAlgorithm->GetHightlightEdge(i);
+            char* strSourceNodeId[MAX_ID] = {0};
+            char* strTargetNodeId[MAX_ID] = {0};
+            
+            if (pGraph->IsEgdeExists(edge.source, edge.target))
+            {
+                pGraph->GetNodeStrId(edge.source, (char *)strSourceNodeId, MAX_ID);
+                pGraph->GetNodeStrId(edge.target, (char *)strTargetNodeId, MAX_ID);
+            }
+            else
+            {
+                pGraph->GetNodeStrId(edge.target, (char *)strSourceNodeId, MAX_ID);
+                pGraph->GetNodeStrId(edge.source, (char *)strTargetNodeId, MAX_ID);
+            }
+            
+            char graphEdge[MAX_NODE_CHAR]  = {0};
+            sprintf(graphEdge, xmlGraphEdge, strSourceNodeId, strTargetNodeId);
+            
+            result += graphEdge;
+        }
+        
+        result += xmlGraphFooter;
+        result += xmlEnd;
+        
+        res = result.length() + 1;
+        
+        if (bufferSize >= res)
+        {
+            strncpy(buffer, result.c_str(), result.length());
+            buffer[result.length()] = '\0';
+        }
+    }
     
-	std::map<ObjectId, bool> hightlightNodes;
-    for (int i = 0; i < pAlgorithm->GetHightlightNodesCount(); i++)
-    {
-		hightlightNodes[pAlgorithm->GetHightlightNode(i)] = true;
-    }
-
-	for (int i = 0; i < pGraph->GetNodesCount(); i++)
-	{
-		char* strNodeStrId[MAX_ID] = {0};
-		pGraph->GetNodeStrId(pGraph->GetNode(i), (char *)strNodeStrId, MAX_ID);
-
-		char graphNode[MAX_NODE_CHAR]  = {0};
-		sprintf(graphNode, xmlGraphNodeStart, strNodeStrId);
-		result += graphNode;
-		// Low dist
-		sprintf(graphNode, xmlGraphNodeLowestDistance, pAlgorithm->GetProperty(pGraph->GetNode(i), "lowestDistance"));
-		result += graphNode;
-
-		// Hightlight or not
-		sprintf(graphNode, xmlGraphNodeHightlight, (hightlightNodes.count(pGraph->GetNode(i)) > 0));
-		result += graphNode;			
-
-		result += xmlGraphNodeEnd;
-	}
-
-    for (int i = 0; i < pAlgorithm->GetHightlightEdgesCount(); i++)
-    {
-      NodesEdge edge = pAlgorithm->GetHightlightEdge(i);
-	  char* strSourceNodeId[MAX_ID] = {0};
-      char* strTargetNodeId[MAX_ID] = {0};
-
-      if (pGraph->IsEgdeExistsInInput(edge.source, edge.target))
-      {
-        pGraph->GetNodeStrId(edge.source, (char *)strSourceNodeId, MAX_ID);
-        pGraph->GetNodeStrId(edge.target, (char *)strTargetNodeId, MAX_ID);
-      }
-      else
-      {
-        pGraph->GetNodeStrId(edge.target, (char *)strSourceNodeId, MAX_ID);
-        pGraph->GetNodeStrId(edge.source, (char *)strTargetNodeId, MAX_ID);
-      }
-
-      char graphEdge[MAX_NODE_CHAR]  = {0};
-      sprintf(graphEdge, xmlGraphEdge, strSourceNodeId, strTargetNodeId);
-
-      result += graphEdge;
-    }
-
-    result += xmlGraphFooter;
-    result += xmlEnd;
-
-    resultBuffer = new char[result.length() + 1];
-    memset(resultBuffer, 0, result.length() + 1);
-    strncpy(resultBuffer, result.c_str(), result.length());
-  }
-
-  return resultBuffer;
+    return res;
 }
 
 
-// Free memory.
-void GraphMLReporter::FreeReport(const char* report)
-{
-  delete[] report;
-}
+

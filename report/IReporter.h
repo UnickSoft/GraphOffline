@@ -6,14 +6,13 @@
 #pragma once
 
 #include "IAlgorithm.h"
-#include "IRelease.h"
 
-class IReporter: public IRelease
+class IReporter
 {
 public:
-  // Return report: TODO: return char*
-  virtual char* GetReport(IAlgorithmResult* pAlgorithm, IGraph* pGraph) = 0;
+    // Return size of report.
+    virtual IndexType GetReport(const IAlgorithmResult* pAlgorithm, const IGraph* pGraph,
+                               char* buffer, IndexType bufferSize) = 0;
 
-  // Free memory of report.
-  virtual void FreeReport(const char* report) = 0;
+    virtual ~IReporter() {}
 };

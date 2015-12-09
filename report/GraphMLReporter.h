@@ -21,23 +21,21 @@
 #pragma once
 
 #include "IReporter.h"
-#include "IRelease.h"
 
 class GraphMLReporter : public IReporter
 {
 public:
-
-  /**
-   * @return report in GraphML format.
-   */
-  virtual char* GetReport(IAlgorithmResult* pAlgorithm, IGraph* pGraph);
-
-  // Free memory.
-  virtual void FreeReport(const char* report);
-
-  // release it.
-  virtual void Release ()
-  {
-	delete this;
-  }
+    
+    /**
+     * @return report in GraphML format.
+     */
+    virtual IndexType GetReport(const IAlgorithmResult* pAlgorithm, const IGraph* pGraph,
+                                char* buffer, IndexType bufferSize);
+    
+    // release it.
+    virtual void Release ()
+    {
+        delete this;
+    }
 };
+

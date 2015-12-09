@@ -42,7 +42,7 @@ private:
 	bool FindShortestPathCommand (int argc, char *argv[]);
 
 	// Create reporter by name.
-	IReporter* CreateReporter(const String& reporterName);
+	std::shared_ptr<IReporter> CreateReporter(const String& reporterName);
 
 public:
 	// Main method.

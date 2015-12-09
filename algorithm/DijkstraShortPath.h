@@ -15,30 +15,38 @@
 class DijkstraShortPath: public IAlgorithm
 {
 public:
-  DijkstraShortPath (ObjectId source, ObjectId target, IGraph* pGraph);
-  virtual ~DijkstraShortPath ();
-
-  // Calculate algorithm.
-  virtual void Calculate();
-  // Hightlight nodes count.
-  virtual unsigned int GetHightlightNodesCount();
-  // Hightlight node.
-  virtual ObjectId GetHightlightNode(int index);
-  // Hightlight edges count.
-  virtual unsigned int GetHightlightEdgesCount();
-  // Hightlight edge.
-  virtual NodesEdge GetHightlightEdge(int index);
-  // Get result.
-  virtual int GetResult();
-  // Get propery
-  virtual int GetProperty(ObjectId, const char* name);
-
+    DijkstraShortPath (IGraph* pGraph);
+    virtual ~DijkstraShortPath ();
+    
+    // Long name of algoright: DijkstraShortPath.
+    virtual const char* GetAlgorithLongName() const {return "DijkstraShortPath";};
+    // Short name of algorithm: dsp
+    virtual const char* GetAlgorithShortName() const {return "dsp";};
+    // Enum parameters
+    virtual bool EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const;
+    // Set parameter to algorithm.
+    virtual void SetParameter(const char* name, ObjectId id);
+    // Calculate algorithm.
+    virtual bool Calculate();
+    // Hightlight nodes count.
+    virtual IndexType GetHightlightNodesCount() const;
+    // Hightlight node.
+    virtual ObjectId GetHightlightNode(IndexType index) const;
+    // Hightlight edges count.
+    virtual IndexType GetHightlightEdgesCount() const;
+    // Hightlight edge.
+    virtual NodesEdge GetHightlightEdge(IndexType index) const;
+    // Get result.
+    virtual IntWeightType GetResult() const;
+    // Get propery
+    virtual IntWeightType GetProperty(ObjectId, const char* name) const;
+    
 protected:
-  ObjectId m_source;
-  ObjectId m_target;
-  IGraph*  m_pGraph;
-  std::vector<ObjectId> m_path;
-  std::unordered_map<ObjectId, int> m_lowestDistance;
-
-  int m_result;
+    ObjectId m_source;
+    ObjectId m_target;
+    IGraph*  m_pGraph;
+    std::vector<ObjectId> m_path;
+    std::unordered_map<ObjectId, int> m_lowestDistance;
+    
+    int m_result;
 };

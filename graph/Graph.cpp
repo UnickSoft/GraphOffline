@@ -12,7 +12,7 @@ struct FindEdgeFunctor
     this->sourceNode = sourceNode;
     this->targetNode = targetNode;
   }
-  bool operator()(Graph::Edge* edge)
+  bool operator()(Graph::EdgePtr edge)
   {
     return (edge->source == sourceNode && edge->target == targetNode) ||
       (edge->source == targetNode && edge->target == sourceNode && !edge->direct);
@@ -33,7 +33,7 @@ Graph::~Graph(void)
 
 
 // Load from GraphML format.
-bool Graph::LoadFromGraphML(const char * pBuffer, int bufferSize)
+bool Graph::LoadFromGraphML(const char * pBuffer, uint32_t bufferSize)
 {
   Clear();
   bool res = false;
@@ -66,7 +66,6 @@ bool Graph::LoadFromGraphML(const char * pBuffer, int bufferSize)
         }
       }
 
-
       pugi::xml_node graph = graphml.child("graph");
       pugi::xml_attribute xmlDefaultEdge  = graph.attribute("edgedefault");
       bool bDefaultDirect = false;
@@ -80,15 +79,15 @@ bool Graph::LoadFromGraphML(const char * pBuffer, int bufferSize)
         pugi::xml_object_range<pugi::xml_named_node_iterator> nodeList = graph.children("node");
         for (pugi::xml_named_node_iterator node = nodeList.begin(); node != nodeList.end(); node++)
         {
-          m_nodes.push_back(new Node(String(node->attribute("id").value())));
+            m_nodes.push_back(NodePtr(new Node(String(node->attribute("id").value()))));
         }
 
         // Enum edges.
         pugi::xml_object_range<pugi::xml_named_node_iterator> edgeList = graph.children("edge");
         for (pugi::xml_named_node_iterator edge = edgeList.begin(); edge != edgeList.end(); edge++)
         {
-          Node* sourceNode = FindNode(edge->attribute("source").value());
-          Node* targetNode = FindNode(edge->attribute("target").value());
+          NodePtr sourceNode = FindNode(edge->attribute("source").value());
+          NodePtr targetNode = FindNode(edge->attribute("target").value());
           pugi::xml_attribute directXML = edge->attribute("directed");
           bool direct = bDefaultDirect;
           if (directXML)
@@ -103,19 +102,19 @@ bool Graph::LoadFromGraphML(const char * pBuffer, int bufferSize)
           }
 
           m_edges.push_back(
-            new Edge(String(edge->attribute("id").value()), sourceNode, targetNode, direct, weight));
+            EdgePtr(new Edge(String(edge->attribute("id").value()), sourceNode, targetNode, direct, weight)));
 
           // Add to nodes.
-          if (FindNode(targetNode->id, sourceNode->targets) == NULL)
+          if (!FindNode(targetNode->id, sourceNode->targets))
           {
-            sourceNode->targets.push_back(targetNode);
+            sourceNode->targets.push_back(targetNode.get());
           }
 
           if (!direct)
           {
-            if (FindNode(sourceNode->id, targetNode->targets) == NULL)
+            if (!FindNode(sourceNode->id, targetNode->targets))
             {
-              targetNode->targets.push_back(sourceNode);
+              targetNode->targets.push_back(sourceNode.get());
             }
           }
         }
@@ -130,6 +129,7 @@ bool Graph::LoadFromGraphML(const char * pBuffer, int bufferSize)
 
 void Graph::Clear()
 {
+/*
   for (int i = 0; i < m_nodes.size(); i++)
   {
     delete m_nodes[i];
@@ -140,19 +140,20 @@ void Graph::Clear()
     delete m_edges[i];
     m_edges[i] = NULL;
   }
+*/
 
   m_nodes.clear();
   m_edges.clear();
 }
 
-Graph::Node* Graph::FindNode(const String& id)
+Graph::NodePtr Graph::FindNode(const String& id) const
 {
   return FindNode(id, m_nodes);
 }
 
-Graph::Node* Graph::FindNode(const String& id, const std::vector<Node*>& nodes)
+template <typename T> T Graph::FindNode(const String& id, const std::vector<T>& nodes) const
 {
-  Node* node = NULL;
+  T node = nullptr;
   for (int i = 0; i < nodes.size(); i++)
   {
     if (nodes[i] && nodes[i]->id == id)
@@ -165,69 +166,92 @@ Graph::Node* Graph::FindNode(const String& id, const std::vector<Node*>& nodes)
   return node;
 }
 
+template <typename T> T Graph::FindNode(ObjectId objectId, const std::vector<T>& nodes) const
+{
+    T node = nullptr;
+    Node* nodeObject = (Node*)objectId;
+    for (int i = 0; i < nodes.size(); i++)
+    {
+        if (nodes[i] == nodeObject)
+        {
+            node = nodes[i];
+            break;
+        }
+    }
+    
+    return node;
+}
+
 // Get Nodes count.
-unsigned int Graph::GetNodesCount()
+IndexType Graph::GetNodesCount() const
 {
   return m_nodes.size();
 }
 
-ObjectId Graph::GetNode(int index)
+ObjectId Graph::GetNode(IndexType index) const
 {
-  return m_nodes[index];
+  return m_nodes[index].get();
+}
+
+ObjectId Graph::GetNode(const char* nodeId) const
+{
+    NodePtr res = FindNode(String().FromLocale(nodeId));
+    return res ? res.get() : nullptr;
 }
 
 
 // Get Edges count.
-unsigned int Graph::GetEdgesCount()
+IndexType Graph::GetEdgesCount() const
 {
   return m_edges.size();
 }
 
 // Get connected graph count.
-unsigned int Graph::GetConnectedGraphs(ObjectId source)
+IndexType Graph::GetConnectedNodes(ObjectId source) const
 {
-  unsigned int res = 0;
-  if (IsValidNodeId(source))
-  {
-    res = ((Node*)source)->targets.size();
-  }
-  return res;
+    IndexType res = 0;
+    NodePtr nodePtr;
+    if (IsValidNodeId(source, nodePtr) && nodePtr)
+    {
+        res = nodePtr->targets.size();
+    }
+    return res;
 }
 
 // Get connected graph for this graph.
-ObjectId Graph::GetConnectedGraph(ObjectId source, int index)
+ObjectId Graph::GetConnectedNode(ObjectId source, IndexType index) const
 {
-  ObjectId res = 0;
-  if (IsValidNodeId(source))
-  {
-    res = ((Node*)source)->targets[index];
-  }
-  return res;
+    ObjectId res = 0;
+    NodePtr sourcePtr;
+    if (IsValidNodeId(source, sourcePtr))
+    {
+        res = sourcePtr->targets[index];
+    }
+    return res;
 }
 
 // Is edge exists.
-bool Graph::IsEgdeExists(ObjectId source, ObjectId target)
+bool Graph::AreNodesConnected(ObjectId source, ObjectId target) const
 {
   bool res = false;
-  if (IsValidNodeId(source) && IsValidNodeId(target))
+    NodePtr sourcePtr, targetPtr;
+  if (IsValidNodeId(source, sourcePtr) && IsValidNodeId(target, targetPtr))
   {
-    res = Has(((Node*)source)->targets, (Node *)target);
+    res = Has<Node*, NodePtr>(sourcePtr->targets, targetPtr);
   }
   return res;
 }
 
 // Is edge exists in input graph.
-bool Graph::IsEgdeExistsInInput(ObjectId source, ObjectId target)
+bool Graph::IsEgdeExists(ObjectId source, ObjectId target) const
 {
   bool res = false;
-  if (IsValidNodeId(source) && IsValidNodeId(target))
+    NodePtr sourcePtr, targetPtr;
+  if (IsValidNodeId(source, sourcePtr) && IsValidNodeId(target, targetPtr))
   {
-    Node* sourceNode = (Node*)source;
-    Node* targetNode = (Node*)target;
-
     for (int i = 0; i < m_edges.size(); i++)
     {
-      if (m_edges[i]->source == sourceNode && m_edges[i]->target == targetNode)
+      if (m_edges[i]->source == sourcePtr && m_edges[i]->target == targetPtr)
       {
         res = true;
         break;
@@ -238,10 +262,10 @@ bool Graph::IsEgdeExistsInInput(ObjectId source, ObjectId target)
 }
 
 // Get Egde weight. TODO: float.
-int Graph::GetEdgeWeight(ObjectId source, ObjectId target)
+IntWeightType Graph::GetEdgeWeight(ObjectId source, ObjectId target) const
 {
-  int res = 1;
-  Edge* edge = FindEdge(source, target);
+  IntWeightType res = 1;
+  EdgePtr edge = FindEdge(source, target);
   if (edge)
   {
     res = (int)edge->weight;
@@ -250,42 +274,61 @@ int Graph::GetEdgeWeight(ObjectId source, ObjectId target)
 }
 
 // Return graph string Id.
-bool Graph::GetNodeStrId(ObjectId node, char* outBuffer, int bufferSize)
+bool Graph::GetNodeStrId(ObjectId node, char* outBuffer, IndexType bufferSize) const
 {
-  bool res = false;
-  if (IsValidNodeId(node))
-  {
-	  res = ((Node*)(node))->id.PrintLocale(outBuffer, bufferSize) > 0;
-  }
-  return res;
+    bool res = false;
+    NodePtr nodePtr;
+    if (IsValidNodeId(node, nodePtr))
+    {
+        res = nodePtr->id.PrintLocale(outBuffer, bufferSize) > 0;
+    }
+    return res;
 }
 
-bool Graph::IsValidNodeId(ObjectId id)
+bool Graph::IsValidNodeId(ObjectId id, NodePtr& ptr) const
 {
-  return Has(m_nodes, (Node *)id);
+    ptr = FindNode(id, m_nodes);
+    return ptr != nullptr;
 }
 
-template <typename T> bool Graph::Has(const std::vector<T>& vector, const T& value)
+template <typename T> bool Graph::Has(const std::vector<T>& vector, const T& value) const
 {
   return std::find(vector.begin(), vector.end(), value) != vector.end();
 }
 
-Graph::Edge* Graph::FindEdge(ObjectId source, ObjectId target)
+template <typename T1, typename T2> bool Graph::Has(const std::vector<T1>& vector, const T2& value) const
 {
-  Edge* res = NULL;
-  if (IsValidNodeId(source) && IsValidNodeId(target))
-  {
-    Node* sourceNode = (Node*)source;
-    Node* targetNode = (Node*)target;
-
-    std::vector<Edge*>::iterator edgeIterator = 
-      std::find_if(m_edges.begin(), m_edges.end(), FindEdgeFunctor(sourceNode, targetNode));
-
-    if (edgeIterator != m_edges.end())
+    bool res = false;
+    for (const T1& item : vector)
     {
-      res = *edgeIterator;
+        if (value == item)
+        {
+            res = true;
+            break;
+        }
+        
     }
-  }
-  return res;
-
+    return res;
 }
+
+Graph::EdgePtr Graph::FindEdge(ObjectId source, ObjectId target) const
+{
+    EdgePtr res = NULL;
+    NodePtr sourcePtr, targetPtr;
+    if (IsValidNodeId(source, sourcePtr) && IsValidNodeId(target, targetPtr))
+    {
+        Node* sourceNode = (Node*)source;
+        Node* targetNode = (Node*)target;
+        
+        auto edgeIterator =
+        std::find_if(m_edges.begin(), m_edges.end(), FindEdgeFunctor(sourceNode, targetNode));
+        
+        if (edgeIterator != m_edges.end())
+        {
+            res = *edgeIterator;
+        }
+    }
+    
+    return res;
+}
+

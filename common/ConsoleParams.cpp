@@ -27,8 +27,10 @@ DijkstraShortPath* ConsoleParams::GetShortPath(const String& filename, const Str
 
       delete[] pBuffer;
       file.closeFile();
-
-      DijkstraShortPath* shortPath = new DijkstraShortPath(graph.FindNode(source), graph.FindNode(target), &graph);
+        
+      DijkstraShortPath* shortPath = new DijkstraShortPath(&graph);
+      shortPath->SetParameter("start", graph.GetNode(source.Locale().Data()));
+      shortPath->SetParameter("finish", graph.GetNode(target.Locale().Data()));
       shortPath->Calculate();
 
       res = shortPath;
@@ -79,18 +81,23 @@ bool ConsoleParams::FindShortestPathCommand (int argc, char *argv[])
     commands["-report"] = "console";
   }
 
-  if (res)
-  {                                                                            
-    IReporter* pReporter    = CreateReporter(commands["-report"]);
-
-    DijkstraShortPath* path = GetShortPath(commands["-sp"], commands["-start"], commands["-finish"]);
-
-    report = pReporter->GetReport(path, &graph);
-
-    pReporter->Release();
-
-    delete path;
-  }
+    if (res)
+    {
+        std::shared_ptr<IReporter> pReporter    = CreateReporter(commands["-report"]);
+        
+        DijkstraShortPath* path = GetShortPath(commands["-sp"], commands["-start"], commands["-finish"]);
+        
+        uint32_t neededSize = pReporter->GetReport(path, &graph, nullptr, 0);
+        if (neededSize > 0)
+        {
+            char* pBuffer = new char[neededSize];
+            pReporter->GetReport(path, &graph, pBuffer, neededSize);
+            report = pBuffer;
+            delete[] pBuffer;
+        }
+        
+        delete path;
+    }
 
   return res;
 }
@@ -109,17 +116,17 @@ bool ConsoleParams::ProcessConsoleParams(int argc, char *argv[])
 	return res;
 }
 
-IReporter* ConsoleParams::CreateReporter(const String& reporterName)
+std::shared_ptr<IReporter> ConsoleParams::CreateReporter(const String& reporterName)
 {
-	IReporter* res = NULL;
+	std::shared_ptr<IReporter> res = NULL;
 
 	if (reporterName == "console")
 	{
-		res = new ConsoleReporter();
+		res = std::shared_ptr<IReporter>(new ConsoleReporter());
 	}
 	else if (reporterName == "xml")
 	{
-		res = new GraphMLReporter();
+		res = std::shared_ptr<IReporter>(new GraphMLReporter());
 	}
 
 	return res;

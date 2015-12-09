@@ -16,33 +16,48 @@ struct NodesEdge
   ObjectId target;
 };
 
+struct AlgorithmParam
+{
+    char paramName[16];
+};
+
 // If path is not avalible, it may have result.
-#define INFINITY_PATH_INT 0x7FFFFFFF
+#define INFINITY_PATH_INT INT32_MAX
 
 class IAlgorithmEngine
 {
 public:
-  // Calculate algorithm.
-  virtual void Calculate() = 0;
+    // Long name of algoright: DijkstraShortPath.
+    virtual const char* GetAlgorithLongName() const = 0;
+    // Short name of algorithm: dsp
+    virtual const char* GetAlgorithShortName() const = 0;
+    // Enum parameters
+    virtual bool EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const = 0;
+    // Set parameter to algorithm.
+    virtual void SetParameter(const char* name, ObjectId id) = 0;
+    // Calculate algorithm.
+    virtual bool Calculate() = 0;
+    
+    virtual ~IAlgorithmEngine() {}
 };
 
 class IAlgorithmResult
 {
 public:
-  // Calculate algorithm.
-  virtual void Calculate() = 0;
   // Hightlight nodes count.
-  virtual unsigned int GetHightlightNodesCount() = 0;
+  virtual IndexType GetHightlightNodesCount() const = 0;
   // Hightlight node.
-  virtual ObjectId GetHightlightNode(int index) = 0;
+  virtual ObjectId GetHightlightNode(IndexType index) const = 0;
   // Hightlight edges count.
-  virtual unsigned int GetHightlightEdgesCount() = 0;
+  virtual IndexType GetHightlightEdgesCount() const = 0;
   // Hightlight edge.
-  virtual NodesEdge GetHightlightEdge(int index) = 0;
+  virtual NodesEdge GetHightlightEdge(IndexType index) const = 0;
   // Get result.
-  virtual int GetResult() = 0;
+  virtual IntWeightType GetResult() const = 0;
   // Get propery
-  virtual int GetProperty(ObjectId, const char* name) = 0;
+  virtual IntWeightType GetProperty(ObjectId object, const char* name) const = 0;
+    
+  virtual ~IAlgorithmResult() {}
 };
 
 class IAlgorithm : public IAlgorithmEngine, public IAlgorithmResult 

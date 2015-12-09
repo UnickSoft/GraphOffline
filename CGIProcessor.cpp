@@ -79,13 +79,21 @@ bool CGIProcessor::Process()
 							sourceId.Locale().Data(), targetId.Locale().Data());
 					}
 
-					DijkstraShortPath shortPath(graph.FindNode(sourceId), graph.FindNode(targetId), &graph);
+					DijkstraShortPath shortPath(&graph);
+                    shortPath.SetParameter("start", graph.GetNode(sourceId.Locale().Data()));
+                    shortPath.SetParameter("finish", graph.GetNode(sourceId.Locale().Data()));
 					shortPath.Calculate();
 
 					GraphMLReporter reporter;
-					const char* reportBuffer = reporter.GetReport(&shortPath, &graph);
-
-					report = String(reportBuffer);
+                    uint32_t reportSize = reporter.GetReport(&shortPath, &graph, nullptr, 0);
+                    char* reportBuffer = new char[reportSize];
+                    if (reportBuffer)
+                    {
+                        reporter.GetReport(&shortPath, &graph, reportBuffer, reportSize);
+                        report = String(reportBuffer);
+                        delete reportBuffer;
+                        reportBuffer = NULL;
+                    }
 
 					if (bDebugFile)
 					{
@@ -97,7 +105,6 @@ bool CGIProcessor::Process()
 						}
 					}
 
-					reporter.FreeReport(reportBuffer);
 					res = true;
 				}
 
