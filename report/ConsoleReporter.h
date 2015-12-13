@@ -57,5 +57,11 @@ public:
         
         return outBufferSize;
     }
+    
+    // @return full name.
+    virtual const char* GetFullName() { return "Console Reporter"; }
+    
+    // @return short name for console param.
+    virtual const char* GetShortName() { return "console"; }
 
 };

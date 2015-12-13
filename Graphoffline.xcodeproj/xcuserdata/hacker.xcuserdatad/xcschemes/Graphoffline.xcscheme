@@ -63,7 +63,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-sp ../../.././test/graph_shortPath.xml -start n4 -finish n7"
+            argument = "-dsp ../../.././test/graph_shortPath.xml -start n4 -finish n7"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

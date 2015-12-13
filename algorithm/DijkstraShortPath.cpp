@@ -10,11 +10,11 @@
 #include <string.h>
 #include <list>
 
-DijkstraShortPath::DijkstraShortPath (IGraph* pGraph)
+DijkstraShortPath::DijkstraShortPath ()
 {
   m_source = 0;
   m_target = 0;
-  m_pGraph = pGraph;
+  m_pGraph = NULL;
   m_result = INFINITY_PATH_INT;
 }
 
@@ -33,12 +33,16 @@ bool DijkstraShortPath::EnumParameter(uint32_t index, AlgorithmParam* outParamIn
         case 0:
         {
             strncpy(outParamInfo->paramName, "start", sizeof(outParamInfo->paramName));
+            outParamInfo->type = APT_NODE;
             res = true;
+            break;
         }
         case 1:
         {
             strncpy(outParamInfo->paramName, "finish", sizeof(outParamInfo->paramName));
+            outParamInfo->type = APT_NODE;
             res = true;
+            break;
         }
     }
     
@@ -172,5 +176,11 @@ int DijkstraShortPath::GetResult() const
 int DijkstraShortPath::GetProperty(ObjectId object, const char* name) const
 {
 	return (strcmp(name, "lowestDistance") == 0 ? m_lowestDistance.at(object) : 0);
+}
+
+// Set graph
+void DijkstraShortPath::SetGraph(const IGraph* pGraph)
+{
+  m_pGraph = pGraph;
 }
 

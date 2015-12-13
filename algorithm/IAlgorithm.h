@@ -16,8 +16,11 @@ struct NodesEdge
   ObjectId target;
 };
 
+enum AlgorithmParamType {APT_NODE = 0};
+
 struct AlgorithmParam
 {
+    AlgorithmParamType type;
     char paramName[16];
 };
 
@@ -28,13 +31,15 @@ class IAlgorithmEngine
 {
 public:
     // Long name of algoright: DijkstraShortPath.
-    virtual const char* GetAlgorithLongName() const = 0;
+    virtual const char* GetFullName() const = 0;
     // Short name of algorithm: dsp
-    virtual const char* GetAlgorithShortName() const = 0;
+    virtual const char* GetShortName() const = 0;
     // Enum parameters
     virtual bool EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const = 0;
     // Set parameter to algorithm.
     virtual void SetParameter(const char* name, ObjectId id) = 0;
+    // Set graph
+    virtual void SetGraph(const IGraph* pGraph) = 0;
     // Calculate algorithm.
     virtual bool Calculate() = 0;
     

@@ -32,10 +32,10 @@ public:
     virtual IndexType GetReport(const IAlgorithmResult* pAlgorithm, const IGraph* pGraph,
                                 char* buffer, IndexType bufferSize);
     
-    // release it.
-    virtual void Release ()
-    {
-        delete this;
-    }
+    // @return full name.
+    virtual const char* GetFullName() { return "GraphML Reporter"; }
+    
+    // @return short name for console param.
+    virtual const char* GetShortName() { return "xml"; }
 };
 

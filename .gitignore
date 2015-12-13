@@ -21,8 +21,43 @@
 *.la
 *.a
 *.lib
+*.d
+*.dia
+*.dat
+dgph
+dgph~
+*.xcindex*
+*.LinkFileList
+bin/Mac/obj/*
+bin/Mac/Release/Graphoffline.dSYM/*
+bin/Mac/Release/Graphoffline
+bin/Mac/Debug/Graphoffline
+*.hmap
+._*
+# Xcode
+.DS_Store
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+*.xcworkspace
+!default.xcworkspace
+xcuserdata
+profile
+*.moved-aside
+DerivedData
+.idea/
 
 # Executables
 *.exe
 *.out
 *.app
+
+*.xcuserstate
+
+*.xcbkptlist

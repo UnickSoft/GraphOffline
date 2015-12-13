@@ -8,109 +8,66 @@
 #include "ConsoleReporter.h"
 #include "YString.h"
 #include "FileReader.h"
+#include "ReporterFactory.h"
+#include "AlgorithmFactory.h"
 
-DijkstraShortPath* ConsoleParams::GetShortPath(const String& filename, const String& source, const String& target)
+#define ALGORITHM_NAME "algorithm"
+
+void ConsoleParams::ParseCommandLine (const std::vector<String>& params, ParametersMap& commands)
 {
-  DijkstraShortPath* res = NULL;
-  {
-    FileReader file;
-    bool bOpen = file.openFile(filename);
-
-    unsigned long fileSize = file.getFileSize();
-
-    if (bOpen && fileSize)
+    if (!params.empty())
     {
-      char* pBuffer = new char[fileSize];
-      file.readData(pBuffer, fileSize);
-
-      graph.LoadFromGraphML(pBuffer, fileSize);
-
-      delete[] pBuffer;
-      file.closeFile();
+        commands[ALGORITHM_NAME] = GetRealParamName(params.front());
         
-      DijkstraShortPath* shortPath = new DijkstraShortPath(&graph);
-      shortPath->SetParameter("start", graph.GetNode(source.Locale().Data()));
-      shortPath->SetParameter("finish", graph.GetNode(target.Locale().Data()));
-      shortPath->Calculate();
-
-      res = shortPath;
-    }
-  }
-
-  return res;
-}
-
-
-void ConsoleParams::ParseCommandLine (int argc, char *argv[], ParseCommand& commands)
-{
-	for (int i = 0; i < argc; i++)
-	{
-		if (commands.count(argv[i]) > 0 && i < argc - 1)
-		{
-			commands[argv[i]] = argv[i + 1];
-		}
-	}
-}
-
-// Process:  Find short path: -sp graph_filename -start verate_name -finish vertext_name [-report console|xml]
-bool ConsoleParams::FindShortestPathCommand (int argc, char *argv[])
-{
-  bool res = true;
-  ParseCommand commands;
-  commands["-start"]  = "";
-  commands["-finish"] = "";
-  commands["-report"] = "";
-  commands["-sp"]     = "";
-
-  ParseCommandLine(argc, argv, commands);
-
-  if (commands["-start"].IsEmpty())
-  {
-    res = false;
-  }
-  if (commands["-finish"].IsEmpty())
-  {
-    res = false;
-  }
-  if (commands["-sp"].IsEmpty())
-  {
-    res = false;
-  }
-  if (commands["-report"].IsEmpty())
-  {
-    commands["-report"] = "console";
-  }
-
-    if (res)
-    {
-        std::shared_ptr<IReporter> pReporter    = CreateReporter(commands["-report"]);
-        
-        DijkstraShortPath* path = GetShortPath(commands["-sp"], commands["-start"], commands["-finish"]);
-        
-        uint32_t neededSize = pReporter->GetReport(path, &graph, nullptr, 0);
-        if (neededSize > 0)
+        for (auto param = params.begin(); param < params.end(); param += 2)
         {
-            char* pBuffer = new char[neededSize];
-            pReporter->GetReport(path, &graph, pBuffer, neededSize);
-            report = pBuffer;
-            delete[] pBuffer;
+            if ((param + 1) != params.end())
+            {
+                commands[GetRealParamName(*param)] = *(param + 1);
+            }
         }
-        
-        delete path;
     }
-
-  return res;
 }
 
-bool ConsoleParams::ProcessConsoleParams(int argc, char *argv[])
+bool ConsoleParams::ProcessConsoleParams(const std::vector<String>& params)
 {
 	bool res = false;
 	report.Clear();
 
 	// Find shortest path.
-	if (argc > 1 && strcmp(argv[1], "-sp") == 0)
+	if (!params.empty())
 	{
-		res = FindShortestPathCommand (argc, argv);
+        ParametersMap commands;
+        ParseCommandLine(params, commands);
+        
+        if (commands.count(ALGORITHM_NAME) > 0)
+        {
+            String algorithmShortName = commands.count(ALGORITHM_NAME) > 0 ? commands[ALGORITHM_NAME] : "";
+            
+            // Graph.
+            Graph graph;
+            if (commands.count(algorithmShortName) > 0 && LoadGraph(commands[algorithmShortName], graph))
+            {
+                std::shared_ptr<IAlgorithm> algorithm =  AlgorithmFactory::GetSingleton().CreateAlgorithm(&graph, algorithmShortName, commands);
+                if (algorithm)
+                {
+                    res = algorithm->Calculate();
+                    ReporterPtr reporter = CreateReporter(commands.count("report") > 0 ? commands["report"] : "");
+                    
+                    if (reporter)
+                    {
+                        uint32_t neededSize = reporter->GetReport(algorithm.get(), &graph, nullptr, 0);
+                        if (neededSize > 0)
+                        {
+                            char* pBuffer = new char[neededSize];
+                            reporter->GetReport(algorithm.get(), &graph, pBuffer, neededSize);
+                            report = pBuffer;
+                            delete[] pBuffer;
+                        }
+                    }
+                }
+            }
+        }
 	}
 
 	return res;
@@ -118,21 +75,43 @@ bool ConsoleParams::ProcessConsoleParams(int argc, char *argv[])
 
 std::shared_ptr<IReporter> ConsoleParams::CreateReporter(const String& reporterName)
 {
-	std::shared_ptr<IReporter> res = NULL;
-
-	if (reporterName == "console")
-	{
-		res = std::shared_ptr<IReporter>(new ConsoleReporter());
-	}
-	else if (reporterName == "xml")
-	{
-		res = std::shared_ptr<IReporter>(new GraphMLReporter());
-	}
-
-	return res;
+    return ReporterFactory::GetSingleton().CreateReporter(reporterName.IsEmpty() ? "console" : reporterName);
 }
 
 String ConsoleParams::GetReport()
 {
 	return report;
+}
+
+bool ConsoleParams::LoadGraph(const String& sourceName, Graph& graph)
+{
+    FileReader file;
+    
+    bool res = false;
+    
+    if (file.openFile(sourceName) && file.getFileSize() > 0)
+    {
+        unsigned long fileSize = file.getFileSize();
+        char* pBuffer = new char[fileSize];
+        file.readData(pBuffer, fileSize);
+        
+        graph.LoadFromGraphML(pBuffer, fileSize);
+        
+        delete[] pBuffer;
+        file.closeFile();
+        res = true;
+    }
+
+    return res;
+}
+
+
+String ConsoleParams::GetRealParamName(const String& paramName)
+{
+    String res = paramName;
+    if (res.GetAt(0) == Char32('-'))
+    {
+        res = res.SubStr(1);
+    }
+    return res;
 }

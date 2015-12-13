@@ -15,17 +15,19 @@
 class DijkstraShortPath: public IAlgorithm
 {
 public:
-    DijkstraShortPath (IGraph* pGraph);
+    DijkstraShortPath ();
     virtual ~DijkstraShortPath ();
     
     // Long name of algoright: DijkstraShortPath.
-    virtual const char* GetAlgorithLongName() const {return "DijkstraShortPath";};
+    virtual const char* GetFullName() const {return "DijkstraShortPath";};
     // Short name of algorithm: dsp
-    virtual const char* GetAlgorithShortName() const {return "dsp";};
+    virtual const char* GetShortName() const {return "dsp";};
     // Enum parameters
     virtual bool EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const;
     // Set parameter to algorithm.
     virtual void SetParameter(const char* name, ObjectId id);
+    // Set graph
+    virtual void SetGraph(const IGraph* pGraph);
     // Calculate algorithm.
     virtual bool Calculate();
     // Hightlight nodes count.
@@ -44,7 +46,7 @@ public:
 protected:
     ObjectId m_source;
     ObjectId m_target;
-    IGraph*  m_pGraph;
+    const IGraph*  m_pGraph;
     std::vector<ObjectId> m_path;
     std::unordered_map<ObjectId, int> m_lowestDistance;
     

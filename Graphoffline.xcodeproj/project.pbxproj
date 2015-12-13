@@ -16,6 +16,8 @@
 		683D17001C0B6CE600C804DF /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D16FE1C0B6CE600C804DF /* pugixml.cpp */; };
 		683D17051C0B6CF100C804DF /* GraphMLReporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D17021C0B6CF100C804DF /* GraphMLReporter.cpp */; };
 		683D170D1C0B6E4000C804DF /* GraphOffline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D170C1C0B6E4000C804DF /* GraphOffline.cpp */; };
+		68DEA7751C19DC0F003BBEE2 /* AlgorithmFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68DEA7731C19DC0F003BBEE2 /* AlgorithmFactory.cpp */; };
+		68E3A3DE1C1C30740050FB32 /* ReporterFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68E3A3DC1C1C30740050FB32 /* ReporterFactory.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -57,6 +59,10 @@
 		683D17031C0B6CF100C804DF /* GraphMLReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphMLReporter.h; path = report/GraphMLReporter.h; sourceTree = SOURCE_ROOT; };
 		683D17041C0B6CF100C804DF /* IReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IReporter.h; path = report/IReporter.h; sourceTree = SOURCE_ROOT; };
 		683D170C1C0B6E4000C804DF /* GraphOffline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphOffline.cpp; sourceTree = SOURCE_ROOT; };
+		68DEA7731C19DC0F003BBEE2 /* AlgorithmFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AlgorithmFactory.cpp; path = algorithm/AlgorithmFactory.cpp; sourceTree = SOURCE_ROOT; };
+		68DEA7741C19DC0F003BBEE2 /* AlgorithmFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlgorithmFactory.h; path = algorithm/AlgorithmFactory.h; sourceTree = SOURCE_ROOT; };
+		68E3A3DC1C1C30740050FB32 /* ReporterFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ReporterFactory.cpp; path = report/ReporterFactory.cpp; sourceTree = SOURCE_ROOT; };
+		68E3A3DD1C1C30740050FB32 /* ReporterFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReporterFactory.h; path = report/ReporterFactory.h; sourceTree = SOURCE_ROOT; };
 		68EBA7841C0B6C1000F83F7E /* Graphoffline */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Graphoffline; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -78,6 +84,8 @@
 				683D17021C0B6CF100C804DF /* GraphMLReporter.cpp */,
 				683D17031C0B6CF100C804DF /* GraphMLReporter.h */,
 				683D17041C0B6CF100C804DF /* IReporter.h */,
+				68E3A3DC1C1C30740050FB32 /* ReporterFactory.cpp */,
+				68E3A3DD1C1C30740050FB32 /* ReporterFactory.h */,
 			);
 			name = Reports;
 			sourceTree = "<group>";
@@ -112,6 +120,8 @@
 		683D17091C0B6D6800C804DF /* Algorithms */ = {
 			isa = PBXGroup;
 			children = (
+				68DEA7731C19DC0F003BBEE2 /* AlgorithmFactory.cpp */,
+				68DEA7741C19DC0F003BBEE2 /* AlgorithmFactory.h */,
 				683D16E41C0B6CBC00C804DF /* DijkstraShortPath.cpp */,
 				683D16E51C0B6CBC00C804DF /* DijkstraShortPath.h */,
 				683D16E61C0B6CBC00C804DF /* IAlgorithm.h */,
@@ -228,7 +238,9 @@
 				683D17051C0B6CF100C804DF /* GraphMLReporter.cpp in Sources */,
 				683D16E71C0B6CBC00C804DF /* DijkstraShortPath.cpp in Sources */,
 				683D16F61C0B6CCE00C804DF /* YString.cpp in Sources */,
+				68E3A3DE1C1C30740050FB32 /* ReporterFactory.cpp in Sources */,
 				683D170D1C0B6E4000C804DF /* GraphOffline.cpp in Sources */,
+				68DEA7751C19DC0F003BBEE2 /* AlgorithmFactory.cpp in Sources */,
 				683D17001C0B6CE600C804DF /* pugixml.cpp in Sources */,
 				683D16FB1C0B6CD900C804DF /* Graph.cpp in Sources */,
 				683D16F41C0B6CCE00C804DF /* CaseFunctions.cpp in Sources */,

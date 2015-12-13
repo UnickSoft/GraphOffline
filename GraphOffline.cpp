@@ -19,7 +19,13 @@ int main(int argc, char *argv[])
   if (requestMethod == NULL)
   {
       ConsoleParams consoleParams;
-      res = consoleParams.ProcessConsoleParams(argc, argv);
+      
+      std::vector<String> params;
+      for (int i = 1; i < argc; i++)
+      {
+          params.push_back(argv[i]);
+      }
+      res = consoleParams.ProcessConsoleParams(params);
       printf("%s\n", consoleParams.GetReport().UTF8().Data());
   }
     

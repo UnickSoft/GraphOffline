@@ -11,6 +11,7 @@
 #include "Graph.h"
 #include <map>
 #include "DijkstraShortPath.h"
+#include "AlgorithmFactory.h"
 
 /**
  *  Console parameters of GraphUtility:
@@ -24,29 +25,32 @@
 class ConsoleParams
 {
 private:
-	// Current graph.
-	Graph graph;
 	// Report.
 	String report;
 
 	// Find shortest path using Dejkstra algorithm.
 	DijkstraShortPath* GetShortPath(const String& filename, const String& source, const String& target);
 
-	// Privat structore for params.
-	typedef std::map<String, String> ParseCommand;
 	
 	// Parse command line to private structure.
-	void ParseCommandLine (int argc, char *argv[], ParseCommand& commands);
+	void ParseCommandLine (const std::vector<String>& params, ParametersMap& commands);
 
 	// Process:  Find short path: -sp graph_filename -start verate_name -finish vertext_name [-report console|xml]
 	bool FindShortestPathCommand (int argc, char *argv[]);
-
-	// Create reporter by name.
-	std::shared_ptr<IReporter> CreateReporter(const String& reporterName);
-
+    
+    // Create reporter by name.
+    std::shared_ptr<IReporter> CreateReporter(const String& reporterName);
+    
+    // Load graph from file or from buffer.
+    bool LoadGraph(const String& soirceName, Graph& graph);
+    
+    // Get real param value.
+    String GetRealParamName(const String& paramName);
+    
 public:
+    
 	// Main method.
-	bool ProcessConsoleParams(int argc, char *argv[]);
+    bool ProcessConsoleParams(const std::vector<String>& params);
 
 	// return last report.
 	String GetReport();

@@ -79,7 +79,8 @@ bool CGIProcessor::Process()
 							sourceId.Locale().Data(), targetId.Locale().Data());
 					}
 
-					DijkstraShortPath shortPath(&graph);
+					DijkstraShortPath shortPath;
+                    shortPath.SetGraph(&graph);
                     shortPath.SetParameter("start", graph.GetNode(sourceId.Locale().Data()));
                     shortPath.SetParameter("finish", graph.GetNode(sourceId.Locale().Data()));
 					shortPath.Calculate();

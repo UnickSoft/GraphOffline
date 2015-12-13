@@ -3,7 +3,7 @@
 exePath=../bin/Mac/Release/GraphOffline;
 isFaild=0;
 
-rm *.test
+rm *.test &>/dev/null
 
 while IFS=$' ' read -r command xmlFile startGraph finishGraph ; do
 
@@ -26,6 +26,6 @@ if [ $isFaild -eq 1 ]; then
   exit 1;
 else
   echo "OK"
-  rm *.test
+  rm *.test &>/dev/null
 fi
 
