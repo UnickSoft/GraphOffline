@@ -19,7 +19,7 @@
   class String
   {
   public:
-    inline size_t Count() const;
+    size_t Count() const;
 
     Char32 GetAt(size_t pos, Char32 retIfFail = 0) const;
     bool SetAt(size_t pos, Char32 val);

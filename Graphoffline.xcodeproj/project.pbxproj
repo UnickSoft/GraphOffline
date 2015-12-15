@@ -17,6 +17,7 @@
 		683D17051C0B6CF100C804DF /* GraphMLReporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D17021C0B6CF100C804DF /* GraphMLReporter.cpp */; };
 		683D170D1C0B6E4000C804DF /* GraphOffline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D170C1C0B6E4000C804DF /* GraphOffline.cpp */; };
 		68DEA7751C19DC0F003BBEE2 /* AlgorithmFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68DEA7731C19DC0F003BBEE2 /* AlgorithmFactory.cpp */; };
+		68E271701C1F64AE00B6E3C1 /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68E2716E1C1F64AE00B6E3C1 /* Logger.cpp */; };
 		68E3A3DE1C1C30740050FB32 /* ReporterFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68E3A3DC1C1C30740050FB32 /* ReporterFactory.cpp */; };
 /* End PBXBuildFile section */
 
@@ -61,6 +62,8 @@
 		683D170C1C0B6E4000C804DF /* GraphOffline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphOffline.cpp; sourceTree = SOURCE_ROOT; };
 		68DEA7731C19DC0F003BBEE2 /* AlgorithmFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AlgorithmFactory.cpp; path = algorithm/AlgorithmFactory.cpp; sourceTree = SOURCE_ROOT; };
 		68DEA7741C19DC0F003BBEE2 /* AlgorithmFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlgorithmFactory.h; path = algorithm/AlgorithmFactory.h; sourceTree = SOURCE_ROOT; };
+		68E2716E1C1F64AE00B6E3C1 /* Logger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Logger.cpp; path = common/Logger.cpp; sourceTree = SOURCE_ROOT; };
+		68E2716F1C1F64AE00B6E3C1 /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logger.h; path = common/Logger.h; sourceTree = SOURCE_ROOT; };
 		68E3A3DC1C1C30740050FB32 /* ReporterFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ReporterFactory.cpp; path = report/ReporterFactory.cpp; sourceTree = SOURCE_ROOT; };
 		68E3A3DD1C1C30740050FB32 /* ReporterFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReporterFactory.h; path = report/ReporterFactory.h; sourceTree = SOURCE_ROOT; };
 		68EBA7841C0B6C1000F83F7E /* Graphoffline */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Graphoffline; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,7 +104,7 @@
 			name = XMLParser;
 			sourceTree = "<group>";
 		};
-		683D17081C0B6D4E00C804DF /* Utilites */ = {
+		683D17081C0B6D4E00C804DF /* Common */ = {
 			isa = PBXGroup;
 			children = (
 				683D16EB1C0B6CCE00C804DF /* Buffer.h */,
@@ -113,8 +116,10 @@
 				683D16F11C0B6CCE00C804DF /* RefCounter.h */,
 				683D16F21C0B6CCE00C804DF /* YString.cpp */,
 				683D16F31C0B6CCE00C804DF /* YString.h */,
+				68E2716E1C1F64AE00B6E3C1 /* Logger.cpp */,
+				68E2716F1C1F64AE00B6E3C1 /* Logger.h */,
 			);
-			name = Utilites;
+			name = Common;
 			sourceTree = "<group>";
 		};
 		683D17091C0B6D6800C804DF /* Algorithms */ = {
@@ -170,7 +175,7 @@
 				683D17061C0B6D1900C804DF /* Reports */,
 				683D17071C0B6D3A00C804DF /* XMLParser */,
 				683D170A1C0B6D8800C804DF /* Graph */,
-				683D17081C0B6D4E00C804DF /* Utilites */,
+				683D17081C0B6D4E00C804DF /* Common */,
 				683D170B1C0B6D9600C804DF /* CGI */,
 				683D17091C0B6D6800C804DF /* Algorithms */,
 				683D170C1C0B6E4000C804DF /* GraphOffline.cpp */,
@@ -240,6 +245,7 @@
 				683D16F61C0B6CCE00C804DF /* YString.cpp in Sources */,
 				68E3A3DE1C1C30740050FB32 /* ReporterFactory.cpp in Sources */,
 				683D170D1C0B6E4000C804DF /* GraphOffline.cpp in Sources */,
+				68E271701C1F64AE00B6E3C1 /* Logger.cpp in Sources */,
 				68DEA7751C19DC0F003BBEE2 /* AlgorithmFactory.cpp in Sources */,
 				683D17001C0B6CE600C804DF /* pugixml.cpp in Sources */,
 				683D16FB1C0B6CD900C804DF /* Graph.cpp in Sources */,

@@ -10,6 +10,8 @@
 #include "FileReader.h"
 #include "ReporterFactory.h"
 #include "AlgorithmFactory.h"
+#include "CGIProcessor.h"
+#include "logger.h"
 
 #define ALGORITHM_NAME "algorithm"
 
@@ -44,6 +46,9 @@ bool ConsoleParams::ProcessConsoleParams(const std::vector<String>& params)
         {
             String algorithmShortName = commands.count(ALGORITHM_NAME) > 0 ? commands[ALGORITHM_NAME] : "";
             
+            LOG_INFO("Algorith name is " << algorithmShortName.Locale().Data() << ". Graph soure is " <<
+                     (commands.count(algorithmShortName) > 0 ? commands[algorithmShortName].Locale().Data() : "EMPTY"));
+            
             // Graph.
             Graph graph;
             if (commands.count(algorithmShortName) > 0 && LoadGraph(commands[algorithmShortName], graph))
@@ -64,11 +69,31 @@ bool ConsoleParams::ProcessConsoleParams(const std::vector<String>& params)
                             report = pBuffer;
                             delete[] pBuffer;
                         }
+                        else
+                        {
+                            LOG_WARNING("Report is empty");
+                        }
                     }
+                    else
+                    {
+                        LOG_ERROR("Cannot create reporter");
+                    }
+                }
+                else
+                {
+                    LOG_ERROR("Cannot create algorithm");
                 }
             }
         }
+        else
+        {
+            LOG_ERROR("Cannot find algorithm name");
+        }
 	}
+    else
+    {
+        LOG_WARNING("Param list is empty");
+    }
 
 	return res;
 }
@@ -100,6 +125,17 @@ bool ConsoleParams::LoadGraph(const String& sourceName, Graph& graph)
         delete[] pBuffer;
         file.closeFile();
         res = true;
+    }
+    else if (sourceName == "cgiInput")
+    {
+        String cgiInputXML = CGIProcessor::GetGraphBuffer();
+        BufferChar buffer = cgiInputXML.Locale();
+        graph.LoadFromGraphML(buffer.Data(), buffer.Size());
+        res = true;
+    }
+    else
+    {
+        LOG_ERROR("Cannot load graph");
     }
 
     return res;

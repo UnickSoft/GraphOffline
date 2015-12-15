@@ -35,95 +35,95 @@ Graph::~Graph(void)
 // Load from GraphML format.
 bool Graph::LoadFromGraphML(const char * pBuffer, uint32_t bufferSize)
 {
-  Clear();
-  bool res = false;
-  pugi::xml_document doc;
-
-  pugi::xml_parse_result result = doc.load_buffer(pBuffer, bufferSize);
-
-  if (result)
-  {
-    pugi::xml_node graphml = doc.child("graphml");
-
-    if (graphml)
+    Clear();
+    bool res = false;
+    pugi::xml_document doc;
+    
+    pugi::xml_parse_result result = doc.load_buffer(pBuffer, bufferSize);
+    
+    if (result)
     {
-      double defaultWeight = 1.0;
-      String weightId = "";
-
-      pugi::xml_object_range<pugi::xml_named_node_iterator> childrenKey = graphml.children("key");
-
-      for (pugi::xml_named_node_iterator key = childrenKey.begin(); key != childrenKey.end(); key++)
-      {
-        if (String(key->attribute("attr.name").value()) == String("weight"))
+        pugi::xml_node graphml = doc.child("graphml");
+        
+        if (graphml)
         {
-          pugi::xml_node defaultWeightNode = key->child("default");
-          if (defaultWeightNode)
-          {
-            defaultWeight = defaultWeightNode.text().as_double(1.0);
-            weightId = key->attribute("id").value();
-            break;
-          }
-        }
-      }
-
-      pugi::xml_node graph = graphml.child("graph");
-      pugi::xml_attribute xmlDefaultEdge  = graph.attribute("edgedefault");
-      bool bDefaultDirect = false;
-      if (xmlDefaultEdge)
-      {
-        bDefaultDirect = (String(xmlDefaultEdge.value()) == String("directed"));
-      }
-      if (!graph.empty())
-      {
-        // Enum nodes.
-        pugi::xml_object_range<pugi::xml_named_node_iterator> nodeList = graph.children("node");
-        for (pugi::xml_named_node_iterator node = nodeList.begin(); node != nodeList.end(); node++)
-        {
-            m_nodes.push_back(NodePtr(new Node(String(node->attribute("id").value()))));
-        }
-
-        // Enum edges.
-        pugi::xml_object_range<pugi::xml_named_node_iterator> edgeList = graph.children("edge");
-        for (pugi::xml_named_node_iterator edge = edgeList.begin(); edge != edgeList.end(); edge++)
-        {
-          NodePtr sourceNode = FindNode(edge->attribute("source").value());
-          NodePtr targetNode = FindNode(edge->attribute("target").value());
-          pugi::xml_attribute directXML = edge->attribute("directed");
-          bool direct = bDefaultDirect;
-          if (directXML)
-          {
-            direct = directXML.as_bool();
-          }
-          double weight = defaultWeight;
-          pugi::xml_node edgeData = edge->child("data");
-          if (edgeData && String(edgeData.attribute("key").value()) == String(weightId))
-          {
-            weight = edgeData.text().as_double();
-          }
-
-          m_edges.push_back(
-            EdgePtr(new Edge(String(edge->attribute("id").value()), sourceNode, targetNode, direct, weight)));
-
-          // Add to nodes.
-          if (!FindNode(targetNode->id, sourceNode->targets))
-          {
-            sourceNode->targets.push_back(targetNode.get());
-          }
-
-          if (!direct)
-          {
-            if (!FindNode(sourceNode->id, targetNode->targets))
+            double defaultWeight = 1.0;
+            String weightId = "";
+            
+            pugi::xml_object_range<pugi::xml_named_node_iterator> childrenKey = graphml.children("key");
+            
+            for (pugi::xml_named_node_iterator key = childrenKey.begin(); key != childrenKey.end(); key++)
             {
-              targetNode->targets.push_back(sourceNode.get());
+                if (String(key->attribute("attr.name").value()) == String("weight"))
+                {
+                    pugi::xml_node defaultWeightNode = key->child("default");
+                    if (defaultWeightNode)
+                    {
+                        defaultWeight = defaultWeightNode.text().as_double(1.0);
+                        weightId = key->attribute("id").value();
+                        break;
+                    }
+                }
             }
-          }
+            
+            pugi::xml_node graph = graphml.child("graph");
+            pugi::xml_attribute xmlDefaultEdge  = graph.attribute("edgedefault");
+            bool bDefaultDirect = false;
+            if (xmlDefaultEdge)
+            {
+                bDefaultDirect = (String(xmlDefaultEdge.value()) == String("directed"));
+            }
+            if (!graph.empty())
+            {
+                // Enum nodes.
+                pugi::xml_object_range<pugi::xml_named_node_iterator> nodeList = graph.children("node");
+                for (pugi::xml_named_node_iterator node = nodeList.begin(); node != nodeList.end(); node++)
+                {
+                    m_nodes.push_back(NodePtr(new Node(String(node->attribute("id").value()))));
+                }
+                
+                // Enum edges.
+                pugi::xml_object_range<pugi::xml_named_node_iterator> edgeList = graph.children("edge");
+                for (pugi::xml_named_node_iterator edge = edgeList.begin(); edge != edgeList.end(); edge++)
+                {
+                    NodePtr sourceNode = FindNode(edge->attribute("source").value());
+                    NodePtr targetNode = FindNode(edge->attribute("target").value());
+                    pugi::xml_attribute directXML = edge->attribute("directed");
+                    bool direct = bDefaultDirect;
+                    if (directXML)
+                    {
+                        direct = directXML.as_bool();
+                    }
+                    double weight = defaultWeight;
+                    pugi::xml_node edgeData = edge->child("data");
+                    if (edgeData && String(edgeData.attribute("key").value()) == String(weightId))
+                    {
+                        weight = edgeData.text().as_double();
+                    }
+                    
+                    m_edges.push_back(
+                                      EdgePtr(new Edge(String(edge->attribute("id").value()), sourceNode, targetNode, direct, weight)));
+                    
+                    // Add to nodes.
+                    if (!FindNode(targetNode->id, sourceNode->targets))
+                    {
+                        sourceNode->targets.push_back(targetNode.get());
+                    }
+                    
+                    if (!direct)
+                    {
+                        if (!FindNode(sourceNode->id, targetNode->targets))
+                        {
+                            targetNode->targets.push_back(sourceNode.get());
+                        }
+                    }
+                }
+                res = true;
+            }
         }
-        res = true;
-      }
     }
-  }
-
-  return res;
+    
+    return res;
 }
 
 

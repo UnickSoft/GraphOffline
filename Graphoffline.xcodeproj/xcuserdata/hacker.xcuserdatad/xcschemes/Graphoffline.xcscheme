@@ -67,6 +67,18 @@
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "QUERY_STRING"
+            value = "dsp=/Volumes/NO NAME/projects/www/!Graph/GraphOffline/test/graph_shortPath_3.xml&amp;start=n0&amp;finish=n7&amp;report=xml"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "REQUEST_METHOD"
+            value = "POST"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

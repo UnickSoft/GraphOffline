@@ -5,120 +5,89 @@
 #include <stdlib.h> 
 #include <memory.h> 
 
-CGIProcessor::CGIProcessor(void)
-{
-}
 
-CGIProcessor::~CGIProcessor(void)
+std::vector<String> CGIProcessor::GetRequestParams()
 {
-}
-
-bool CGIProcessor::Process()
-{
-	bool res = false;
-
-	report.Clear();
+    std::vector<String> res;
 
 	char * requestMethod = getenv("REQUEST_METHOD");
 	if (strstr(requestMethod, "POST"))
 	{
-		// CGI mode.
-		char * strContentLength = getenv("CONTENT_LENGTH");
-		long contentLength  = strtol(strContentLength, NULL, 10);
-
-		// "REQUEST_STRING" should have n0->n2 data or n0->n2|Debug
+		// "REQUEST_STRING" should have start=n0&finish=n2&report=xml
+        
 		char* requestBuffer = getenv("QUERY_STRING");
-		String requestString (requestBuffer);
-		int debugPosition = requestString.Find("DebugOutput");
-		bool bDebugOutput = false;
-		bool bDebugFile = false;
-		if (debugPosition >= 0)
-		{
-			bDebugOutput = true;
-			requestString = requestString.SubStr(0, debugPosition);
-		}
-
-		if (bDebugOutput)
-		{
-			printf("contentLength = %d\n", contentLength);
-		}
-		
-		// We process xml from 0 to 1 Mb.
-		if (contentLength > 0)
-		{
-			char* postdata = new char[contentLength + 1];
-			memset(postdata, 0, contentLength + 1);
-			if (!postdata)
-			{ 
-				printf ("Error!!!");
-				exit(EXIT_FAILURE);
-			}
-			//fgets(postdata, contentLength + 1, stdin);
-			fread(postdata, contentLength + 1, 1, stdin);
-			if (bDebugOutput)
-			{
-				printf("Output xml: %s\n", postdata);
-			}
-
-			Graph graph;
-			if (graph.LoadFromGraphML(postdata, contentLength + 1))
-			{
-				if (bDebugOutput)
-				{
-					printf("Request string: %s\n", requestString.Locale().Data());
-				}
-
-				int position = requestString.Find("to");
-				if (position >= 0)
-				{
-					String sourceId = String(requestString).SubStr(0, position);
-					String targetId = String(requestString).SubStr(position + 2);
-					if (bDebugOutput)
-					{
-						printf("Find from %s to %s\n",
-							sourceId.Locale().Data(), targetId.Locale().Data());
-					}
-
-					DijkstraShortPath shortPath;
-                    shortPath.SetGraph(&graph);
-                    shortPath.SetParameter("start", graph.GetNode(sourceId.Locale().Data()));
-                    shortPath.SetParameter("finish", graph.GetNode(sourceId.Locale().Data()));
-					shortPath.Calculate();
-
-					GraphMLReporter reporter;
-                    uint32_t reportSize = reporter.GetReport(&shortPath, &graph, nullptr, 0);
-                    char* reportBuffer = new char[reportSize];
-                    if (reportBuffer)
-                    {
-                        reporter.GetReport(&shortPath, &graph, reportBuffer, reportSize);
-                        report = String(reportBuffer);
-                        delete reportBuffer;
-                        reportBuffer = NULL;
-                    }
-
-					if (bDebugFile)
-					{
-						FILE* file = fopen("GraphCGI.log", "w");
-						if (file)
-						{
-							fprintf(file, reportBuffer);
-							fclose(file);
-						}
-					}
-
-					res = true;
-				}
-
-				delete[] postdata;
-			}
-		}    
+        if (requestBuffer)
+        {
+            String requestString (requestBuffer);
+            std::vector<String> delemiters;
+            delemiters.push_back("=");
+            delemiters.push_back("&");
+            
+            res = SplitString(requestString, delemiters);
+        }
 	}
 
 	return res;
 }
 
-// Return report after process.
-String CGIProcessor::GetReport()
+// Return buffer of graph.
+String CGIProcessor::GetGraphBuffer()
 {
-	return report;
+    String res;
+    char * requestMethod = getenv("REQUEST_METHOD");
+    if (strstr(requestMethod, "POST"))
+    {
+        // CGI mode.
+        const char * strContentLength = getenv("CONTENT_LENGTH");
+        if (strContentLength)
+        {
+            long contentLength  = strtol(strContentLength, NULL, 10);
+            if (contentLength > 0)
+            {
+                char* postdata = new char[contentLength + 1];
+                fread(postdata, contentLength, 1, stdin);
+                postdata[contentLength + 1] = 0;
+                res.FromLocale(postdata);
+                delete[] postdata;
+            }
+        }
+    }
+    
+    return res;
+}
+
+std::vector<String> CGIProcessor::SplitString(const String& inputString, const std::vector<String>& delemiters)
+{
+    std::vector<String> res;
+    String input = inputString;
+    
+    while (!input.IsEmpty())
+    {
+        int nMinPosition = input.Count();
+        for (const String& delemiter : delemiters)
+        {
+            int pos = input.Find(delemiter);
+            if (pos >= 0)
+            {
+                nMinPosition = std::min(pos, nMinPosition);
+            }
+        }
+        
+        if (nMinPosition < input.Count())
+        {
+            String param = String(input).SubStr(0, nMinPosition);
+            res.push_back(param);
+            input = input.SubStr(nMinPosition + 1);
+        }
+        else
+        {
+            break;
+        }
+    }
+    
+    if (!input.IsEmpty())
+    {
+        res.push_back(input);
+    }
+    return res;
 }

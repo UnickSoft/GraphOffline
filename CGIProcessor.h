@@ -5,19 +5,14 @@
 
 class CGIProcessor
 {
-private:
-	// Current graph.
-	Graph graph;
-	// Report.
-	String report;
-
 public:
-	CGIProcessor(void);
-	~CGIProcessor(void);
+	// Return params of this call.
+	static std::vector<String> GetRequestParams();
+    // Return buffer of graph.
+    static String GetGraphBuffer();
 
-	// Process CGI request.
-	bool Process();
-
-	// Return report after process.
-	String GetReport();
+    
+private:
+    
+    static std::vector<String> SplitString(const String& inputString, const std::vector<String>& delemiters);
 };

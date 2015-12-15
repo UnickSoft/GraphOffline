@@ -52,6 +52,7 @@ profile
 *.moved-aside
 DerivedData
 .idea/
+UserInterfaceState.xcuserstate
 
 # Executables
 *.exe
@@ -61,3 +62,9 @@ DerivedData
 *.xcuserstate
 
 *.xcbkptlist
+
+*.xcuserstate
+
+*.xcbkptlist
+
+*.xcscheme
