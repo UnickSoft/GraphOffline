@@ -52,11 +52,11 @@ bool DijkstraShortPath::EnumParameter(uint32_t index, AlgorithmParam* outParamIn
 // Set parameter to algorithm.
 void DijkstraShortPath::SetParameter(const char* name, ObjectId id)
 {
-    if (strncmp(name, "start", sizeof(AlgorithmParam::paramName)) == 0)
+    if (strncmp(name, "start", sizeof(AlgorithmParam().paramName)) == 0)
     {
         m_source = id;
     }
-    else if (strncmp(name, "finish", sizeof(AlgorithmParam::paramName)) == 0)
+    else if (strncmp(name, "finish", sizeof(AlgorithmParam().paramName)) == 0)
     {
         m_target = id;
     }

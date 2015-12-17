@@ -153,7 +153,7 @@ Graph::NodePtr Graph::FindNode(const String& id) const
 
 template <typename T> T Graph::FindNode(const String& id, const std::vector<T>& nodes) const
 {
-  T node = nullptr;
+  T node = T(nullptr);
   for (int i = 0; i < nodes.size(); i++)
   {
     if (nodes[i] && nodes[i]->id == id)
@@ -168,7 +168,7 @@ template <typename T> T Graph::FindNode(const String& id, const std::vector<T>& 
 
 template <typename T> T Graph::FindNode(ObjectId objectId, const std::vector<T>& nodes) const
 {
-    T node = nullptr;
+    T node = T(nullptr);
     Node* nodeObject = (Node*)objectId;
     for (int i = 0; i < nodes.size(); i++)
     {
@@ -313,7 +313,7 @@ template <typename T1, typename T2> bool Graph::Has(const std::vector<T1>& vecto
 
 Graph::EdgePtr Graph::FindEdge(ObjectId source, ObjectId target) const
 {
-    EdgePtr res = NULL;
+    EdgePtr res;
     NodePtr sourcePtr, targetPtr;
     if (IsValidNodeId(source, sourcePtr) && IsValidNodeId(target, targetPtr))
     {

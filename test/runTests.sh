@@ -1,13 +1,18 @@
 # @echo off
 
-exePath=../bin/Mac/Release/GraphOffline;
+if [ "$1" == "-linux" ]; then
+    exePath=../bin/Linux/Release/GraphOffline;
+else
+    exePath=../bin/Mac/Release/GraphOffline;
+fi
+
 isFaild=0;
 
 rm *.test &>/dev/null
 
 while IFS=$' ' read -r command xmlFile startGraph finishGraph ; do
 
-  if [ "$1" == "-debug" ]; then
+  if [ "$2" == "-debug" ]; then
     echo "$exePath ${command} ./${xmlFile} -start ${startGraph} -finish ${finishGraph} > ${xmlFile}.test"
   fi
   $exePath ${command} ./${xmlFile} -start ${startGraph} -finish ${finishGraph} > ${xmlFile}.test

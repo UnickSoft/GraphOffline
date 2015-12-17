@@ -68,3 +68,5 @@ UserInterfaceState.xcuserstate
 *.xcbkptlist
 
 *.xcscheme
+
+bin/Linux/Release/GraphOffline
