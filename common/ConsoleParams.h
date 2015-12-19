@@ -47,6 +47,9 @@ private:
     // Get real param value.
     String GetRealParamName(const String& paramName);
     
+    // @return utility help.
+    String GetHelp();
+    
 public:
     
 	// Main method.

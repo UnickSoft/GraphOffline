@@ -10,12 +10,12 @@
 #include "ConsoleReporter.h"
 #include "GraphMLReporter.h"
 
-std::shared_ptr<IReporter> ReporterFactory::CreateReporter(const String& name)
+std::shared_ptr<IReporter> ReporterFactory::CreateReporter(const String& name) const
 {
-    return m_mReporters.count(name) > 0 ? CreateReporter(m_mReporters[name]) : std::shared_ptr<IReporter>();
+    return m_mReporters.count(name) > 0 ? CreateReporter(m_mReporters.at(name)) : std::shared_ptr<IReporter>();
 }
 
-ReporterFactory& ReporterFactory::GetSingleton()
+const ReporterFactory& ReporterFactory::GetSingleton()
 {
     static ReporterFactory reporterFactory;
     return reporterFactory;
@@ -37,7 +37,7 @@ ReporterFactory::~ReporterFactory()
     
 }
 
-std::shared_ptr<IReporter> ReporterFactory::CreateReporter(IndexType index)
+std::shared_ptr<IReporter> ReporterFactory::CreateReporter(IndexType index) const
 {
     std::shared_ptr<IReporter> res;
     switch (index)

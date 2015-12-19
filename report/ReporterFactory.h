@@ -20,16 +20,16 @@ class ReporterFactory
 public:
     
     // Create reported by name.
-    std::shared_ptr<IReporter> CreateReporter(const String& name);
+    std::shared_ptr<IReporter> CreateReporter(const String& name) const;
     
-    static ReporterFactory& GetSingleton();
+    static const ReporterFactory& GetSingleton();
+
+    std::shared_ptr<IReporter> CreateReporter(IndexType index) const;
     
 private:
     
     ReporterFactory();
     ~ReporterFactory();
-    
-    std::shared_ptr<IReporter> CreateReporter(IndexType index);
     
     // Map of reporters.
     std::map<String, IndexType> m_mReporters;

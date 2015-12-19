@@ -9,9 +9,9 @@
 #include "AlgorithmFactory.h"
 #include "DijkstraShortPath.h"
 
-std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(const IGraph* pGraph, const String& name, const ParametersMap& map)
+std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(const IGraph* pGraph, const String& name, const ParametersMap& map) const
 {
-    std::shared_ptr<IAlgorithm> res = m_mAlgorithms.count(name) > 0 ? CreateAlgorithm(m_mAlgorithms[name]) : std::shared_ptr<IAlgorithm>();
+    std::shared_ptr<IAlgorithm> res = m_mAlgorithms.count(name) > 0 ? CreateAlgorithm(m_mAlgorithms.at(name)) : std::shared_ptr<IAlgorithm>();
     
     if (res)
     {
@@ -46,7 +46,7 @@ std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(const IGraph* pGra
     return res;
 }
     
-AlgorithmFactory& AlgorithmFactory::GetSingleton()
+const AlgorithmFactory& AlgorithmFactory::GetSingleton()
 {
     static AlgorithmFactory factory;
     return factory;
@@ -69,7 +69,7 @@ AlgorithmFactory::~AlgorithmFactory()
 
 }
 
-std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(IndexType index)
+std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(IndexType index) const
 {
     std::shared_ptr<IAlgorithm> res;
     switch (index)

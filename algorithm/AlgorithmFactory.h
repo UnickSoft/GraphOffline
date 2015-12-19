@@ -22,16 +22,16 @@ class AlgorithmFactory
 {
 public:
     
-    std::shared_ptr<IAlgorithm> CreateAlgorithm(const IGraph* pGraph, const String& name, const ParametersMap& map);
+    std::shared_ptr<IAlgorithm> CreateAlgorithm(const IGraph* pGraph, const String& name, const ParametersMap& map) const;
     
-    static AlgorithmFactory& GetSingleton();
+    static const AlgorithmFactory& GetSingleton();
+    
+    std::shared_ptr<IAlgorithm> CreateAlgorithm(IndexType index) const;
     
 protected:
     
     AlgorithmFactory();
     ~AlgorithmFactory();
-    
-    std::shared_ptr<IAlgorithm> CreateAlgorithm(IndexType index);
     
     // Map of algorithms.
     std::map<String, IndexType> m_mAlgorithms;

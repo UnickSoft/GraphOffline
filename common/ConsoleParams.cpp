@@ -14,6 +14,7 @@
 #include "logger.h"
 
 #define ALGORITHM_NAME "algorithm"
+#define HELP_NAME      "help"
 
 void ConsoleParams::ParseCommandLine (const std::vector<String>& params, ParametersMap& commands)
 {
@@ -42,57 +43,65 @@ bool ConsoleParams::ProcessConsoleParams(const std::vector<String>& params)
         ParametersMap commands;
         ParseCommandLine(params, commands);
         
-        if (commands.count(ALGORITHM_NAME) > 0)
+        if (params.front() == "-" HELP_NAME)
         {
-            String algorithmShortName = commands.count(ALGORITHM_NAME) > 0 ? commands[ALGORITHM_NAME] : "";
-            
-            LOG_INFO("Algorith name is " << algorithmShortName.Locale().Data() << ". Graph soure is " <<
-                     (commands.count(algorithmShortName) > 0 ? commands[algorithmShortName].Locale().Data() : "EMPTY"));
-            
-            // Graph.
-            Graph graph;
-            if (commands.count(algorithmShortName) > 0 && LoadGraph(commands[algorithmShortName], graph))
+            report = GetHelp();
+        }
+        else
+        {
+            if (commands.count(ALGORITHM_NAME) > 0)
             {
-                std::shared_ptr<IAlgorithm> algorithm =  AlgorithmFactory::GetSingleton().CreateAlgorithm(&graph, algorithmShortName, commands);
-                if (algorithm)
+                String algorithmShortName = commands.count(ALGORITHM_NAME) > 0 ? commands[ALGORITHM_NAME] : "";
+                
+                LOG_INFO("Algorith name is " << algorithmShortName.Locale().Data() << ". Graph soure is " <<
+                         (commands.count(algorithmShortName) > 0 ? commands[algorithmShortName].Locale().Data() : "EMPTY"));
+                
+                // Graph.
+                Graph graph;
+                if (commands.count(algorithmShortName) > 0 && LoadGraph(commands[algorithmShortName], graph))
                 {
-                    res = algorithm->Calculate();
-                    ReporterPtr reporter = CreateReporter(commands.count("report") > 0 ? commands["report"] : "");
-                    
-                    if (reporter)
+                    std::shared_ptr<IAlgorithm> algorithm =  AlgorithmFactory::GetSingleton().CreateAlgorithm(&graph, algorithmShortName, commands);
+                    if (algorithm)
                     {
-                        uint32_t neededSize = reporter->GetReport(algorithm.get(), &graph, nullptr, 0);
-                        if (neededSize > 0)
+                        res = algorithm->Calculate();
+                        ReporterPtr reporter = CreateReporter(commands.count("report") > 0 ? commands["report"] : "");
+                        
+                        if (reporter)
                         {
-                            char* pBuffer = new char[neededSize];
-                            reporter->GetReport(algorithm.get(), &graph, pBuffer, neededSize);
-                            report = pBuffer;
-                            delete[] pBuffer;
+                            uint32_t neededSize = reporter->GetReport(algorithm.get(), &graph, nullptr, 0);
+                            if (neededSize > 0)
+                            {
+                                char* pBuffer = new char[neededSize];
+                                reporter->GetReport(algorithm.get(), &graph, pBuffer, neededSize);
+                                report = pBuffer;
+                                delete[] pBuffer;
+                            }
+                            else
+                            {
+                                LOG_WARNING("Report is empty");
+                            }
                         }
                         else
                         {
-                            LOG_WARNING("Report is empty");
+                            LOG_ERROR("Cannot create reporter");
                         }
                     }
                     else
                     {
-                        LOG_ERROR("Cannot create reporter");
+                        LOG_ERROR("Cannot create algorithm");
                     }
                 }
-                else
-                {
-                    LOG_ERROR("Cannot create algorithm");
-                }
             }
-        }
-        else
-        {
-            LOG_ERROR("Cannot find algorithm name");
+            else
+            {
+                LOG_ERROR("Cannot find algorithm name");
+            }
         }
 	}
     else
     {
         LOG_WARNING("Param list is empty");
+        report = GetHelp();
     }
 
 	return res;
@@ -149,5 +158,55 @@ String ConsoleParams::GetRealParamName(const String& paramName)
     {
         res = res.SubStr(1);
     }
+    return res;
+}
+
+
+String ConsoleParams::GetHelp()
+{
+    String res = "GraphOffline utility calculate graph algorithms\n" \
+        "Command line:\n" \
+        "Graphoffline [-debug] ALGORITH_SHORTNAME graphSource [PARAMETERS] [-report reportType]\n" \
+        "graphSource - maybe GraphML file name or cgiInput for input stream.\n"
+        "-debug - output debug information.\n" \
+        "-report - setup report type. By default console.\n" \
+        "\nAvailable alrogithms:\n";
+
+    IndexType index = 0;
+    const AlgorithmFactory& algorithmFactory = AlgorithmFactory::GetSingleton();
+    std::shared_ptr<IAlgorithm> algorithm;
+    
+    while (algorithm = algorithmFactory.CreateAlgorithm(index))
+    {
+        res = res + String(" ") + String(algorithm->GetFullName()) + String(" - shortname is ") + String(algorithm->GetShortName()) +
+            String("\n Parameters:\n");
+        
+        IndexType paramIndex = 0;
+        AlgorithmParam outParamInfo;
+        while (algorithm->EnumParameter(paramIndex, &outParamInfo))
+        {
+            res = res + String("  ") + String(outParamInfo.paramName) + String(" \n");
+            paramIndex++;
+        }
+        
+        ++index;
+    }
+    
+    res = res + "\nAvailable reports:\n";
+    
+    index = 0;
+    const ReporterFactory& reporterFactory = ReporterFactory::GetSingleton();
+    std::shared_ptr<IReporter> reporter;
+    
+    while (reporter = reporterFactory.CreateReporter(index))
+    {
+        res = res + String(" ") + String(reporter->GetFullName()) + String(" - shortname is ") + String(reporter->GetShortName()) + String("\n");
+        ++index;
+    }
+    
+    res = res + "\nExamples:\n" \
+        " Graphoffline -dsp graph_shortPath.xml -start n4 -finish n7\n" \
+        " Graphoffline -help";
+    
     return res;
 }
