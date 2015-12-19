@@ -5,7 +5,7 @@ CC_FLAGS = -std=c++0x -Wall -O3 -I ./algorithm -I ./pugixml -I ./report -I ./com
 # File names
 EXEC = ./bin/Linux/Release/GraphOffline
 ALGORITHM_DIR = ./algorithm/
-PUGIXML_DIR = ./algorithm/
+PUGIXML_DIR = ./pugixml/
 REPORT_DIR = ./report/
 COMMON_DIR = ./common/
 GRAPH_DIR = ./graph/
@@ -16,7 +16,7 @@ SOURCES = $(wildcard *.cpp) $(wildcard */*.cpp)
 OBJECTS = $(patsubst %.cpp,$(OBJ_DIR)%.o, $(SOURCES))
 
 # Main target
-$(EXEC): $(OBJECTS)
+$(EXEC): $(OBJ_DIR)$(GRAPH_DIR) $(OBJ_DIR)$(COMMON_DIR) $(OBJ_DIR)$(REPORT_DIR) $(OBJ_DIR)$(ALGORITHM_DIR) $(OBJ_DIR)$(PUGIXML_DIR) $(OBJECTS)
 	$(CC) $(OBJECTS) -o $(EXEC)
 
 # To obtain object files
@@ -37,6 +37,22 @@ $(OBJ_DIR)$(GRAPH_DIR)%.o: $(REPORT_DIR)%.cpp
 
 $(OBJ_DIR)%.o: %.cpp
 	$(CC) -c $(CC_FLAGS) $< -o $@
+
+# make dirs
+$(OBJ_DIR)$(ALGORITHM_DIR):
+	mkdir -p $(OBJ_DIR)$(ALGORITHM_DIR)
+
+$(OBJ_DIR)$(PUGIXML_DIR):
+	mkdir -p $(OBJ_DIR)$(PUGIXML_DIR)
+
+$(OBJ_DIR)$(REPORT_DIR):
+	mkdir -p $(OBJ_DIR)$(REPORT_DIR)
+
+$(OBJ_DIR)$(COMMON_DIR):
+	mkdir -p $(OBJ_DIR)$(COMMON_DIR)
+
+$(OBJ_DIR)$(GRAPH_DIR):
+	mkdir -p $(OBJ_DIR)$(GRAPH_DIR)
 
 # To remove generated files
 clean:
