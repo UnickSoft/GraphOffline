@@ -11,7 +11,7 @@
 #include "ReporterFactory.h"
 #include "AlgorithmFactory.h"
 #include "CGIProcessor.h"
-#include "logger.h"
+#include "Logger.h"
 
 #define ALGORITHM_NAME "algorithm"
 #define HELP_NAME      "help"
