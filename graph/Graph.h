@@ -4,7 +4,7 @@
 #include <vector>
 #include "IGraph.h"
 #include "YString.h"
-
+#include <memory>
 
 
 
