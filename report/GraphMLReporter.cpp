@@ -17,13 +17,17 @@ const char* xmlStartShort = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n \
 
 const char* xmlEnd = "</graphml>\n";
 
-const char* xmlGraphHeaderMask = "<graph id=\"G\" edgedefault=\"undirected\" result=\"%d\">\n";
+const char* xmlGraphHeaderMaskInt = "<graph id=\"G\" edgedefault=\"undirected\" result=\"%d\">\n";
+const char* xmlGraphHeaderMaskFloat = "<graph id=\"G\" edgedefault=\"undirected\" result=\"%f\">\n";
 
 const char* xmlGraphFooter = "</graph>\n";
 const char* xmlGraphNodeStart = "<node id=\"%s\">\n";
 const char* xmlGraphNodeEnd = "</node>\n";
 const char* xmlGraphEdge = "<edge source=\"%s\" target=\"%s\"/>\n";
-const char* xmlGraphNodeLowestDistance = "<data key=\"lowestDistance\">%d</data>\n";
+
+const char* xmlGraphNodeLowestDistanceInt   = "<data key=\"lowestDistance\">%d</data>\n";
+const char* xmlGraphNodeLowestDistanceFloat = "<data key=\"lowestDistance\">%f</data>\n";
+
 const char* xmlGraphNodeHightlight     = "<data key=\"hightlightNode\">%d</data>\n";
 
 
@@ -33,12 +37,38 @@ const char* xmlGraphNodeHightlight     = "<data key=\"hightlightNode\">%d</data>
 IndexType GraphMLReporter::GetReport(const IAlgorithmResult* pAlgorithm, const IGraph* pGraph,
                                      char* buffer, IndexType bufferSize)
 {
+    if (pGraph->GetEdgeWeightType() == WT_INT)
+    {
+        return GetReport<IntWeightType>(pAlgorithm, pGraph, buffer, bufferSize);
+    }
+    else
+    {
+        return GetReport<FloatWeightType>(pAlgorithm, pGraph, buffer, bufferSize);
+    }
+}
+
+template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgorithmResult* pAlgorithm, const IGraph* pGraph, char* buffer, IndexType bufferSize)
+{
     IndexType res = 0;
     if (pAlgorithm && pGraph)
     {
+        const char* xmlGraphHeaderMask = NULL;
+        const char* xmlGraphNodeLowestDistance = NULL;
+        
+        if (pGraph->GetEdgeWeightType() == WT_INT)
+        {
+            xmlGraphHeaderMask = xmlGraphHeaderMaskInt;
+            xmlGraphNodeLowestDistance = xmlGraphNodeLowestDistanceInt;
+        }
+        else
+        {
+            xmlGraphHeaderMask = xmlGraphHeaderMaskFloat;
+            xmlGraphNodeLowestDistance = xmlGraphNodeLowestDistanceFloat;
+        }
+        
         std::string result = xmlStartShort;
         char graphHeader[MAX_NODE_CHAR]  = {0};
-        sprintf(graphHeader, xmlGraphHeaderMask, pAlgorithm->GetResult());
+        sprintf(graphHeader, xmlGraphHeaderMask, (WeightType)pAlgorithm->GetResult());
         result += graphHeader;
         
         std::map<ObjectId, bool> hightlightNodes;
@@ -56,7 +86,7 @@ IndexType GraphMLReporter::GetReport(const IAlgorithmResult* pAlgorithm, const I
             sprintf(graphNode, xmlGraphNodeStart, strNodeStrId);
             result += graphNode;
             // Low dist
-            sprintf(graphNode, xmlGraphNodeLowestDistance, pAlgorithm->GetProperty(pGraph->GetNode(i), "lowestDistance"));
+            sprintf(graphNode, xmlGraphNodeLowestDistance, (WeightType)pAlgorithm->GetProperty(pGraph->GetNode(i), "lowestDistance"));
             result += graphNode;
             
             // Hightlight or not
@@ -103,6 +133,4 @@ IndexType GraphMLReporter::GetReport(const IAlgorithmResult* pAlgorithm, const I
     
     return res;
 }
-
-
 

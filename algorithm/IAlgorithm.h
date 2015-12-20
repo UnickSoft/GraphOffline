@@ -58,9 +58,9 @@ public:
   // Hightlight edge.
   virtual NodesEdge GetHightlightEdge(IndexType index) const = 0;
   // Get result.
-  virtual IntWeightType GetResult() const = 0;
+  virtual FloatWeightType GetResult() const = 0;
   // Get propery
-  virtual IntWeightType GetProperty(ObjectId object, const char* name) const = 0;
+  virtual FloatWeightType GetProperty(ObjectId object, const char* name) const = 0;
     
   virtual ~IAlgorithmResult() {}
 };

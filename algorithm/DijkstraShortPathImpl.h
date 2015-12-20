@@ -10,7 +10,7 @@
 #include <string.h>
 #include <list>
 
-DijkstraShortPath::DijkstraShortPath ()
+template<class WeightTypeInterface, typename WeightType> DijkstraShortPath<WeightTypeInterface, WeightType>::DijkstraShortPath ()
 {
   m_source = 0;
   m_target = 0;
@@ -18,13 +18,13 @@ DijkstraShortPath::DijkstraShortPath ()
   m_result = INFINITY_PATH_INT;
 }
 
-DijkstraShortPath::~DijkstraShortPath ()
+template<class WeightTypeInterface, typename WeightType> DijkstraShortPath<WeightTypeInterface, WeightType>::~DijkstraShortPath ()
 {
 
 }
 
 // Enum parameters
-bool DijkstraShortPath::EnumParameter(uint32_t index, AlgorithmParam* outParamInfo) const
+template<class WeightTypeInterface, typename WeightType> bool DijkstraShortPath<WeightTypeInterface, WeightType>::EnumParameter(uint32_t index, AlgorithmParam* outParamInfo) const
 {
     bool res = false;
     
@@ -50,7 +50,7 @@ bool DijkstraShortPath::EnumParameter(uint32_t index, AlgorithmParam* outParamIn
 }
 
 // Set parameter to algorithm.
-void DijkstraShortPath::SetParameter(const char* name, ObjectId id)
+template<class WeightTypeInterface, typename WeightType> void DijkstraShortPath<WeightTypeInterface, WeightType>::SetParameter(const char* name, ObjectId id)
 {
     if (strncmp(name, "start", sizeof(AlgorithmParam().paramName)) == 0)
     {
@@ -63,13 +63,13 @@ void DijkstraShortPath::SetParameter(const char* name, ObjectId id)
 }
 
 // Calculate algorithm.
-bool DijkstraShortPath::Calculate()
+template<class WeightTypeInterface, typename WeightType> bool DijkstraShortPath<WeightTypeInterface, WeightType>::Calculate()
 {
     bool res = false;
     // Look algorithm: http://en.wikipedia.org/wiki/Dijkstra's_algorithm.
     if (m_pGraph && m_source && m_target)
     {
-        std::unordered_map<ObjectId, int> dist;
+        std::unordered_map<ObjectId, WeightType> dist;
         std::unordered_map<ObjectId, ObjectId> previous;
         std::list<ObjectId> q;
         
@@ -86,7 +86,7 @@ bool DijkstraShortPath::Calculate()
         while (q.size() > 0)
         {
             int index = -1;
-            int nMinFromQ  = 1E9;
+            WeightType nMinFromQ  = 1E9;
             
             auto uIterator = q.begin();
             for (auto element = q.begin(); element != q.end(); element++)
@@ -95,7 +95,7 @@ bool DijkstraShortPath::Calculate()
                 {
                     nMinFromQ = dist[*element];
                     uIterator = element;
-                    break;
+                    //break;
                 }
             }
             ObjectId u = *uIterator;
@@ -104,7 +104,7 @@ bool DijkstraShortPath::Calculate()
             for (IndexType i = 0; i < m_pGraph->GetConnectedNodes(u); i++)
             {
                 ObjectId v = m_pGraph->GetConnectedNode(u, i);
-                int alt = dist[u] + m_pGraph->GetEdgeWeight(u, v);
+                WeightType alt = dist[u] + m_pGraph->GetEdgeWeight(u, v);
                 if (alt < dist[v])
                 {
                     dist[v]     = alt;
@@ -142,25 +142,25 @@ bool DijkstraShortPath::Calculate()
 }
 
 // Hightlight nodes count.
-IndexType DijkstraShortPath::GetHightlightNodesCount() const
+template<class WeightTypeInterface, typename WeightType> IndexType DijkstraShortPath<WeightTypeInterface, WeightType>::GetHightlightNodesCount() const
 {
   return m_path.size();
 }
 
 // Hightlight node.
-ObjectId DijkstraShortPath::GetHightlightNode(IndexType index) const
+template<class WeightTypeInterface, typename WeightType> ObjectId DijkstraShortPath<WeightTypeInterface, WeightType>::GetHightlightNode(IndexType index) const
 {
   return m_path[index];
 }
 
 // Hightlight edges count.
-IndexType DijkstraShortPath::GetHightlightEdgesCount() const
+template<class WeightTypeInterface, typename WeightType> IndexType DijkstraShortPath<WeightTypeInterface, WeightType>::GetHightlightEdgesCount() const
 {
   return m_path.size() ? m_path.size() - 1 : 0;
 }
 
 // Hightlight edge.
-NodesEdge DijkstraShortPath::GetHightlightEdge(IndexType index) const
+template<class WeightTypeInterface, typename WeightType> NodesEdge DijkstraShortPath<WeightTypeInterface, WeightType>::GetHightlightEdge(IndexType index) const
 {
   NodesEdge edge;
   edge.source = m_path[index];
@@ -168,19 +168,20 @@ NodesEdge DijkstraShortPath::GetHightlightEdge(IndexType index) const
   return edge;
 }
 
-int DijkstraShortPath::GetResult() const
+template<class WeightTypeInterface, typename WeightType> FloatWeightType DijkstraShortPath<WeightTypeInterface, WeightType>::GetResult() const
 {
-  return m_result;
+  return (FloatWeightType) m_result;
 }
 
-int DijkstraShortPath::GetProperty(ObjectId object, const char* name) const
+template<class WeightTypeInterface, typename WeightType> FloatWeightType DijkstraShortPath<WeightTypeInterface, WeightType>::GetProperty(ObjectId object, const char* name) const
 {
-	return (strcmp(name, "lowestDistance") == 0 ? m_lowestDistance.at(object) : 0);
+	return (FloatWeightType)(strcmp(name, "lowestDistance") == 0 ? m_lowestDistance.at(object) : 0);
 }
 
 // Set graph
-void DijkstraShortPath::SetGraph(const IGraph* pGraph)
+template<class WeightTypeInterface, typename WeightType> void DijkstraShortPath<WeightTypeInterface, WeightType>::SetGraph(const IGraph* pGraph)
 {
-  m_pGraph = pGraph;
+    //(TODO)
+    m_pGraph = dynamic_cast<const WeightTypeInterface*>(pGraph);
 }
 

@@ -11,7 +11,9 @@
 
 std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(const IGraph* pGraph, const String& name, const ParametersMap& map) const
 {
-    std::shared_ptr<IAlgorithm> res = m_mAlgorithms.count(name) > 0 ? CreateAlgorithm(m_mAlgorithms.at(name)) : std::shared_ptr<IAlgorithm>();
+    std::shared_ptr<IAlgorithm> res = m_mAlgorithms.count(name) > 0 ?
+        CreateAlgorithm(m_mAlgorithms.at(name), pGraph->GetEdgeWeightType() == WT_FLOAT)
+        : std::shared_ptr<IAlgorithm>();
     
     if (res)
     {
@@ -69,13 +71,24 @@ AlgorithmFactory::~AlgorithmFactory()
 
 }
 
-std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(IndexType index) const
+std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(IndexType index, bool bFloat) const
 {
     std::shared_ptr<IAlgorithm> res;
     switch (index)
     {
         case 0:
-            res = std::shared_ptr<IAlgorithm>(new DijkstraShortPath());
+            
+            IAlgorithm* pAlgorithm = NULL;
+            if (bFloat)
+            {
+                pAlgorithm = new DijkstraShortPath<IGraphFloat, FloatWeightType>();
+            }
+            else
+            {
+                pAlgorithm = new DijkstraShortPath<IGraphInt, IntWeightType>();
+            }
+            
+            res = std::shared_ptr<IAlgorithm>(pAlgorithm);
             break;
     }
  

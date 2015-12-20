@@ -3,37 +3,39 @@
 #include "Graph.h"
 #include "pugixml.hpp"
 #include <algorithm>
+#include <math.h>
 
 // Find Edge funtor.
-struct FindEdgeFunctor
+template<class _WeightInterface, typename _WeightType> class FindEdgeFunctor
 {
-  FindEdgeFunctor(Graph::Node* sourceNode, Graph::Node* targetNode)
+public:
+  FindEdgeFunctor(typename Graph<_WeightInterface, _WeightType>::Node* sourceNode, typename Graph<_WeightInterface, _WeightType>::Node* targetNode)
   {
     this->sourceNode = sourceNode;
     this->targetNode = targetNode;
   }
-  bool operator()(Graph::EdgePtr edge)
+  bool operator()(typename Graph<_WeightInterface, _WeightType>::EdgePtr edge)
   {
     return (edge->source == sourceNode && edge->target == targetNode) ||
       (edge->source == targetNode && edge->target == sourceNode && !edge->direct);
   }
-  Graph::Node* sourceNode;
-  Graph::Node* targetNode;
+  typename Graph<_WeightInterface, _WeightType>::Node* sourceNode;
+  typename Graph<_WeightInterface, _WeightType>::Node* targetNode;
 };
 
-Graph::Graph(void)
+template<class WeightInterface, typename WeightType> Graph<WeightInterface, WeightType>::Graph(void)
 {
-
+    m_weightType = WT_INT;
 }
 
-Graph::~Graph(void)
+template<class WeightInterface, typename WeightType> Graph<WeightInterface, WeightType>::~Graph(void)
 {
   Clear();
 }
 
 
 // Load from GraphML format.
-bool Graph::LoadFromGraphML(const char * pBuffer, uint32_t bufferSize)
+template<class WeightInterface, typename WeightType> bool Graph<WeightInterface, WeightType>::LoadFromGraphML(const char * pBuffer, uint32_t bufferSize)
 {
     Clear();
     bool res = false;
@@ -60,6 +62,7 @@ bool Graph::LoadFromGraphML(const char * pBuffer, uint32_t bufferSize)
                     if (defaultWeightNode)
                     {
                         defaultWeight = defaultWeightNode.text().as_double(1.0);
+                        m_weightType = IsDouble(defaultWeight) || m_weightType == WT_FLOAT ? WT_FLOAT : WT_INT;
                         weightId = key->attribute("id").value();
                         break;
                     }
@@ -99,6 +102,7 @@ bool Graph::LoadFromGraphML(const char * pBuffer, uint32_t bufferSize)
                     if (edgeData && String(edgeData.attribute("key").value()) == String(weightId))
                     {
                         weight = edgeData.text().as_double();
+                        m_weightType = IsDouble(weight) || m_weightType == WT_FLOAT ? WT_FLOAT : WT_INT;
                     }
                     
                     m_edges.push_back(
@@ -127,7 +131,7 @@ bool Graph::LoadFromGraphML(const char * pBuffer, uint32_t bufferSize)
 }
 
 
-void Graph::Clear()
+template<class WeightInterface, typename WeightType> void Graph<WeightInterface, WeightType>::Clear()
 {
 /*
   for (int i = 0; i < m_nodes.size(); i++)
@@ -146,12 +150,12 @@ void Graph::Clear()
   m_edges.clear();
 }
 
-Graph::NodePtr Graph::FindNode(const String& id) const
+template<class WeightInterface, typename WeightType> typename Graph<WeightInterface, WeightType>::NodePtr Graph<WeightInterface, WeightType>::FindNode(const String& id) const
 {
   return FindNode(id, m_nodes);
 }
 
-template <typename T> T Graph::FindNode(const String& id, const std::vector<T>& nodes) const
+template<class WeightInterface, typename WeightType> template <typename T> T Graph<WeightInterface, WeightType>::FindNode(const String& id, const std::vector<T>& nodes) const
 {
   T node = T(nullptr);
   for (int i = 0; i < nodes.size(); i++)
@@ -166,7 +170,7 @@ template <typename T> T Graph::FindNode(const String& id, const std::vector<T>& 
   return node;
 }
 
-template <typename T> T Graph::FindNode(ObjectId objectId, const std::vector<T>& nodes) const
+template<class WeightInterface, typename WeightType> template <typename T> T Graph<WeightInterface, WeightType>::FindNode(ObjectId objectId, const std::vector<T>& nodes) const
 {
     T node = T(nullptr);
     Node* nodeObject = (Node*)objectId;
@@ -183,17 +187,17 @@ template <typename T> T Graph::FindNode(ObjectId objectId, const std::vector<T>&
 }
 
 // Get Nodes count.
-IndexType Graph::GetNodesCount() const
+template<class WeightInterface, typename WeightType> IndexType Graph<WeightInterface, WeightType>::GetNodesCount() const
 {
   return m_nodes.size();
 }
 
-ObjectId Graph::GetNode(IndexType index) const
+template<class WeightInterface, typename WeightType> ObjectId Graph<WeightInterface, WeightType>::GetNode(IndexType index) const
 {
   return m_nodes[index].get();
 }
 
-ObjectId Graph::GetNode(const char* nodeId) const
+template<class WeightInterface, typename WeightType>  ObjectId Graph<WeightInterface, WeightType>::GetNode(const char* nodeId) const
 {
     NodePtr res = FindNode(String().FromLocale(nodeId));
     return res ? res.get() : nullptr;
@@ -201,13 +205,13 @@ ObjectId Graph::GetNode(const char* nodeId) const
 
 
 // Get Edges count.
-IndexType Graph::GetEdgesCount() const
+template<class WeightInterface, typename WeightType>  IndexType Graph<WeightInterface, WeightType>::GetEdgesCount() const
 {
   return m_edges.size();
 }
 
 // Get connected graph count.
-IndexType Graph::GetConnectedNodes(ObjectId source) const
+template<class WeightInterface, typename WeightType>  IndexType Graph<WeightInterface, WeightType>::GetConnectedNodes(ObjectId source) const
 {
     IndexType res = 0;
     NodePtr nodePtr;
@@ -219,7 +223,7 @@ IndexType Graph::GetConnectedNodes(ObjectId source) const
 }
 
 // Get connected graph for this graph.
-ObjectId Graph::GetConnectedNode(ObjectId source, IndexType index) const
+template<class WeightInterface, typename WeightType>  ObjectId Graph<WeightInterface, WeightType>::GetConnectedNode(ObjectId source, IndexType index) const
 {
     ObjectId res = 0;
     NodePtr sourcePtr;
@@ -231,7 +235,7 @@ ObjectId Graph::GetConnectedNode(ObjectId source, IndexType index) const
 }
 
 // Is edge exists.
-bool Graph::AreNodesConnected(ObjectId source, ObjectId target) const
+template<class WeightInterface, typename WeightType>  bool Graph<WeightInterface, WeightType>::AreNodesConnected(ObjectId source, ObjectId target) const
 {
   bool res = false;
     NodePtr sourcePtr, targetPtr;
@@ -243,7 +247,7 @@ bool Graph::AreNodesConnected(ObjectId source, ObjectId target) const
 }
 
 // Is edge exists in input graph.
-bool Graph::IsEgdeExists(ObjectId source, ObjectId target) const
+template<class WeightInterface, typename WeightType>  bool Graph<WeightInterface, WeightType>::IsEgdeExists(ObjectId source, ObjectId target) const
 {
   bool res = false;
     NodePtr sourcePtr, targetPtr;
@@ -262,19 +266,19 @@ bool Graph::IsEgdeExists(ObjectId source, ObjectId target) const
 }
 
 // Get Egde weight. TODO: float.
-IntWeightType Graph::GetEdgeWeight(ObjectId source, ObjectId target) const
+template<class WeightInterface, typename WeightType> WeightType Graph<WeightInterface, WeightType>::GetEdgeWeight(ObjectId source, ObjectId target) const
 {
-  IntWeightType res = 1;
+  WeightType res = 1;
   EdgePtr edge = FindEdge(source, target);
   if (edge)
   {
-    res = (int)edge->weight;
+    res = (WeightType)edge->weight;
   }
   return res;
 }
 
 // Return graph string Id.
-bool Graph::GetNodeStrId(ObjectId node, char* outBuffer, IndexType bufferSize) const
+template<class WeightInterface, typename WeightType>  bool Graph<WeightInterface, WeightType>::GetNodeStrId(ObjectId node, char* outBuffer, IndexType bufferSize) const
 {
     bool res = false;
     NodePtr nodePtr;
@@ -285,18 +289,18 @@ bool Graph::GetNodeStrId(ObjectId node, char* outBuffer, IndexType bufferSize) c
     return res;
 }
 
-bool Graph::IsValidNodeId(ObjectId id, NodePtr& ptr) const
+template<class WeightInterface, typename WeightType> bool Graph<WeightInterface, WeightType>::IsValidNodeId(ObjectId id, NodePtr& ptr) const
 {
     ptr = FindNode(id, m_nodes);
     return ptr != nullptr;
 }
 
-template <typename T> bool Graph::Has(const std::vector<T>& vector, const T& value) const
+template<class WeightInterface, typename WeightType> template <typename T> bool Graph<WeightInterface, WeightType>::Has(const std::vector<T>& vector, const T& value) const
 {
   return std::find(vector.begin(), vector.end(), value) != vector.end();
 }
 
-template <typename T1, typename T2> bool Graph::Has(const std::vector<T1>& vector, const T2& value) const
+template<class WeightInterface, typename WeightType> template <typename T1, typename T2> bool Graph<WeightInterface, WeightType>::Has(const std::vector<T1>& vector, const T2& value) const
 {
     bool res = false;
     for (const T1& item : vector)
@@ -311,7 +315,7 @@ template <typename T1, typename T2> bool Graph::Has(const std::vector<T1>& vecto
     return res;
 }
 
-Graph::EdgePtr Graph::FindEdge(ObjectId source, ObjectId target) const
+template<class WeightInterface, typename WeightType> typename Graph<WeightInterface, WeightType>::EdgePtr Graph<WeightInterface, WeightType>::FindEdge(ObjectId source, ObjectId target) const
 {
     EdgePtr res;
     NodePtr sourcePtr, targetPtr;
@@ -321,7 +325,7 @@ Graph::EdgePtr Graph::FindEdge(ObjectId source, ObjectId target) const
         Node* targetNode = (Node*)target;
         
         auto edgeIterator =
-        std::find_if(m_edges.begin(), m_edges.end(), FindEdgeFunctor(sourceNode, targetNode));
+        std::find_if(m_edges.begin(), m_edges.end(), FindEdgeFunctor<WeightInterface, WeightType>(sourceNode, targetNode));
         
         if (edgeIterator != m_edges.end())
         {
@@ -332,3 +336,13 @@ Graph::EdgePtr Graph::FindEdge(ObjectId source, ObjectId target) const
     return res;
 }
 
+
+template<class WeightInterface, typename WeightType> bool Graph<WeightInterface, WeightType>::IsDouble(double value)
+{
+    return fabs(value - floor(value)) > 1E-5;
+}
+
+template<class WeightInterface, typename WeightType> EdgeWeightType Graph<WeightInterface, WeightType>::GetEdgeWeightType() const
+{
+    return m_weightType;
+}

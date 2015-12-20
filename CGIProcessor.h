@@ -7,12 +7,15 @@ class CGIProcessor
 {
 public:
 	// Return params of this call.
-	static std::vector<String> GetRequestParams();
+    std::vector<String> GetRequestParams();
     // Return buffer of graph.
-    static String GetGraphBuffer();
+    String GetGraphBuffer();
 
     
 private:
+    
+    String m_graphBuffer;
+    std::vector<String> m_parameters;
     
     static std::vector<String> SplitString(const String& inputString, const std::vector<String>& delemiters);
 };

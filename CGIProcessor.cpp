@@ -8,24 +8,29 @@
 
 std::vector<String> CGIProcessor::GetRequestParams()
 {
-    std::vector<String> res;
+    std::vector<String> res = m_parameters;
 
-	char * requestMethod = getenv("REQUEST_METHOD");
-	if (strstr(requestMethod, "POST"))
-	{
-		// "REQUEST_STRING" should have start=n0&finish=n2&report=xml
-        
-		char* requestBuffer = getenv("QUERY_STRING");
-        if (requestBuffer)
+    if (res.empty())
+    {
+        char * requestMethod = getenv("REQUEST_METHOD");
+        if (strstr(requestMethod, "POST"))
         {
-            String requestString (requestBuffer);
-            std::vector<String> delemiters;
-            delemiters.push_back("=");
-            delemiters.push_back("&");
+            // "REQUEST_STRING" should have start=n0&finish=n2&report=xml
             
-            res = SplitString(requestString, delemiters);
+            char* requestBuffer = getenv("QUERY_STRING");
+            if (requestBuffer)
+            {
+                String requestString (requestBuffer);
+                std::vector<String> delemiters;
+                delemiters.push_back("=");
+                delemiters.push_back("&");
+                
+                res = SplitString(requestString, delemiters);
+            }
         }
-	}
+        
+        m_parameters = res;
+    }
 
 	return res;
 }
@@ -33,24 +38,30 @@ std::vector<String> CGIProcessor::GetRequestParams()
 // Return buffer of graph.
 String CGIProcessor::GetGraphBuffer()
 {
-    String res;
-    char * requestMethod = getenv("REQUEST_METHOD");
-    if (strstr(requestMethod, "POST"))
+    String res = m_graphBuffer;
+    
+    if (res.IsEmpty())
     {
-        // CGI mode.
-        const char * strContentLength = getenv("CONTENT_LENGTH");
-        if (strContentLength)
+        char * requestMethod = getenv("REQUEST_METHOD");
+        if (strstr(requestMethod, "POST"))
         {
-            long contentLength  = strtol(strContentLength, NULL, 10);
-            if (contentLength > 0)
+            // CGI mode.
+            const char * strContentLength = getenv("CONTENT_LENGTH");
+            if (strContentLength)
             {
-                char* postdata = new char[contentLength + 1];
-                fread(postdata, contentLength, 1, stdin);
-                postdata[contentLength + 1] = 0;
-                res.FromLocale(postdata);
-                delete[] postdata;
+                long contentLength  = strtol(strContentLength, NULL, 10);
+                if (contentLength > 0)
+                {
+                    char* postdata = new char[contentLength + 1];
+                    fread(postdata, contentLength, 1, stdin);
+                    postdata[contentLength + 1] = 0;
+                    res.FromLocale(postdata);
+                    delete[] postdata;
+                }
             }
         }
+        
+        m_graphBuffer = res;
     }
     
     return res;

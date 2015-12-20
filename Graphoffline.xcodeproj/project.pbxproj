@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		683D16E71C0B6CBC00C804DF /* DijkstraShortPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D16E41C0B6CBC00C804DF /* DijkstraShortPath.cpp */; };
+		683D16E71C0B6CBC00C804DF /* DijkstraShortPathImpl.h in Sources */ = {isa = PBXBuildFile; fileRef = 683D16E41C0B6CBC00C804DF /* DijkstraShortPathImpl.h */; };
 		683D16EA1C0B6CC400C804DF /* CGIProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D16E81C0B6CC400C804DF /* CGIProcessor.cpp */; };
 		683D16F41C0B6CCE00C804DF /* CaseFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D16EC1C0B6CCE00C804DF /* CaseFunctions.cpp */; };
 		683D16F51C0B6CCE00C804DF /* ConsoleParams.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D16EE1C0B6CCE00C804DF /* ConsoleParams.cpp */; };
 		683D16F61C0B6CCE00C804DF /* YString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D16F21C0B6CCE00C804DF /* YString.cpp */; };
-		683D16FB1C0B6CD900C804DF /* Graph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D16F71C0B6CD900C804DF /* Graph.cpp */; };
+		683D16FB1C0B6CD900C804DF /* GraphImpl.h in Sources */ = {isa = PBXBuildFile; fileRef = 683D16F71C0B6CD900C804DF /* GraphImpl.h */; };
 		683D17001C0B6CE600C804DF /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D16FE1C0B6CE600C804DF /* pugixml.cpp */; };
 		683D17051C0B6CF100C804DF /* GraphMLReporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D17021C0B6CF100C804DF /* GraphMLReporter.cpp */; };
 		683D170D1C0B6E4000C804DF /* GraphOffline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D170C1C0B6E4000C804DF /* GraphOffline.cpp */; };
@@ -34,7 +34,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		683D16E41C0B6CBC00C804DF /* DijkstraShortPath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DijkstraShortPath.cpp; path = algorithm/DijkstraShortPath.cpp; sourceTree = SOURCE_ROOT; };
+		683D16E41C0B6CBC00C804DF /* DijkstraShortPathImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DijkstraShortPathImpl.h; path = algorithm/DijkstraShortPathImpl.h; sourceTree = SOURCE_ROOT; };
 		683D16E51C0B6CBC00C804DF /* DijkstraShortPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DijkstraShortPath.h; path = algorithm/DijkstraShortPath.h; sourceTree = SOURCE_ROOT; };
 		683D16E61C0B6CBC00C804DF /* IAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IAlgorithm.h; path = algorithm/IAlgorithm.h; sourceTree = SOURCE_ROOT; };
 		683D16E81C0B6CC400C804DF /* CGIProcessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CGIProcessor.cpp; sourceTree = SOURCE_ROOT; };
@@ -48,7 +48,7 @@
 		683D16F11C0B6CCE00C804DF /* RefCounter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RefCounter.h; path = common/RefCounter.h; sourceTree = SOURCE_ROOT; };
 		683D16F21C0B6CCE00C804DF /* YString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = YString.cpp; path = common/YString.cpp; sourceTree = SOURCE_ROOT; };
 		683D16F31C0B6CCE00C804DF /* YString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YString.h; path = common/YString.h; sourceTree = SOURCE_ROOT; };
-		683D16F71C0B6CD900C804DF /* Graph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Graph.cpp; path = graph/Graph.cpp; sourceTree = SOURCE_ROOT; };
+		683D16F71C0B6CD900C804DF /* GraphImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphImpl.h; path = graph/GraphImpl.h; sourceTree = SOURCE_ROOT; };
 		683D16F81C0B6CD900C804DF /* Graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Graph.h; path = graph/Graph.h; sourceTree = SOURCE_ROOT; };
 		683D16F91C0B6CD900C804DF /* IGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IGraph.h; path = graph/IGraph.h; sourceTree = SOURCE_ROOT; };
 		683D16FC1C0B6CE600C804DF /* foreach.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = foreach.hpp; path = pugixml/foreach.hpp; sourceTree = SOURCE_ROOT; };
@@ -127,7 +127,7 @@
 			children = (
 				68DEA7731C19DC0F003BBEE2 /* AlgorithmFactory.cpp */,
 				68DEA7741C19DC0F003BBEE2 /* AlgorithmFactory.h */,
-				683D16E41C0B6CBC00C804DF /* DijkstraShortPath.cpp */,
+				683D16E41C0B6CBC00C804DF /* DijkstraShortPathImpl.h */,
 				683D16E51C0B6CBC00C804DF /* DijkstraShortPath.h */,
 				683D16E61C0B6CBC00C804DF /* IAlgorithm.h */,
 			);
@@ -137,7 +137,7 @@
 		683D170A1C0B6D8800C804DF /* Graph */ = {
 			isa = PBXGroup;
 			children = (
-				683D16F71C0B6CD900C804DF /* Graph.cpp */,
+				683D16F71C0B6CD900C804DF /* GraphImpl.h */,
 				683D16F81C0B6CD900C804DF /* Graph.h */,
 				683D16F91C0B6CD900C804DF /* IGraph.h */,
 			);
@@ -241,14 +241,14 @@
 				683D16EA1C0B6CC400C804DF /* CGIProcessor.cpp in Sources */,
 				683D16F51C0B6CCE00C804DF /* ConsoleParams.cpp in Sources */,
 				683D17051C0B6CF100C804DF /* GraphMLReporter.cpp in Sources */,
-				683D16E71C0B6CBC00C804DF /* DijkstraShortPath.cpp in Sources */,
+				683D16E71C0B6CBC00C804DF /* DijkstraShortPathImpl.h in Sources */,
 				683D16F61C0B6CCE00C804DF /* YString.cpp in Sources */,
 				68E3A3DE1C1C30740050FB32 /* ReporterFactory.cpp in Sources */,
 				683D170D1C0B6E4000C804DF /* GraphOffline.cpp in Sources */,
 				68E271701C1F64AE00B6E3C1 /* Logger.cpp in Sources */,
 				68DEA7751C19DC0F003BBEE2 /* AlgorithmFactory.cpp in Sources */,
 				683D17001C0B6CE600C804DF /* pugixml.cpp in Sources */,
-				683D16FB1C0B6CD900C804DF /* Graph.cpp in Sources */,
+				683D16FB1C0B6CD900C804DF /* GraphImpl.h in Sources */,
 				683D16F41C0B6CCE00C804DF /* CaseFunctions.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

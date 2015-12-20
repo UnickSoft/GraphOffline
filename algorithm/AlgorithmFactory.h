@@ -26,7 +26,7 @@ public:
     
     static const AlgorithmFactory& GetSingleton();
     
-    std::shared_ptr<IAlgorithm> CreateAlgorithm(IndexType index) const;
+    std::shared_ptr<IAlgorithm> CreateAlgorithm(IndexType index, bool bFloat = true) const;
     
 protected:
     

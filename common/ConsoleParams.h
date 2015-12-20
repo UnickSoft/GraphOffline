@@ -12,6 +12,7 @@
 #include <map>
 #include "DijkstraShortPath.h"
 #include "AlgorithmFactory.h"
+#include "CGIProcessor.h"
 
 /**
  *  Console parameters of GraphUtility:
@@ -27,10 +28,8 @@ class ConsoleParams
 private:
 	// Report.
 	String report;
-
-	// Find shortest path using Dejkstra algorithm.
-	DijkstraShortPath* GetShortPath(const String& filename, const String& source, const String& target);
-
+    // CGI helper.
+    CGIProcessor m_cgiHelper;
 	
 	// Parse command line to private structure.
 	void ParseCommandLine (const std::vector<String>& params, ParametersMap& commands);
@@ -42,7 +41,7 @@ private:
     std::shared_ptr<IReporter> CreateReporter(const String& reporterName);
     
     // Load graph from file or from buffer.
-    bool LoadGraph(const String& soirceName, Graph& graph);
+    template <class GraphType> bool LoadGraph(const String& soirceName, GraphType& graph);
     
     // Get real param value.
     String GetRealParamName(const String& paramName);

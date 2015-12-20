@@ -12,7 +12,7 @@
 #include <map>
 #include <unordered_map>
 
-class DijkstraShortPath: public IAlgorithm
+template<class WeightTypeInterface, typename WeightType> class DijkstraShortPath : public IAlgorithm
 {
 public:
     DijkstraShortPath ();
@@ -39,16 +39,18 @@ public:
     // Hightlight edge.
     virtual NodesEdge GetHightlightEdge(IndexType index) const;
     // Get result.
-    virtual IntWeightType GetResult() const;
+    virtual FloatWeightType GetResult() const;
     // Get propery
-    virtual IntWeightType GetProperty(ObjectId, const char* name) const;
+    virtual FloatWeightType GetProperty(ObjectId, const char* name) const;
     
 protected:
     ObjectId m_source;
     ObjectId m_target;
-    const IGraph*  m_pGraph;
+    const WeightTypeInterface*  m_pGraph;
     std::vector<ObjectId> m_path;
-    std::unordered_map<ObjectId, int> m_lowestDistance;
+    std::unordered_map<ObjectId, WeightType> m_lowestDistance;
     
-    int m_result;
+    WeightType m_result;
 };
+
+#include "DijkstraShortPathImpl.h"

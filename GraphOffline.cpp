@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
         
         if (strstr(requestMethod, "POST"))
         {
-            params = CGIProcessor::GetRequestParams();
+            params = CGIProcessor().GetRequestParams();
         }
     }
     

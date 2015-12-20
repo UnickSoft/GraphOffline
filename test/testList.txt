@@ -6,3 +6,6 @@
 -dsp graph_weight_2.xml 0 3
 -dsp graph_weight_3.xml 0 3
 -dsp graph_weight_4.xml 3 4
+-dsp graph_weight_5.xml 0 1
+-dsp graph_float_weight.xml 0 1
+-dsp graph_float_weight2.xml 0 2

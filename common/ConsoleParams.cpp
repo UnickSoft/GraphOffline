@@ -53,14 +53,28 @@ bool ConsoleParams::ProcessConsoleParams(const std::vector<String>& params)
             {
                 String algorithmShortName = commands.count(ALGORITHM_NAME) > 0 ? commands[ALGORITHM_NAME] : "";
                 
-                LOG_INFO("Algorith name is " << algorithmShortName.Locale().Data() << ". Graph soure is " <<
+                LOG_INFO("Algorith name is " << algorithmShortName.Locale().Data() << ". Graph source is " <<
                          (commands.count(algorithmShortName) > 0 ? commands[algorithmShortName].Locale().Data() : "EMPTY"));
                 
                 // Graph.
-                Graph graph;
-                if (commands.count(algorithmShortName) > 0 && LoadGraph(commands[algorithmShortName], graph))
+                FloatGraph floatGraph;
+                if (commands.count(algorithmShortName) > 0 && LoadGraph(commands[algorithmShortName], floatGraph))
                 {
-                    std::shared_ptr<IAlgorithm> algorithm =  AlgorithmFactory::GetSingleton().CreateAlgorithm(&graph, algorithmShortName, commands);
+                    IGraph* pGraph = &floatGraph;
+                    
+                    IntGraph intGraph;
+                    if (floatGraph.GetEdgeWeightType() == WT_INT)
+                    {
+                        if (LoadGraph(commands[algorithmShortName], intGraph))
+                        {
+                            LOG_INFO("Graph is int");
+                            pGraph = &intGraph;
+                        }
+                    }
+                    
+                    LOG_INFO("Graph has nodes " << pGraph->GetNodesCount() << " and edges " << pGraph->GetEdgesCount());
+                    
+                    std::shared_ptr<IAlgorithm> algorithm =  AlgorithmFactory::GetSingleton().CreateAlgorithm(pGraph, algorithmShortName, commands);
                     if (algorithm)
                     {
                         res = algorithm->Calculate();
@@ -68,11 +82,13 @@ bool ConsoleParams::ProcessConsoleParams(const std::vector<String>& params)
                         
                         if (reporter)
                         {
-                            uint32_t neededSize = reporter->GetReport(algorithm.get(), &graph, nullptr, 0);
+                            LOG_INFO("Result is " << algorithm->GetResult());
+                            
+                            uint32_t neededSize = reporter->GetReport(algorithm.get(), pGraph, nullptr, 0);
                             if (neededSize > 0)
                             {
                                 char* pBuffer = new char[neededSize];
-                                reporter->GetReport(algorithm.get(), &graph, pBuffer, neededSize);
+                                reporter->GetReport(algorithm.get(), pGraph, pBuffer, neededSize);
                                 report = pBuffer;
                                 delete[] pBuffer;
                             }
@@ -117,7 +133,7 @@ String ConsoleParams::GetReport()
 	return report;
 }
 
-bool ConsoleParams::LoadGraph(const String& sourceName, Graph& graph)
+template <class GraphType> bool ConsoleParams::LoadGraph(const String& sourceName, GraphType& graph)
 {
     FileReader file;
     
@@ -137,7 +153,7 @@ bool ConsoleParams::LoadGraph(const String& sourceName, Graph& graph)
     }
     else if (sourceName == "cgiInput")
     {
-        String cgiInputXML = CGIProcessor::GetGraphBuffer();
+        String cgiInputXML = m_cgiHelper.GetGraphBuffer();
         BufferChar buffer = cgiInputXML.Locale();
         graph.LoadFromGraphML(buffer.Data(), buffer.Size());
         res = true;
@@ -166,7 +182,7 @@ String ConsoleParams::GetHelp()
 {
     String res = "GraphOffline utility calculate graph algorithms\n" \
         "Command line:\n" \
-        "Graphoffline [-debug] ALGORITH_SHORTNAME graphSource [PARAMETERS] [-report reportType]\n" \
+        "GraphOffline [-debug] ALGORITH_SHORTNAME graphSource [PARAMETERS] [-report reportType]\n" \
         "graphSource - maybe GraphML file name or cgiInput for input stream.\n"
         "-debug - output debug information.\n" \
         "-report - setup report type. By default console.\n" \

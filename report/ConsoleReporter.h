@@ -29,7 +29,14 @@ public:
         String result;
         
         char tempBuffer[MAX_REPORT] = {0};
-        sprintf(tempBuffer, "Result is %d (", pAlgorithm->GetResult());
+        if (pGraph->GetEdgeWeightType() == WT_INT)
+        {
+            sprintf(tempBuffer, "Result is %d (", (int)pAlgorithm->GetResult());
+        }
+        else
+        {
+            sprintf(tempBuffer, "Result is %f (", (float)pAlgorithm->GetResult());
+        }
         result = String(tempBuffer);
         
         for (int i = 0; i < pAlgorithm->GetHightlightEdgesCount(); i++)

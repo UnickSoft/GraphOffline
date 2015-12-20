@@ -12,7 +12,7 @@
  * Main Graph class.
  *
  */
-class Graph : public IGraph
+template<class WeightInterface, typename WeightType> class Graph : public WeightInterface
 {
 public:
     
@@ -41,7 +41,7 @@ public:
         // Operator to compare pointers.
         bool operator == (const Graph::Node* node2) const
         {
-            return get() == node2;
+            return std::shared_ptr<Node>::get() == node2;
         }
     };
     
@@ -52,8 +52,8 @@ public:
         NodePtr source;
         NodePtr target;
         bool  direct;
-        IntWeightType weight;
-        Edge(const String& id, NodePtr source, NodePtr target, bool direct, const IntWeightType& weight)
+        WeightType weight;
+        Edge(const String& id, NodePtr source, NodePtr target, bool direct, const WeightType& weight)
         {
             this->id = id;
             this->source = source;
@@ -88,14 +88,17 @@ public:
     // Is edge exists.
     virtual bool AreNodesConnected(ObjectId source, ObjectId target) const;
     // Get Egde weight. TODO: float.
-    virtual IntWeightType GetEdgeWeight(ObjectId source, ObjectId target) const;
+    virtual WeightType GetEdgeWeight(ObjectId source, ObjectId target) const;
     // Return graph string Id.
     virtual bool GetNodeStrId(ObjectId node, char* outBuffer, IndexType bufferSize) const;
     // Is edge exists in input graph.
     virtual bool IsEgdeExists(ObjectId source, ObjectId target) const;
-    
+    // Get weight real type
+    virtual EdgeWeightType GetEdgeWeightType() const;
+
     // Find Node by Id
     NodePtr FindNode(const String& id) const;
+
     
 protected:
     
@@ -116,7 +119,17 @@ protected:
     typedef std::vector<NodePtr> NodePtrVector;
     typedef std::vector<EdgePtr> EdgePtrVector;
     
+    bool IsDouble(double value);
+    
     // List of graph.
     NodePtrVector m_nodes;
     EdgePtrVector m_edges;
+    
+    EdgeWeightType m_weightType;
 };
+
+typedef Graph<IGraphInt, IntWeightType> IntGraph;
+typedef Graph<IGraphFloat, FloatWeightType> FloatGraph;
+
+#include "GraphImpl.h"
+

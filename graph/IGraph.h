@@ -13,6 +13,11 @@ typedef void* ObjectId;
 typedef uint32_t IndexType;
 // Integer edge weight
 typedef int32_t IntWeightType;
+// Float edge weight
+typedef double FloatWeightType;
+
+// Type of edges wieght.
+enum EdgeWeightType {WT_INT = 0, WT_FLOAT};
 
 /**
  * Graph base specification.
@@ -35,12 +40,28 @@ public:
     virtual ObjectId GetConnectedNode(ObjectId source, IndexType index) const = 0;
     // Is edge exists.
     virtual bool AreNodesConnected(ObjectId source, ObjectId target) const = 0;
-    // Get Egde weight. TODO: float.
-    virtual IntWeightType GetEdgeWeight(ObjectId source, ObjectId target) const = 0;
     // Return graph string Id.
     virtual bool GetNodeStrId(ObjectId node, char* outBuffer, IndexType bufferSize) const = 0;
     // Is edge exists in input graph. It is not the same with IsEgdeExists. 
     virtual bool IsEgdeExists(ObjectId source, ObjectId target) const = 0;
+    // Get weight real type
+    virtual EdgeWeightType GetEdgeWeightType() const = 0;
     
     virtual ~IGraph() {};
 };
+
+
+class IGraphInt : public IGraph
+{
+public:
+    // Get Egde weight of int graph.
+    virtual IntWeightType GetEdgeWeight(ObjectId source, ObjectId target) const = 0;
+};
+
+class IGraphFloat : public IGraph
+{
+public:
+    // Get Egde weight of int graph.
+    virtual FloatWeightType GetEdgeWeight(ObjectId source, ObjectId target) const = 0;
+};
+

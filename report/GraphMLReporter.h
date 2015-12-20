@@ -37,5 +37,13 @@ public:
     
     // @return short name for console param.
     virtual const char* GetShortName() { return "xml"; }
+    
+protected:
+    
+    /**
+     * @return report in GraphML format.
+     */
+    template <typename WeightType> IndexType GetReport(const IAlgorithmResult* pAlgorithm, const IGraph* pGraph,
+                                char* buffer, IndexType bufferSize);
 };
 
