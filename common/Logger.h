@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <sstream>
+#include "IAlgorithm.h"
 
 class Logger
 {
@@ -39,6 +40,9 @@ private:
 #define LOG_ERROR(str)   Logger(Logger::LE_ERROR).GetOutputStream() << "ERROR:" << str << std::endl;
 #define LOG_WARNING(str) Logger(Logger::LE_WARNING).GetOutputStream() << "WARNING:" << str << std::endl;
 #define LOG_INFO(str)    Logger(Logger::LE_INFORMATION).GetOutputStream() << str << std::endl;
+
+std::ostream& operator<< (std::ostream& stream, const AlgorithmResult& result);
+
 
 
 #endif /* Logger_hpp */

@@ -205,6 +205,8 @@ String ConsoleParams::GetHelp()
             paramIndex++;
         }
         
+        res = res + String("\n");
+        
         ++index;
     }
     

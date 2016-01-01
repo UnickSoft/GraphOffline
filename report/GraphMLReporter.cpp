@@ -25,8 +25,8 @@ const char* xmlGraphNodeStart = "<node id=\"%s\">\n";
 const char* xmlGraphNodeEnd = "</node>\n";
 const char* xmlGraphEdge = "<edge source=\"%s\" target=\"%s\"/>\n";
 
-const char* xmlGraphNodeLowestDistanceInt   = "<data key=\"lowestDistance\">%d</data>\n";
-const char* xmlGraphNodeLowestDistanceFloat = "<data key=\"lowestDistance\">%f</data>\n";
+const char* xmlGraphNodePropertyInt   = "<data key=\"%s\">%d</data>\n";
+const char* xmlGraphNodePropertyFloat = "<data key=\"%s\">%f</data>\n";
 
 const char* xmlGraphNodeHightlight     = "<data key=\"hightlightNode\">%d</data>\n";
 
@@ -53,22 +53,23 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
     if (pAlgorithm && pGraph)
     {
         const char* xmlGraphHeaderMask = NULL;
-        const char* xmlGraphNodeLowestDistance = NULL;
+        const char* xmlGraphNodeProperty = NULL;
         
         if (pGraph->GetEdgeWeightType() == WT_INT)
         {
             xmlGraphHeaderMask = xmlGraphHeaderMaskInt;
-            xmlGraphNodeLowestDistance = xmlGraphNodeLowestDistanceInt;
+            xmlGraphNodeProperty = xmlGraphNodePropertyInt;
         }
         else
         {
             xmlGraphHeaderMask = xmlGraphHeaderMaskFloat;
-            xmlGraphNodeLowestDistance = xmlGraphNodeLowestDistanceFloat;
+            xmlGraphNodeProperty = xmlGraphNodePropertyFloat;
         }
         
         std::string result = xmlStartShort;
         char graphHeader[MAX_NODE_CHAR]  = {0};
-        sprintf(graphHeader, xmlGraphHeaderMask, (WeightType)pAlgorithm->GetResult());
+        AlgorithmResult algorithResult =  pAlgorithm->GetResult();
+        sprintf(graphHeader, xmlGraphHeaderMask, (WeightType)(algorithResult.type == ART_INT ? algorithResult.nValue : algorithResult.fValue));
         result += graphHeader;
         
         std::map<ObjectId, bool> hightlightNodes;
@@ -86,8 +87,15 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
             sprintf(graphNode, xmlGraphNodeStart, strNodeStrId);
             result += graphNode;
             // Low dist
-            sprintf(graphNode, xmlGraphNodeLowestDistance, (WeightType)pAlgorithm->GetProperty(pGraph->GetNode(i), "lowestDistance"));
-            result += graphNode;
+            IndexType index = 0;
+            AlgorithmResult property;
+            while (pAlgorithm->GetProperty(pGraph->GetNode(i), index, &property) && property.type != ART_UNKNOWN)
+            {
+                sprintf(graphNode, xmlGraphNodeProperty, pAlgorithm->GetPropertyName(index), (WeightType)(property.type == ART_INT ? property.nValue : property.fValue));
+                result += graphNode;
+                index++;
+            }
+            
             
             // Hightlight or not
             sprintf(graphNode, xmlGraphNodeHightlight, (hightlightNodes.count(pGraph->GetNode(i)) > 0));

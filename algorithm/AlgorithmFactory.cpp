@@ -8,6 +8,8 @@
 
 #include "AlgorithmFactory.h"
 #include "DijkstraShortPath.h"
+#include "EulerianLoop.h"
+#include "ConnectedComponent.h"
 
 std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(const IGraph* pGraph, const String& name, const ParametersMap& map) const
 {
@@ -77,7 +79,7 @@ std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(IndexType index, b
     switch (index)
     {
         case 0:
-            
+        {
             IAlgorithm* pAlgorithm = NULL;
             if (bFloat)
             {
@@ -90,6 +92,18 @@ std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(IndexType index, b
             
             res = std::shared_ptr<IAlgorithm>(pAlgorithm);
             break;
+        }
+        case 1:
+        {
+            res = std::shared_ptr<IAlgorithm>(new EulerianLoop());
+            break;
+        }
+            
+        case 2:
+        {
+            res = std::shared_ptr<IAlgorithm>(new ConnectedComponent());;
+            break;
+        }
     }
  
     return res;

@@ -1,32 +1,35 @@
-/**
- *
- *  Interface for algorithm.
- */
+//
+//  ConnectedСomponent.hpp
+//  Graphoffline
+//
+//  Created by Олег on 27.12.15.
+//
+//
 
+#ifndef Connected_Component_hpp
+#define Connected_Component_hpp
 
-#pragma once
+#include <stdio.h>
 
+#include <stdio.h>
 #include "IAlgorithm.h"
 #include "IGraph.h"
-#include <vector>
-#include <map>
-#include <unordered_map>
 
-template<class WeightTypeInterface, typename WeightType> class DijkstraShortPath : public IAlgorithm
+class ConnectedComponent : public IAlgorithm
 {
 public:
-    DijkstraShortPath ();
-    virtual ~DijkstraShortPath ();
+    ConnectedComponent ();
+    virtual ~ConnectedComponent ();
     
     // Long name of algoright: DijkstraShortPath.
-    virtual const char* GetFullName() const {return "DijkstraShortPath";};
+    virtual const char* GetFullName() const {return "Connected component";};
     // Short name of algorithm: dsp
-    virtual const char* GetShortName() const {return "dsp";};
-    // Enum parameters.
+    virtual const char* GetShortName() const {return "concomp";};
+    // Enum parameters
     virtual bool EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const;
     // Set parameter to algorithm.
     virtual void SetParameter(const char* name, ObjectId id);
-    // Set graph.
+    // Set graph
     virtual void SetGraph(const IGraph* pGraph);
     // Calculate algorithm.
     virtual bool Calculate();
@@ -40,18 +43,13 @@ public:
     virtual NodesEdge GetHightlightEdge(IndexType index) const;
     // Get result.
     virtual AlgorithmResult GetResult() const;
-    // Get property.
+    // Get propery
     virtual bool GetProperty(ObjectId object, IndexType index, AlgorithmResult* param) const;
     virtual const char* GetPropertyName(IndexType index) const;
     
-protected:
-    ObjectId m_source;
-    ObjectId m_target;
-    const WeightTypeInterface*  m_pGraph;
-    std::vector<ObjectId> m_path;
-    std::unordered_map<ObjectId, WeightType> m_lowestDistance;
+private:
     
-    WeightType m_result;
+    const IGraph* m_pGraph;
 };
 
-#include "DijkstraShortPathImpl.h"
+#endif /* Connected_Component_hpp */

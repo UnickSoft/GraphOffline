@@ -8,6 +8,7 @@
 #pragma once
 
 #include "IGraph.h"
+#include <ostream>
 
 // Edge struct.
 struct NodesEdge
@@ -22,6 +23,17 @@ struct AlgorithmParam
 {
     AlgorithmParamType type;
     char paramName[16];
+};
+
+enum AlgorithmResultType {ART_UNKNOWN = 0, ART_INT, ART_FLOAT, ART_STRING};
+
+struct AlgorithmResult
+{
+    AlgorithmResult () : type(ART_UNKNOWN) {}
+    AlgorithmResultType type;
+    IntWeightType nValue;
+    FloatWeightType fValue;
+    char strValue[64];
 };
 
 // If path is not avalible, it may have result.
@@ -58,9 +70,10 @@ public:
   // Hightlight edge.
   virtual NodesEdge GetHightlightEdge(IndexType index) const = 0;
   // Get result.
-  virtual FloatWeightType GetResult() const = 0;
+  virtual AlgorithmResult GetResult() const = 0;
   // Get propery
-  virtual FloatWeightType GetProperty(ObjectId object, const char* name) const = 0;
+  virtual bool GetProperty(ObjectId object, IndexType index, AlgorithmResult* param) const = 0;
+  virtual const char* GetPropertyName(IndexType index) const = 0;
     
   virtual ~IAlgorithmResult() {}
 };
@@ -68,3 +81,4 @@ public:
 class IAlgorithm : public IAlgorithmEngine, public IAlgorithmResult 
 {
 };
+

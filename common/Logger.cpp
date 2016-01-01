@@ -53,3 +53,18 @@ std::ostringstream& Logger::GetOutputStream()
 {
     return m_outputStream;
 }
+
+
+std::ostream& operator<< (std::ostream& stream, const AlgorithmResult& result)
+{
+    switch (result.type)
+    {
+        case ART_UNKNOWN:   stream << "Unknown"; break;
+        case ART_INT:       stream << result.nValue; break;
+        case ART_FLOAT:     stream << result.fValue; break;
+        case ART_STRING:    stream << result.strValue; break;
+    }
+    return stream;
+}
+
+

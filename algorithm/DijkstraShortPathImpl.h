@@ -12,10 +12,13 @@
 
 template<class WeightTypeInterface, typename WeightType> DijkstraShortPath<WeightTypeInterface, WeightType>::DijkstraShortPath ()
 {
-  m_source = 0;
-  m_target = 0;
-  m_pGraph = NULL;
-  m_result = INFINITY_PATH_INT;
+    m_source = 0;
+    m_target = 0;
+    m_pGraph = NULL;
+    m_result = INFINITY_PATH_INT;
+    
+    // We support only 2 types;
+    static_assert(sizeof(WeightType) == sizeof(FloatWeightType) || sizeof(WeightType) == sizeof(IntWeightType));
 }
 
 template<class WeightTypeInterface, typename WeightType> DijkstraShortPath<WeightTypeInterface, WeightType>::~DijkstraShortPath ()
@@ -168,14 +171,43 @@ template<class WeightTypeInterface, typename WeightType> NodesEdge DijkstraShort
   return edge;
 }
 
-template<class WeightTypeInterface, typename WeightType> FloatWeightType DijkstraShortPath<WeightTypeInterface, WeightType>::GetResult() const
+template<class WeightTypeInterface, typename WeightType> AlgorithmResult DijkstraShortPath<WeightTypeInterface, WeightType>::GetResult() const
 {
-  return (FloatWeightType) m_result;
+    AlgorithmResult result;
+    
+    if (typeid(WeightType) == typeid(FloatWeightType))
+    {
+        result.type = ART_FLOAT;
+        result.fValue = (FloatWeightType) m_result;
+    }
+    else
+    {
+        result.type = ART_INT;
+        result.nValue = (IntWeightType) m_result;
+    }
+    return result;
 }
 
-template<class WeightTypeInterface, typename WeightType> FloatWeightType DijkstraShortPath<WeightTypeInterface, WeightType>::GetProperty(ObjectId object, const char* name) const
+template<class WeightTypeInterface, typename WeightType> bool DijkstraShortPath<WeightTypeInterface, WeightType>::GetProperty(ObjectId object, IndexType index, AlgorithmResult* param) const
 {
-	return (FloatWeightType)(strcmp(name, "lowestDistance") == 0 ? m_lowestDistance.at(object) : 0);
+    bool result = false;
+    
+    if (m_lowestDistance.count(object) > 0 && index == 0 && param)
+    {
+        if (typeid(WeightType) == typeid(FloatWeightType))
+        {
+            param->type = ART_FLOAT;
+            param->fValue = (FloatWeightType) m_lowestDistance.at(object);
+        }
+        else
+        {
+            param->type = ART_INT;
+            param->nValue = (IntWeightType) m_lowestDistance.at(object);
+        }
+        result = true;
+    }
+
+    return result;
 }
 
 // Set graph
@@ -183,5 +215,17 @@ template<class WeightTypeInterface, typename WeightType> void DijkstraShortPath<
 {
     //(TODO)
     m_pGraph = dynamic_cast<const WeightTypeInterface*>(pGraph);
+}
+
+template<class WeightTypeInterface, typename WeightType> const char* DijkstraShortPath<WeightTypeInterface, WeightType>::GetPropertyName(IndexType index) const
+{
+    if (index == 0)
+    {
+        return "lowestDistance";
+    }
+    else
+    {
+        return nullptr;
+    }
 }
 

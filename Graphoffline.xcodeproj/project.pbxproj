@@ -17,6 +17,8 @@
 		683D17051C0B6CF100C804DF /* GraphMLReporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D17021C0B6CF100C804DF /* GraphMLReporter.cpp */; };
 		683D170D1C0B6E4000C804DF /* GraphOffline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D170C1C0B6E4000C804DF /* GraphOffline.cpp */; };
 		68DEA7751C19DC0F003BBEE2 /* AlgorithmFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68DEA7731C19DC0F003BBEE2 /* AlgorithmFactory.cpp */; };
+		68DF5ACC1C308AF4005502FA /* ConnectedComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68DF5ACA1C308AF4005502FA /* ConnectedComponent.cpp */; };
+		68E0F81F1C2F41450001E127 /* EulerianLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68E0F81D1C2F41450001E127 /* EulerianLoop.cpp */; };
 		68E271701C1F64AE00B6E3C1 /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68E2716E1C1F64AE00B6E3C1 /* Logger.cpp */; };
 		68E3A3DE1C1C30740050FB32 /* ReporterFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68E3A3DC1C1C30740050FB32 /* ReporterFactory.cpp */; };
 /* End PBXBuildFile section */
@@ -62,6 +64,10 @@
 		683D170C1C0B6E4000C804DF /* GraphOffline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphOffline.cpp; sourceTree = SOURCE_ROOT; };
 		68DEA7731C19DC0F003BBEE2 /* AlgorithmFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AlgorithmFactory.cpp; path = algorithm/AlgorithmFactory.cpp; sourceTree = SOURCE_ROOT; };
 		68DEA7741C19DC0F003BBEE2 /* AlgorithmFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlgorithmFactory.h; path = algorithm/AlgorithmFactory.h; sourceTree = SOURCE_ROOT; };
+		68DF5ACA1C308AF4005502FA /* ConnectedComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConnectedComponent.cpp; path = algorithm/ConnectedComponent.cpp; sourceTree = SOURCE_ROOT; };
+		68DF5ACB1C308AF4005502FA /* ConnectedComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConnectedComponent.h; path = algorithm/ConnectedComponent.h; sourceTree = SOURCE_ROOT; };
+		68E0F81D1C2F41450001E127 /* EulerianLoop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EulerianLoop.cpp; path = algorithm/EulerianLoop.cpp; sourceTree = SOURCE_ROOT; };
+		68E0F81E1C2F41450001E127 /* EulerianLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EulerianLoop.h; path = algorithm/EulerianLoop.h; sourceTree = SOURCE_ROOT; };
 		68E2716E1C1F64AE00B6E3C1 /* Logger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Logger.cpp; path = common/Logger.cpp; sourceTree = SOURCE_ROOT; };
 		68E2716F1C1F64AE00B6E3C1 /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logger.h; path = common/Logger.h; sourceTree = SOURCE_ROOT; };
 		68E3A3DC1C1C30740050FB32 /* ReporterFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ReporterFactory.cpp; path = report/ReporterFactory.cpp; sourceTree = SOURCE_ROOT; };
@@ -130,6 +136,10 @@
 				683D16E41C0B6CBC00C804DF /* DijkstraShortPathImpl.h */,
 				683D16E51C0B6CBC00C804DF /* DijkstraShortPath.h */,
 				683D16E61C0B6CBC00C804DF /* IAlgorithm.h */,
+				68E0F81D1C2F41450001E127 /* EulerianLoop.cpp */,
+				68E0F81E1C2F41450001E127 /* EulerianLoop.h */,
+				68DF5ACA1C308AF4005502FA /* ConnectedComponent.cpp */,
+				68DF5ACB1C308AF4005502FA /* ConnectedComponent.h */,
 			);
 			name = Algorithms;
 			sourceTree = "<group>";
@@ -239,6 +249,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				683D16EA1C0B6CC400C804DF /* CGIProcessor.cpp in Sources */,
+				68E0F81F1C2F41450001E127 /* EulerianLoop.cpp in Sources */,
 				683D16F51C0B6CCE00C804DF /* ConsoleParams.cpp in Sources */,
 				683D17051C0B6CF100C804DF /* GraphMLReporter.cpp in Sources */,
 				683D16E71C0B6CBC00C804DF /* DijkstraShortPathImpl.h in Sources */,
@@ -250,6 +261,7 @@
 				683D17001C0B6CE600C804DF /* pugixml.cpp in Sources */,
 				683D16FB1C0B6CD900C804DF /* GraphImpl.h in Sources */,
 				683D16F41C0B6CCE00C804DF /* CaseFunctions.cpp in Sources */,
+				68DF5ACC1C308AF4005502FA /* ConnectedComponent.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
