@@ -34,7 +34,7 @@ std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(const IGraph* pGra
                     case APT_NODE:
                     {
                         ObjectId id = pGraph->GetNode(map.at(outParamInfo.paramName).Locale().Data());
-                        if (id != nullptr)
+                        if (id != 0)
                         {
                             res->SetParameter(outParamInfo.paramName, id);
                         }

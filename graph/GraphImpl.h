@@ -4,6 +4,7 @@
 #include "pugixml.hpp"
 #include <algorithm>
 #include <math.h>
+#include "Logger.h"
 
 // Find Edge funtor.
 template<class _WeightInterface, typename _WeightType> class FindEdgeFunctor
@@ -26,6 +27,7 @@ public:
 template<class WeightInterface, typename WeightType> Graph<WeightInterface, WeightType>::Graph(void)
 {
     m_weightType = WT_INT;
+    m_autoIncIndex = 1; // 0 is invalid value.
 }
 
 template<class WeightInterface, typename WeightType> Graph<WeightInterface, WeightType>::~Graph(void)
@@ -82,7 +84,7 @@ template<class WeightInterface, typename WeightType> bool Graph<WeightInterface,
                 pugi::xml_object_range<pugi::xml_named_node_iterator> nodeList = graph.children("node");
                 for (pugi::xml_named_node_iterator node = nodeList.begin(); node != nodeList.end(); node++)
                 {
-                    m_nodes.push_back(NodePtr(new Node(String(node->attribute("id").value()))));
+                    m_nodes.push_back(NodePtr(new Node(String(node->attribute("id").value()), GetNextId())));
                 }
                 
                 // Enum edges.
@@ -106,7 +108,7 @@ template<class WeightInterface, typename WeightType> bool Graph<WeightInterface,
                     }
                     
                     m_edges.push_back(
-                                      EdgePtr(new Edge(String(edge->attribute("id").value()), sourceNode, targetNode, direct, weight)));
+                                      EdgePtr(new Edge(String(edge->attribute("id").value()), sourceNode, targetNode, direct, weight, GetNextId())));
                     
                     // Add to nodes.
                     if (!FindNode(targetNode->id, sourceNode->targets))
@@ -173,10 +175,10 @@ template<class WeightInterface, typename WeightType> template <typename T> T Gra
 template<class WeightInterface, typename WeightType> template <typename T> T Graph<WeightInterface, WeightType>::FindNode(ObjectId objectId, const std::vector<T>& nodes) const
 {
     T node = T(nullptr);
-    Node* nodeObject = (Node*)objectId;
+    //Node* nodeObject = (Node*)objectId;
     for (int i = 0; i < nodes.size(); i++)
     {
-        if (nodes[i] == nodeObject)
+        if (nodes[i]->privateId == objectId)
         {
             node = nodes[i];
             break;
@@ -194,13 +196,13 @@ template<class WeightInterface, typename WeightType> IndexType Graph<WeightInter
 
 template<class WeightInterface, typename WeightType> ObjectId Graph<WeightInterface, WeightType>::GetNode(IndexType index) const
 {
-  return m_nodes[index].get();
+  return m_nodes[index].get()->privateId;
 }
 
 template<class WeightInterface, typename WeightType>  ObjectId Graph<WeightInterface, WeightType>::GetNode(const char* nodeId) const
 {
     NodePtr res = FindNode(String().FromLocale(nodeId));
-    return res ? res.get() : nullptr;
+    return res ? res.get()->privateId : 0;
 }
 
 
@@ -229,7 +231,7 @@ template<class WeightInterface, typename WeightType>  ObjectId Graph<WeightInter
     NodePtr sourcePtr;
     if (IsValidNodeId(source, sourcePtr))
     {
-        res = sourcePtr->targets[index];
+        res = sourcePtr->targets[index]->privateId;
     }
     return res;
 }
@@ -238,7 +240,7 @@ template<class WeightInterface, typename WeightType>  ObjectId Graph<WeightInter
 template<class WeightInterface, typename WeightType>  bool Graph<WeightInterface, WeightType>::AreNodesConnected(ObjectId source, ObjectId target) const
 {
   bool res = false;
-    NodePtr sourcePtr, targetPtr;
+  NodePtr sourcePtr, targetPtr;
   if (IsValidNodeId(source, sourcePtr) && IsValidNodeId(target, targetPtr))
   {
     res = Has<Node*, NodePtr>(sourcePtr->targets, targetPtr);
@@ -250,7 +252,7 @@ template<class WeightInterface, typename WeightType>  bool Graph<WeightInterface
 template<class WeightInterface, typename WeightType>  bool Graph<WeightInterface, WeightType>::IsEgdeExists(ObjectId source, ObjectId target) const
 {
   bool res = false;
-    NodePtr sourcePtr, targetPtr;
+  NodePtr sourcePtr, targetPtr;
   if (IsValidNodeId(source, sourcePtr) && IsValidNodeId(target, targetPtr))
   {
     for (int i = 0; i < m_edges.size(); i++)
@@ -268,13 +270,20 @@ template<class WeightInterface, typename WeightType>  bool Graph<WeightInterface
 // Get Egde weight. TODO: float.
 template<class WeightInterface, typename WeightType> WeightType Graph<WeightInterface, WeightType>::GetEdgeWeight(ObjectId source, ObjectId target) const
 {
-  WeightType res = 1;
-  EdgePtr edge = FindEdge(source, target);
-  if (edge)
-  {
-    res = (WeightType)edge->weight;
-  }
-  return res;
+    WeightType res = 1;
+    EdgePtr edge = FindEdge(source, target);
+    assert(edge);
+
+    if (edge)
+    {
+        res = (WeightType)edge->weight;
+    }
+    else
+    {
+        LOG_WARNING("Cannot find edge from " << source << " to " << target);
+    }
+    
+    return res;
 }
 
 // Return graph string Id.
@@ -325,7 +334,7 @@ template<class WeightInterface, typename WeightType> typename Graph<WeightInterf
         Node* targetNode = (Node*)target;
         
         auto edgeIterator =
-        std::find_if(m_edges.begin(), m_edges.end(), FindEdgeFunctor<WeightInterface, WeightType>(sourceNode, targetNode));
+        std::find_if(m_edges.begin(), m_edges.end(), FindEdgeFunctor<WeightInterface, WeightType>(sourcePtr.get(), targetPtr.get()));
         
         if (edgeIterator != m_edges.end())
         {
@@ -345,4 +354,16 @@ template<class WeightInterface, typename WeightType> bool Graph<WeightInterface,
 template<class WeightInterface, typename WeightType> EdgeWeightType Graph<WeightInterface, WeightType>::GetEdgeWeightType() const
 {
     return m_weightType;
+}
+
+
+// Create copy of graph.
+template<class WeightInterface, typename WeightType> WeightInterface* Graph<WeightInterface, WeightType>::MakeCopy(GraphCopyType type)
+{
+    return this;
+}
+
+template<class WeightInterface, typename WeightType> IndexType Graph<WeightInterface, WeightType>::GetNextId()
+{
+    return ++m_autoIncIndex;
 }

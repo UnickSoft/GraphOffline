@@ -50,6 +50,7 @@ public:
 private:
     
     const IGraph* m_pGraph;
+    IntWeightType m_nConnectedCompCount;
 };
 
 #endif /* Connected_Component_hpp */

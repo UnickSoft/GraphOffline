@@ -25,10 +25,12 @@ public:
     struct Node
     {
         String id;
+        IndexType privateId;
         
-        Node(const String& id)
+        Node(const String& id, IndexType privateId)
         {
             this->id = id;
+            this->privateId = privateId;
         }
         std::vector<Node*> targets;
     };
@@ -53,13 +55,16 @@ public:
         NodePtr target;
         bool  direct;
         WeightType weight;
-        Edge(const String& id, NodePtr source, NodePtr target, bool direct, const WeightType& weight)
+        IndexType privateId;
+        
+        Edge(const String& id, NodePtr source, NodePtr target, bool direct, const WeightType& weight, IndexType privateId)
         {
             this->id = id;
             this->source = source;
             this->target = target;
             this->direct = direct;
             this->weight = weight;
+            this->privateId = privateId;
         }
     };
     
@@ -95,10 +100,11 @@ public:
     virtual bool IsEgdeExists(ObjectId source, ObjectId target) const;
     // Get weight real type
     virtual EdgeWeightType GetEdgeWeightType() const;
+    // Create copy of graph.
+    virtual WeightInterface* MakeCopy(GraphCopyType type);
 
     // Find Node by Id
     NodePtr FindNode(const String& id) const;
-
     
 protected:
     
@@ -121,11 +127,14 @@ protected:
     
     bool IsDouble(double value);
     
+    IndexType GetNextId();
+    
     // List of graph.
     NodePtrVector m_nodes;
     EdgePtrVector m_edges;
     
     EdgeWeightType m_weightType;
+    IndexType      m_autoIncIndex;
 };
 
 typedef Graph<IGraphInt, IntWeightType> IntGraph;

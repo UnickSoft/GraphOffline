@@ -7,10 +7,10 @@
 
 #include <cstdint>
 
-// Id of any object
-typedef void* ObjectId;
 // Index value
 typedef uint32_t IndexType;
+// Id of any object
+typedef IndexType ObjectId;
 // Integer edge weight
 typedef int32_t IntWeightType;
 // Float edge weight
@@ -18,6 +18,9 @@ typedef double FloatWeightType;
 
 // Type of edges wieght.
 enum EdgeWeightType {WT_INT = 0, WT_FLOAT};
+
+// Graph copy type.
+enum GraphCopyType {GCT_COPY = 0, GTC_MAKE_UNDIRECTED};
 
 /**
  * Graph base specification.
@@ -56,6 +59,9 @@ class IGraphInt : public IGraph
 public:
     // Get Egde weight of int graph.
     virtual IntWeightType GetEdgeWeight(ObjectId source, ObjectId target) const = 0;
+    
+    // Create copy of graph.
+    virtual IGraphInt* MakeCopy(GraphCopyType type) = 0;
 };
 
 class IGraphFloat : public IGraph
@@ -63,5 +69,8 @@ class IGraphFloat : public IGraph
 public:
     // Get Egde weight of int graph.
     virtual FloatWeightType GetEdgeWeight(ObjectId source, ObjectId target) const = 0;
+    
+    // Create copy of graph.
+    virtual IGraphFloat* MakeCopy(GraphCopyType type) = 0;
 };
 

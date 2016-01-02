@@ -30,6 +30,8 @@ enum AlgorithmResultType {ART_UNKNOWN = 0, ART_INT, ART_FLOAT, ART_STRING};
 struct AlgorithmResult
 {
     AlgorithmResult () : type(ART_UNKNOWN) {}
+    explicit AlgorithmResult(IntWeightType nValue) : type(ART_INT), nValue(nValue) {};
+    explicit AlgorithmResult(FloatWeightType fValue) : type(ART_FLOAT), fValue(fValue) {};
     AlgorithmResultType type;
     IntWeightType nValue;
     FloatWeightType fValue;
