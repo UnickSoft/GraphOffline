@@ -107,22 +107,7 @@ template<class WeightInterface, typename WeightType> bool Graph<WeightInterface,
                         m_weightType = IsDouble(weight) || m_weightType == WT_FLOAT ? WT_FLOAT : WT_INT;
                     }
                     
-                    m_edges.push_back(
-                                      EdgePtr(new Edge(String(edge->attribute("id").value()), sourceNode, targetNode, direct, weight, GetNextId())));
-                    
-                    // Add to nodes.
-                    if (!FindNode(targetNode->id, sourceNode->targets))
-                    {
-                        sourceNode->targets.push_back(targetNode.get());
-                    }
-                    
-                    if (!direct)
-                    {
-                        if (!FindNode(sourceNode->id, targetNode->targets))
-                        {
-                            targetNode->targets.push_back(sourceNode.get());
-                        }
-                    }
+                    AddEdge(String(edge->attribute("id").value()), sourceNode->privateId, targetNode->privateId, direct, weight, GetNextId());
                 }
                 res = true;
             }
@@ -358,12 +343,101 @@ template<class WeightInterface, typename WeightType> EdgeWeightType Graph<Weight
 
 
 // Create copy of graph.
-template<class WeightInterface, typename WeightType> WeightInterface* Graph<WeightInterface, WeightType>::MakeCopy(GraphCopyType type)
+template<class WeightInterface, typename WeightType> WeightInterface* Graph<WeightInterface, WeightType>::MakeCopy(GraphCopyType type) const
 {
-    return this;
+    WeightInterface* res = NULL;
+    switch (type)
+    {
+        case GCT_COPY:            res = MakeGraphCopy(); break;
+        case GTC_MAKE_UNDIRECTED: res = MakeGraphUndirected(); break;
+    }
+    
+    return res;
 }
 
 template<class WeightInterface, typename WeightType> IndexType Graph<WeightInterface, WeightType>::GetNextId()
 {
     return ++m_autoIncIndex;
 }
+
+// Simple make copy
+template<class WeightInterface, typename WeightType> Graph<WeightInterface, WeightType>* Graph<WeightInterface, WeightType>::MakeGraphCopy() const
+{
+    Graph<WeightInterface, WeightType>* res = new Graph<WeightInterface, WeightType>();
+    res->m_weightType = m_weightType;
+    
+    // Create all nodes.
+    for (NodePtr node : m_nodes)
+    {
+        res->m_nodes.push_back(NodePtr(new Node(node->id, node->privateId)));
+    }
+    
+    // Add edges.
+    for (EdgePtr edge : m_edges)
+    {
+        res->AddEdge(edge->id,
+                     edge->source->privateId,
+                     edge->target->privateId,
+                     edge->direct,
+                     edge->weight,
+                     edge->privateId);
+    }
+    
+    return res;
+}
+
+// Make current graph undirected.
+template<class WeightInterface, typename WeightType> Graph<WeightInterface, WeightType>* Graph<WeightInterface, WeightType>::MakeGraphUndirected() const
+{
+    auto* res = MakeGraphCopy();
+    
+    for (EdgePtr edge : res->m_edges)
+    {
+        if (edge->direct)
+        {
+            edge->direct = false;
+            
+            // Add another nodes.
+            res->AddToTargets(edge->target, edge->source);
+        }
+    }
+    
+    return res;
+}
+
+template<class WeightInterface, typename WeightType> typename Graph<WeightInterface, WeightType>::EdgePtr Graph<WeightInterface, WeightType>::AddEdge(const String& id, IndexType sourceId, IndexType targetId, bool direct, const WeightType& weight, IndexType privateId)
+{
+    EdgePtr res = FindEdge(sourceId, targetId);
+    assert (!res);
+    
+    if (!res)
+    {
+        NodePtr sourceNode = FindNode(sourceId, m_nodes);
+        NodePtr targetNode = FindNode(targetId, m_nodes);
+        
+        res = EdgePtr(new Edge(id, sourceNode, targetNode, direct,
+                       weight, privateId));
+        
+        m_edges.push_back(res);
+        
+        AddToTargets(sourceNode, targetNode);
+        
+        if (!direct)
+        {
+            AddToTargets(targetNode, sourceNode);
+        }
+    }
+    
+    return res;
+}
+
+
+template<class WeightInterface, typename WeightType> void Graph<WeightInterface, WeightType>::AddToTargets(NodePtr source, NodePtr target)
+{
+    if (!FindNode(target->privateId, source->targets))
+    {
+        source->targets.push_back(target.get());
+    }
+}
+
+

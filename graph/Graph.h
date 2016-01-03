@@ -101,7 +101,7 @@ public:
     // Get weight real type
     virtual EdgeWeightType GetEdgeWeightType() const;
     // Create copy of graph.
-    virtual WeightInterface* MakeCopy(GraphCopyType type);
+    virtual WeightInterface* MakeCopy(GraphCopyType type) const;
 
     // Find Node by Id
     NodePtr FindNode(const String& id) const;
@@ -122,6 +122,16 @@ protected:
     // Is edge exists.
     EdgePtr FindEdge(ObjectId source, ObjectId target) const;
     
+    // Simple make copy.
+    Graph<WeightInterface, WeightType>* MakeGraphCopy() const;
+    // Make current graph undirected.
+    Graph<WeightInterface, WeightType>* MakeGraphUndirected() const;
+    
+    EdgePtr AddEdge(const String& id, IndexType sourceId, IndexType targetId, bool direct, const WeightType& weight, IndexType privateId);
+    
+    // Add node to targets of source.
+    void AddToTargets(NodePtr source, NodePtr target);
+    
     typedef std::vector<NodePtr> NodePtrVector;
     typedef std::vector<EdgePtr> EdgePtrVector;
     
@@ -135,6 +145,8 @@ protected:
     
     EdgeWeightType m_weightType;
     IndexType      m_autoIncIndex;
+    
+    // ATTANTION: If you add new fields please update MakeGraphCopy.
 };
 
 typedef Graph<IGraphInt, IntWeightType> IntGraph;

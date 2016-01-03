@@ -45,42 +45,57 @@ bool ConnectedComponent::Calculate()
     
     if (m_pGraph->GetNodesCount() > 0)
     {
-        std::unordered_set<ObjectId> processedNodes;
+        IGraph* pGraph = NULL;
         
-        while (processedNodes.size() != m_pGraph->GetNodesCount())
+        const IGraphFloat * pFloatGraph = dynamic_cast<const IGraphFloat*>(m_pGraph);
+        if (pFloatGraph)
         {
-            // Find Next comonent.
-            ObjectId firstComponentNode = 0;
-            for (int i = 0; i < m_pGraph->GetNodesCount(); i ++)
-            {
-                firstComponentNode = m_pGraph->GetNode(i);
-                if (processedNodes.count(firstComponentNode) == 0)
-                {
-                    processedNodes.insert(firstComponentNode);
-                    break;
-                }
-            }
-            
+            pGraph = pFloatGraph->MakeCopy(GTC_MAKE_UNDIRECTED);
+        }
+        const IGraphInt * pIntGraph = dynamic_cast<const IGraphInt*>(m_pGraph);
+        if (pIntGraph)
+        {
+            pGraph = pIntGraph->MakeCopy(GTC_MAKE_UNDIRECTED);
+        }
         
-            // Find all nodes from this component.
-            std::queue<ObjectId> currentQuary;
-            currentQuary.push(firstComponentNode);
-            while (!currentQuary.empty())
+        if (pGraph)
+        {
+            std::unordered_set<ObjectId> processedNodes;
+            
+            while (processedNodes.size() != pGraph->GetNodesCount())
             {
-                ObjectId currentNode = currentQuary.front();
-                currentQuary.pop();
-                for (int i = 0; i < m_pGraph->GetConnectedNodes(currentNode); i ++)
+                // Find Next comonent.
+                ObjectId firstComponentNode = 0;
+                for (int i = 0; i < pGraph->GetNodesCount(); i ++)
                 {
-                    ObjectId neighborhoodNode = m_pGraph->GetConnectedNode(currentNode, i);
-                    if (processedNodes.count(neighborhoodNode) == 0)
+                    firstComponentNode = pGraph->GetNode(i);
+                    if (processedNodes.count(firstComponentNode) == 0)
                     {
-                        currentQuary.push(neighborhoodNode);
-                        processedNodes.insert(neighborhoodNode);
+                        processedNodes.insert(firstComponentNode);
+                        break;
                     }
                 }
+                
+                // Find all nodes from this component.
+                std::queue<ObjectId> currentQuary;
+                currentQuary.push(firstComponentNode);
+                while (!currentQuary.empty())
+                {
+                    ObjectId currentNode = currentQuary.front();
+                    currentQuary.pop();
+                    for (int i = 0; i < pGraph->GetConnectedNodes(currentNode); i ++)
+                    {
+                        ObjectId neighborhoodNode = pGraph->GetConnectedNode(currentNode, i);
+                        if (processedNodes.count(neighborhoodNode) == 0)
+                        {
+                            currentQuary.push(neighborhoodNode);
+                            processedNodes.insert(neighborhoodNode);
+                        }
+                    }
+                }
+                
+                m_nConnectedCompCount++;
             }
-            
-            m_nConnectedCompCount++;
         }
         
     }

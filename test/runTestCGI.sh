@@ -15,4 +15,4 @@ else
     echo "Failed."
 fi
 
-# rm *.test >/dev/null
+rm *.test >/dev/null

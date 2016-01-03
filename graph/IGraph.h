@@ -61,7 +61,7 @@ public:
     virtual IntWeightType GetEdgeWeight(ObjectId source, ObjectId target) const = 0;
     
     // Create copy of graph.
-    virtual IGraphInt* MakeCopy(GraphCopyType type) = 0;
+    virtual IGraphInt* MakeCopy(GraphCopyType type) const = 0;
 };
 
 class IGraphFloat : public IGraph
@@ -71,6 +71,6 @@ public:
     virtual FloatWeightType GetEdgeWeight(ObjectId source, ObjectId target) const = 0;
     
     // Create copy of graph.
-    virtual IGraphFloat* MakeCopy(GraphCopyType type) = 0;
+    virtual IGraphFloat* MakeCopy(GraphCopyType type) const = 0;
 };
 
