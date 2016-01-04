@@ -1,36 +1,43 @@
 # @echo off
 
 if [ "$1" == "-linux" ]; then
-    exePath=../bin/Linux/Release/GraphOffline;
+    export exePath=../../bin/Linux/Release/GraphOffline;
 else
-    exePath=../bin/Mac/Release/GraphOffline;
+    export exePath=../../bin/Mac/Release/GraphOffline;
 fi
 
-isFaild=0;
+totalResult=0
 
-rm *.test &>/dev/null
+find . -type d -maxdepth 1 -mindepth 1 | while read d; do
+    cd "$d"
+    if [[ $2 != "-debug" ]]
+    then
+        ./_runTests.sh $1 $2 > /dev/null
+    else
+        ./_runTests.sh $1 $2
+    fi
+    rc=$?
 
-while IFS=$' ' read -r command xmlFile startGraph finishGraph ; do
+    printf $d
+    if [[ $rc != 0 ]]
+    then
+        echo " Failed"
+        totalResult = $rc
+    else
+        echo " Ok"
+    fi
 
-  if [ "$2" == "-debug" ]; then
-    echo "$exePath ${command} ./${xmlFile} -start ${startGraph} -finish ${finishGraph} > ${xmlFile}.test"
-  fi
-  $exePath ${command} ./${xmlFile} -start ${startGraph} -finish ${finishGraph} > ${xmlFile}.test
+    cd ..
+done
 
-  if diff --ignore-all-space ${xmlFile}.res ${xmlFile}.test >/dev/null ; then
-    continue;
-  else
-    isFaild=1;
-    echo "${xmlFile} failed."
-    break;
-  fi
-done < "testList.txt"
-
-if [ $isFaild -eq 1 ]; then
-  echo "Failed";
-  exit 1;
+if [[ $totalResult != 0 ]]
+then
+    echo "-- FAILED --"
 else
-  echo "OK"
-  rm *.test &>/dev/null
+    echo "-- OK --"
 fi
 
+exit $totalResult
+
+
+# find . -type d -exec sh -c '(cd {} && ./_runTests.sh)' ';'
