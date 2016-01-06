@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <math.h>
 #include "Logger.h"
+#include <unordered_set>
 
 // Find Edge funtor.
 template<class _WeightInterface, typename _WeightType> class FindEdgeFunctor
@@ -24,10 +25,40 @@ public:
   typename Graph<_WeightInterface, _WeightType>::Node* targetNode;
 };
 
+
+// Base Enum to exclude infinity loop.
+class BaseEnumStrategy : public IEnumStrategy
+{
+public:
+    BaseEnumStrategy (IEnumStrategy* pUserStrategy) : m_pUserStrategy(pUserStrategy) {;}
+    
+    virtual void StartProcessNode(ObjectId nodeId)
+    {
+        processedNode.insert(nodeId);
+        m_pUserStrategy->StartProcessNode(nodeId);
+    }
+    
+    virtual bool NeedProcessChild(ObjectId nodeId, ObjectId childId)
+    {
+        return m_pUserStrategy->NeedProcessChild(nodeId, childId) &&
+            processedNode.find(childId) == processedNode.end();
+    }
+    
+    virtual void FinishProcessNode(ObjectId nodeId)
+    {
+        m_pUserStrategy->FinishProcessNode(nodeId);
+    }
+    
+protected:
+    IEnumStrategy* m_pUserStrategy;
+    std::unordered_set<ObjectId> processedNode;
+};
+
 template<class WeightInterface, typename WeightType> Graph<WeightInterface, WeightType>::Graph(void)
 {
     m_weightType = WT_INT;
     m_autoIncIndex = 1; // 0 is invalid value.
+    m_bDirected = false;
 }
 
 template<class WeightInterface, typename WeightType> Graph<WeightInterface, WeightType>::~Graph(void)
@@ -350,6 +381,7 @@ template<class WeightInterface, typename WeightType> WeightInterface* Graph<Weig
     {
         case GCT_COPY:            res = MakeGraphCopy(); break;
         case GTC_MAKE_UNDIRECTED: res = MakeGraphUndirected(); break;
+        case GTC_INVERSE:         res = MakeGraphInverse(); break;
     }
     
     return res;
@@ -391,14 +423,17 @@ template<class WeightInterface, typename WeightType> Graph<WeightInterface, Weig
 {
     auto* res = MakeGraphCopy();
     
-    for (EdgePtr edge : res->m_edges)
+    if (res->m_bDirected)
     {
-        if (edge->direct)
+        for (EdgePtr edge : res->m_edges)
         {
-            edge->direct = false;
-            
-            // Add another nodes.
-            res->AddToTargets(edge->target, edge->source);
+            if (edge->direct)
+            {
+                edge->direct = false;
+                
+                // Add another nodes.
+                res->AddToTargets(edge->target, edge->source);
+            }
         }
     }
     
@@ -426,6 +461,8 @@ template<class WeightInterface, typename WeightType> typename Graph<WeightInterf
         {
             AddToTargets(targetNode, sourceNode);
         }
+        
+        m_bDirected = m_bDirected || direct;
     }
     
     return res;
@@ -438,6 +475,67 @@ template<class WeightInterface, typename WeightType> void Graph<WeightInterface,
     {
         source->targets.push_back(target.get());
     }
+}
+
+
+template<class WeightInterface, typename WeightType> IGraph* Graph<WeightInterface, WeightType>::MakeBaseCopy(GraphCopyType type) const
+{
+    return MakeCopy(type);
+}
+
+// Is graph directed or not.
+template<class WeightInterface, typename WeightType> bool Graph<WeightInterface, WeightType>::IsDirected() const
+{
+    return m_bDirected;
+}
+
+// Make current graph undirected.
+template<class WeightInterface, typename WeightType> Graph<WeightInterface, WeightType>* Graph<WeightInterface, WeightType>::MakeGraphInverse() const
+{
+    Graph<WeightInterface, WeightType>* res = new Graph<WeightInterface, WeightType>();
+    res->m_weightType = m_weightType;
+    
+    // Create all nodes.
+    for (NodePtr node : m_nodes)
+    {
+        res->m_nodes.push_back(NodePtr(new Node(node->id, node->privateId)));
+    }
+    
+    // Add edges.
+    for (EdgePtr edge : m_edges)
+    {
+        res->AddEdge(edge->id,
+                     edge->target->privateId,
+                     edge->source->privateId,
+                     edge->direct,
+                     edge->weight,
+                     edge->privateId);
+    }
+    
+    return res;
+}
+
+template<class WeightInterface, typename WeightType> void Graph<WeightInterface, WeightType>::ProcessDFS(IEnumStrategy* pEnumStrategy, ObjectId startedNode) const
+{
+    BaseEnumStrategy baseEnumStrategy(pEnumStrategy);
+    _ProcessDFS(&baseEnumStrategy, FindNode(startedNode, m_nodes).get());
+}
+
+template<class WeightInterface, typename WeightType> void Graph<WeightInterface, WeightType>::_ProcessDFS(IEnumStrategy* pEnumStrategy, Node* node) const
+{
+    assert (node);
+    
+    pEnumStrategy->StartProcessNode(node->privateId);
+    
+    for (Node* childNode : node->targets)
+    {
+        if (pEnumStrategy->NeedProcessChild(node->privateId, childNode->privateId))
+        {
+            _ProcessDFS(pEnumStrategy, childNode);
+        }
+    }
+    
+    pEnumStrategy->FinishProcessNode(node->privateId);
 }
 
 

@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 
 // Index value
 typedef uint32_t IndexType;
@@ -20,7 +21,26 @@ typedef double FloatWeightType;
 enum EdgeWeightType {WT_INT = 0, WT_FLOAT};
 
 // Graph copy type.
-enum GraphCopyType {GCT_COPY = 0, GTC_MAKE_UNDIRECTED};
+enum GraphCopyType {GCT_COPY = 0, GTC_MAKE_UNDIRECTED, GTC_INVERSE};
+
+
+/**
+ * Call back for enum nodes methods (DFS, BSF).
+ *
+ */
+class IEnumStrategy
+{
+public:
+    
+    // We started process this node.
+    virtual void StartProcessNode(ObjectId nodeId) = 0;
+    // @return true if we need to process this child node.
+    virtual bool NeedProcessChild(ObjectId nodeId, ObjectId childId) = 0;
+    // We finish process this node.
+    virtual void FinishProcessNode(ObjectId nodeId) = 0;
+    
+    virtual ~IEnumStrategy() {}
+};
 
 /**
  * Graph base specification.
@@ -49,6 +69,12 @@ public:
     virtual bool IsEgdeExists(ObjectId source, ObjectId target) const = 0;
     // Get weight real type
     virtual EdgeWeightType GetEdgeWeightType() const = 0;
+    // Create copy of graph.
+    virtual IGraph* MakeBaseCopy(GraphCopyType type) const = 0;
+    // Is graph directed or not.
+    virtual bool IsDirected() const = 0;
+    // Run DFS and call callbacks.
+    virtual void ProcessDFS(IEnumStrategy* pEnumStrategy, ObjectId startedNode) const = 0;
     
     virtual ~IGraph() {};
 };
@@ -73,4 +99,8 @@ public:
     // Create copy of graph.
     virtual IGraphFloat* MakeCopy(GraphCopyType type) const = 0;
 };
+
+
+// Base typedaef
+typedef std::shared_ptr<IGraph> GraphPtr;
 

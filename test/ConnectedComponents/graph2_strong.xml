@@ -11,20 +11,20 @@
     <node id="n4"/>
     <node id="n5"/>
     <node id="n6"/>
-    <node id="n7"/>
-    <edge source="n0" target="n1"/>
-    <edge source="n3" target="n2"/>
+    
+    <edge source="n2" target="n3"/>
     <edge source="n3" target="n4"/>
-    <edge source="n6" target="n7"/>
-    <edge source="n1" target="n2"/>
-    <edge source="n0" target="n5"/>
-    <edge source="n3" target="n7"/>
+    <edge source="n4" target="n2"/>
+    <edge source="n4" target="n6"/>
+    <edge source="n5" target="n4"/>
+    
   </graph>
 </graphml>
 
 <!--
-n0>n1>n2<n3>n4
-\         |
-_\|      \|/
- n5    n6>n7
--->
+n0 n1 n2<n3
+       \ /
+       n4
+       /\
+      n5 n6
+ -->

@@ -1,6 +1,9 @@
--concomp graph0.xml
--concomp graph1.xml
--concomp graph2.xml
--concomp graph3.xml
--concomp graph4.xml
--concomp graphBig.xml
+-concomp graph0.xml false
+-concomp graph1.xml false
+-concomp graph2.xml false
+-concomp graph3.xml false
+-concomp graph4.xml false
+-concomp graphBig.xml false
+-concomp graph1_strong.xml true
+-concomp graph2_strong.xml true
+-concomp graph3_strong.xml true

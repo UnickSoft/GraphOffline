@@ -26,7 +26,7 @@ public:
     // Enum parameters
     virtual bool EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const;
     // Set parameter to algorithm.
-    virtual void SetParameter(const char* name, ObjectId id);
+    virtual void SetParameter(const AlgorithmParam* outParamInfo);
     // Set graph
     virtual void SetGraph(const IGraph* pGraph);
     // Calculate algorithm.

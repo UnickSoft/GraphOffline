@@ -26,7 +26,7 @@ bool EulerianLoop::EnumParameter(IndexType index, AlgorithmParam* outParamInfo) 
 
 
 // Set parameter to algorithm.
-void EulerianLoop::SetParameter(const char* name, ObjectId id)
+void EulerianLoop::SetParameter(const AlgorithmParam* outParamInfo)
 {
     
 }

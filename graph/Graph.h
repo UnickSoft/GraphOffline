@@ -39,11 +39,11 @@ public:
     {
     public:
         NodePtr () : std::shared_ptr<Node>() {}
-        NodePtr (Node* node) : std::shared_ptr<Node>(node) {}
+        explicit NodePtr (Node* node) : std::shared_ptr<Node>(node) {}
         // Operator to compare pointers.
         bool operator == (const Graph::Node* node2) const
         {
-            return std::shared_ptr<Node>::get() == node2;
+            return this->get() == node2;
         }
     };
     
@@ -102,6 +102,12 @@ public:
     virtual EdgeWeightType GetEdgeWeightType() const;
     // Create copy of graph.
     virtual WeightInterface* MakeCopy(GraphCopyType type) const;
+    // Create copy of graph.
+    virtual IGraph* MakeBaseCopy(GraphCopyType type) const;
+    // Is graph directed or not.
+    virtual bool IsDirected() const;
+    // Run DFS and call callbacks.
+    virtual void ProcessDFS(IEnumStrategy* pEnumStrategy, ObjectId startedNode) const;
 
     // Find Node by Id
     NodePtr FindNode(const String& id) const;
@@ -126,16 +132,21 @@ protected:
     Graph<WeightInterface, WeightType>* MakeGraphCopy() const;
     // Make current graph undirected.
     Graph<WeightInterface, WeightType>* MakeGraphUndirected() const;
+    // Inverse Graph
+    Graph<WeightInterface, WeightType>* MakeGraphInverse() const;
     
     EdgePtr AddEdge(const String& id, IndexType sourceId, IndexType targetId, bool direct, const WeightType& weight, IndexType privateId);
     
     // Add node to targets of source.
     void AddToTargets(NodePtr source, NodePtr target);
     
+    bool IsDouble(double value);
+    
+    // Run DFS and call callbacks.
+    void _ProcessDFS(IEnumStrategy* pEnumStrategy, Node* node) const;
+    
     typedef std::vector<NodePtr> NodePtrVector;
     typedef std::vector<EdgePtr> EdgePtrVector;
-    
-    bool IsDouble(double value);
     
     IndexType GetNextId();
     
@@ -145,6 +156,8 @@ protected:
     
     EdgeWeightType m_weightType;
     IndexType      m_autoIncIndex;
+    
+    bool m_bDirected;
     
     // ATTANTION: If you add new fields please update MakeGraphCopy.
 };

@@ -17,12 +17,17 @@ struct NodesEdge
   ObjectId target;
 };
 
-enum AlgorithmParamType {APT_NODE = 0};
+enum AlgorithmParamType {APT_NODE = 0, APT_FLAG};
 
 struct AlgorithmParam
 {
     AlgorithmParamType type;
     char paramName[16];
+    union
+    {
+        ObjectId id;
+        bool bFlag;
+    } data;
 };
 
 enum AlgorithmResultType {ART_UNKNOWN = 0, ART_INT, ART_FLOAT, ART_STRING};
@@ -51,7 +56,7 @@ public:
     // Enum parameters
     virtual bool EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const = 0;
     // Set parameter to algorithm.
-    virtual void SetParameter(const char* name, ObjectId id) = 0;
+    virtual void SetParameter(const AlgorithmParam* param) = 0;
     // Set graph
     virtual void SetGraph(const IGraph* pGraph) = 0;
     // Calculate algorithm.

@@ -4,12 +4,13 @@ isFaild=0;
 
 rm *.test &>/dev/null
 
-while IFS=$' ' read -r command xmlFile ; do
+while IFS=$' ' read -r command xmlFile strong; do
 
   if [ "$2" == "-debug" ]; then
-    echo "$exePath ${command} ./${xmlFile} > ${xmlFile}.test"
+    echo "$exePath ${command} ./${xmlFile} -strong ${strong} > ${xmlFile}.test"
   fi
-  $exePath ${command} ./${xmlFile} > ${xmlFile}.test
+
+  $exePath ${command} ./${xmlFile} -strong ${strong}> ${xmlFile}.test
 
   if diff --ignore-all-space ${xmlFile}.res ${xmlFile}.test >/dev/null ; then
     continue;

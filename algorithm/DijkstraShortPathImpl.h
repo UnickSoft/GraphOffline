@@ -53,15 +53,18 @@ template<class WeightTypeInterface, typename WeightType> bool DijkstraShortPath<
 }
 
 // Set parameter to algorithm.
-template<class WeightTypeInterface, typename WeightType> void DijkstraShortPath<WeightTypeInterface, WeightType>::SetParameter(const char* name, ObjectId id)
+template<class WeightTypeInterface, typename WeightType> void DijkstraShortPath<WeightTypeInterface, WeightType>::SetParameter(const AlgorithmParam* outParamInfo)
 {
-    if (strncmp(name, "start", sizeof(AlgorithmParam().paramName)) == 0)
+    if (outParamInfo)
     {
-        m_source = id;
-    }
-    else if (strncmp(name, "finish", sizeof(AlgorithmParam().paramName)) == 0)
-    {
-        m_target = id;
+        if (strncmp(outParamInfo->paramName, "start", sizeof(AlgorithmParam().paramName)) == 0)
+        {
+            m_source = outParamInfo->data.id;
+        }
+        else if (strncmp(outParamInfo->paramName, "finish", sizeof(AlgorithmParam().paramName)) == 0)
+        {
+            m_target = outParamInfo->data.id;
+        }
     }
 }
 

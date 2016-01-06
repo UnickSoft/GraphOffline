@@ -28,7 +28,7 @@ public:
     // Enum parameters
     virtual bool EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const;
     // Set parameter to algorithm.
-    virtual void SetParameter(const char* name, ObjectId id);
+    virtual void SetParameter(const AlgorithmParam* outParamInfo);
     // Set graph
     virtual void SetGraph(const IGraph* pGraph);
     // Calculate algorithm.
@@ -47,10 +47,14 @@ public:
     virtual bool GetProperty(ObjectId object, IndexType index, AlgorithmResult* param) const;
     virtual const char* GetPropertyName(IndexType index) const;
     
-private:
+protected:
+    
+    bool FindWeakComponent();
+    bool FindStrongComponent();
     
     const IGraph* m_pGraph;
     IntWeightType m_nConnectedCompCount;
+    bool m_bStrongComponent;
 };
 
 #endif /* Connected_Component_hpp */

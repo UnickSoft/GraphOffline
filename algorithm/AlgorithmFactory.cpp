@@ -36,7 +36,20 @@ std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(const IGraph* pGra
                         ObjectId id = pGraph->GetNode(map.at(outParamInfo.paramName).Locale().Data());
                         if (id != 0)
                         {
-                            res->SetParameter(outParamInfo.paramName, id);
+                            outParamInfo.data.id = id;
+                            res->SetParameter(&outParamInfo);
+                        }
+                        break;
+                    }
+                    case APT_FLAG:
+                    {
+                        bool bFalse = map.at(outParamInfo.paramName) == String("false");
+                        bool bTrue  = map.at(outParamInfo.paramName) == String("true");
+                        
+                        if (bFalse || bTrue)
+                        {
+                            outParamInfo.data.bFlag = bTrue;
+                            res->SetParameter(&outParamInfo);
                         }
                         break;
                     }
