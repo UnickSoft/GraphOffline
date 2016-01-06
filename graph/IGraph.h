@@ -21,7 +21,7 @@ typedef double FloatWeightType;
 enum EdgeWeightType {WT_INT = 0, WT_FLOAT};
 
 // Graph copy type.
-enum GraphCopyType {GCT_COPY = 0, GTC_MAKE_UNDIRECTED, GTC_INVERSE};
+enum GraphCopyType {GCT_COPY = 0, GTC_MAKE_UNDIRECTED, GTC_INVERSE, GTC_REMOVE_SELF_LOOP};
 
 
 /**

@@ -134,6 +134,8 @@ protected:
     Graph<WeightInterface, WeightType>* MakeGraphUndirected() const;
     // Inverse Graph
     Graph<WeightInterface, WeightType>* MakeGraphInverse() const;
+    // Remove self loop.
+    Graph<WeightInterface, WeightType>* MakeGraphRemoveSelfLoop() const;
     
     EdgePtr AddEdge(const String& id, IndexType sourceId, IndexType targetId, bool direct, const WeightType& weight, IndexType privateId);
     

@@ -62,6 +62,7 @@
 		683D17031C0B6CF100C804DF /* GraphMLReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphMLReporter.h; path = report/GraphMLReporter.h; sourceTree = SOURCE_ROOT; };
 		683D17041C0B6CF100C804DF /* IReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IReporter.h; path = report/IReporter.h; sourceTree = SOURCE_ROOT; };
 		683D170C1C0B6E4000C804DF /* GraphOffline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphOffline.cpp; sourceTree = SOURCE_ROOT; };
+		686E49C31C3DB36A00EB71C8 /* IAlgorithmFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IAlgorithmFactory.h; sourceTree = SOURCE_ROOT; };
 		68DEA7731C19DC0F003BBEE2 /* AlgorithmFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AlgorithmFactory.cpp; path = algorithm/AlgorithmFactory.cpp; sourceTree = SOURCE_ROOT; };
 		68DEA7741C19DC0F003BBEE2 /* AlgorithmFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlgorithmFactory.h; path = algorithm/AlgorithmFactory.h; sourceTree = SOURCE_ROOT; };
 		68DF5ACA1C308AF4005502FA /* ConnectedComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConnectedComponent.cpp; path = algorithm/ConnectedComponent.cpp; sourceTree = SOURCE_ROOT; };
@@ -140,6 +141,7 @@
 				68E0F81E1C2F41450001E127 /* EulerianLoop.h */,
 				68DF5ACA1C308AF4005502FA /* ConnectedComponent.cpp */,
 				68DF5ACB1C308AF4005502FA /* ConnectedComponent.h */,
+				686E49C31C3DB36A00EB71C8 /* IAlgorithmFactory.h */,
 			);
 			name = Algorithms;
 			sourceTree = "<group>";

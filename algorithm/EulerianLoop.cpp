@@ -7,8 +7,9 @@
 //
 
 #include "EulerianLoop.h"
+#include "IAlgorithmFactory.h"
 
-EulerianLoop::EulerianLoop () : m_pGraph(NULL)
+EulerianLoop::EulerianLoop () : m_pGraph(NULL), m_bResult(false)
 {
     
 }
@@ -40,7 +41,29 @@ void EulerianLoop::SetGraph(const IGraph* pGraph)
 // Calculate algorithm.
 bool EulerianLoop::EulerianLoop::Calculate()
 {
-    return false;
+    m_bResult = false;
+    
+    AlgorithmPtr connectedComponent = AlgorithmPtr(m_pAlgorithmFactory->CreateAlgorithm("concomp", m_pGraph));
+    
+    if (connectedComponent)
+    {
+        if (m_pGraph->IsDirected())
+        {
+            
+        }
+        else
+        {
+            connectedComponent->Calculate();
+            IntWeightType componentCount = connectedComponent->GetResult().nValue;
+            
+            if (componentCount == 1)
+            {
+                //m_bResult = ;
+            }
+        }
+    }
+    
+    return true;
 }
 
 // Hightlight nodes count.
@@ -70,7 +93,7 @@ NodesEdge EulerianLoop::GetHightlightEdge(IndexType index) const
 // Get result.
 AlgorithmResult EulerianLoop::GetResult() const
 {
-    return AlgorithmResult();
+    return AlgorithmResult((IntWeightType)m_bResult);
 }
 
 // Get propery
@@ -84,3 +107,7 @@ const char* EulerianLoop::GetPropertyName(IndexType index) const
     return nullptr;
 }
 
+void EulerianLoop::SetAlgorithmFactory(const IAlgorithmFactory* pAlgorithmFactory)
+{
+    m_pAlgorithmFactory = pAlgorithmFactory;
+}

@@ -379,9 +379,10 @@ template<class WeightInterface, typename WeightType> WeightInterface* Graph<Weig
     WeightInterface* res = NULL;
     switch (type)
     {
-        case GCT_COPY:            res = MakeGraphCopy(); break;
-        case GTC_MAKE_UNDIRECTED: res = MakeGraphUndirected(); break;
-        case GTC_INVERSE:         res = MakeGraphInverse(); break;
+        case GCT_COPY:             res = MakeGraphCopy(); break;
+        case GTC_MAKE_UNDIRECTED:  res = MakeGraphUndirected(); break;
+        case GTC_INVERSE:          res = MakeGraphInverse(); break;
+        case GTC_REMOVE_SELF_LOOP: res = MakeGraphRemoveSelfLoop(); break;
     }
     
     return res;
@@ -538,4 +539,31 @@ template<class WeightInterface, typename WeightType> void Graph<WeightInterface,
     pEnumStrategy->FinishProcessNode(node->privateId);
 }
 
+template<class WeightInterface, typename WeightType> Graph<WeightInterface, WeightType>* Graph<WeightInterface, WeightType>::MakeGraphRemoveSelfLoop() const
+{
+    Graph<WeightInterface, WeightType>* res = new Graph<WeightInterface, WeightType>();
+    res->m_weightType = m_weightType;
+    
+    // Create all nodes.
+    for (NodePtr node : m_nodes)
+    {
+        res->m_nodes.push_back(NodePtr(new Node(node->id, node->privateId)));
+    }
+    
+    // Add edges.
+    for (EdgePtr edge : m_edges)
+    {
+        if (edge->source->privateId != edge->target->privateId)
+        {
+            res->AddEdge(edge->id,
+                     edge->source->privateId,
+                     edge->target->privateId,
+                     edge->direct,
+                     edge->weight,
+                     edge->privateId);
+        }
+    }
+    
+    return res;
+}
 

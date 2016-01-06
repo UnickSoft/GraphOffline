@@ -120,7 +120,7 @@ bool ConnectedComponent::FindWeakComponent()
 {
     bool res = false;
     // Find weak connected component or connected component.
-    IGraph* pGraph = m_pGraph->MakeBaseCopy(GTC_MAKE_UNDIRECTED);
+    GraphPtr pGraph = GraphPtr(m_pGraph->MakeBaseCopy(GTC_MAKE_UNDIRECTED));
     
     if (pGraph)
     {
@@ -237,5 +237,7 @@ bool ConnectedComponent::FindStrongComponent()
     return res;
 }
 
+void ConnectedComponent::SetAlgorithmFactory(const IAlgorithmFactory* pAlgorithmFactory)
+{}
 
 

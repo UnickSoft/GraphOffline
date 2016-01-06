@@ -10,6 +10,8 @@
 #include "IGraph.h"
 #include <ostream>
 
+class IAlgorithmFactory;
+
 // Edge struct.
 struct NodesEdge
 {
@@ -61,6 +63,8 @@ public:
     virtual void SetGraph(const IGraph* pGraph) = 0;
     // Calculate algorithm.
     virtual bool Calculate() = 0;
+    // Set algorithm factory.
+    virtual void SetAlgorithmFactory(const IAlgorithmFactory* pAlgorithmFactory) = 0;
     
     virtual ~IAlgorithmEngine() {}
 };
@@ -88,4 +92,7 @@ public:
 class IAlgorithm : public IAlgorithmEngine, public IAlgorithmResult 
 {
 };
+
+
+typedef std::shared_ptr<IAlgorithm> AlgorithmPtr;
 

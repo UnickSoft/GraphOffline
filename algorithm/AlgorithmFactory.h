@@ -14,13 +14,18 @@
 #include <memory>
 #include "IAlgorithm.h"
 #include "YString.h"
+#include "IAlgorithmFactory.h"
 
 // Map of parameter name and value.
 typedef std::map<String, String> ParametersMap;
 
-class AlgorithmFactory
+class AlgorithmFactory : public IAlgorithmFactory
 {
 public:
+    
+    // IAlgorithmFactory
+    // Create algorithm for given Graph.
+    virtual IAlgorithm* CreateAlgorithm(const char* name, const IGraph* pGraph) const;
     
     std::shared_ptr<IAlgorithm> CreateAlgorithm(const IGraph* pGraph, const String& name, const ParametersMap& map) const;
     
@@ -29,6 +34,8 @@ public:
     std::shared_ptr<IAlgorithm> CreateAlgorithm(IndexType index, bool bFloat = true) const;
     
 protected:
+    
+    IAlgorithm* _CreateAlgorithm(IndexType index, bool bFloat = true) const;
     
     AlgorithmFactory();
     ~AlgorithmFactory();

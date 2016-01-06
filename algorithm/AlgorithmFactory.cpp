@@ -11,6 +11,22 @@
 #include "EulerianLoop.h"
 #include "ConnectedComponent.h"
 
+
+IAlgorithm* AlgorithmFactory::CreateAlgorithm(const char* name, const IGraph* pGraph) const
+{
+    IAlgorithm* res = m_mAlgorithms.count(String(name)) > 0 ?
+        _CreateAlgorithm(m_mAlgorithms.at(String(name)), pGraph->GetEdgeWeightType() == WT_FLOAT)
+        : nullptr;
+    
+    if (res)
+    {
+        res->SetGraph(pGraph);
+        res->SetAlgorithmFactory(this);
+    }
+    
+    return res;
+}
+
 std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(const IGraph* pGraph, const String& name, const ParametersMap& map) const
 {
     std::shared_ptr<IAlgorithm> res = m_mAlgorithms.count(name) > 0 ?
@@ -20,6 +36,7 @@ std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(const IGraph* pGra
     if (res)
     {
         res->SetGraph(pGraph);
+        res->SetAlgorithmFactory(this);
         
         IndexType index = 0;
         AlgorithmParam outParamInfo;
@@ -88,12 +105,17 @@ AlgorithmFactory::~AlgorithmFactory()
 
 std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(IndexType index, bool bFloat) const
 {
-    std::shared_ptr<IAlgorithm> res;
+    return std::shared_ptr<IAlgorithm>(_CreateAlgorithm(index, bFloat));
+}
+
+IAlgorithm* AlgorithmFactory::_CreateAlgorithm(IndexType index, bool bFloat) const
+{
+    IAlgorithm* res = nullptr;
     switch (index)
     {
         case 0:
         {
-            IAlgorithm* pAlgorithm = NULL;
+            IAlgorithm* pAlgorithm = nullptr;
             if (bFloat)
             {
                 pAlgorithm = new DijkstraShortPath<IGraphFloat, FloatWeightType>();
@@ -103,18 +125,18 @@ std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(IndexType index, b
                 pAlgorithm = new DijkstraShortPath<IGraphInt, IntWeightType>();
             }
             
-            res = std::shared_ptr<IAlgorithm>(pAlgorithm);
+            res = pAlgorithm;
             break;
         }
         case 1:
         {
-            res = std::shared_ptr<IAlgorithm>(new EulerianLoop());
+            res = new EulerianLoop();
             break;
         }
             
         case 2:
         {
-            res = std::shared_ptr<IAlgorithm>(new ConnectedComponent());;
+            res = new ConnectedComponent();
             break;
         }
     }

@@ -46,6 +46,7 @@ public:
     // Get propery
     virtual bool GetProperty(ObjectId object, IndexType index, AlgorithmResult* param) const;
     virtual const char* GetPropertyName(IndexType index) const;
+    virtual void SetAlgorithmFactory(const IAlgorithmFactory* pAlgorithmFactory);
     
 protected:
     

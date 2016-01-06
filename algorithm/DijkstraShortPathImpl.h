@@ -232,3 +232,7 @@ template<class WeightTypeInterface, typename WeightType> const char* DijkstraSho
     }
 }
 
+template<class WeightTypeInterface, typename WeightType> void DijkstraShortPath<WeightTypeInterface, WeightType>::SetAlgorithmFactory(const IAlgorithmFactory* pAlgorithmFactory)
+{
+    
+}

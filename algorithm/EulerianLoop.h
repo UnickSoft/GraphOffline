@@ -44,10 +44,15 @@ public:
     // Get propery
     virtual bool GetProperty(ObjectId object, IndexType index, AlgorithmResult* param) const;
     virtual const char* GetPropertyName(IndexType index) const;
+    virtual void SetAlgorithmFactory(const IAlgorithmFactory* pAlgorithmFactory);
     
 private:
     
     const IGraph* m_pGraph;
+    const IAlgorithmFactory* m_pAlgorithmFactory;
+    
+    // Has or not EulerLoop.
+    bool m_bResult;
 };
 
 #endif /* EulerianLoop_hpp */
