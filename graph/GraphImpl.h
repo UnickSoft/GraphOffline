@@ -26,11 +26,11 @@ public:
 };
 
 
-// Base Enum to exclude infinity loop.
-class BaseEnumStrategy : public IEnumStrategy
+// Base Enum to exclude infinity loop using Nodes.
+class BaseNodeEnumStrategy : public IEnumStrategy
 {
 public:
-    BaseEnumStrategy (IEnumStrategy* pUserStrategy) : m_pUserStrategy(pUserStrategy) {;}
+    BaseNodeEnumStrategy (IEnumStrategy* pUserStrategy) : m_pUserStrategy(pUserStrategy) {;}
     
     virtual void StartProcessNode(ObjectId nodeId)
     {
@@ -38,9 +38,9 @@ public:
         m_pUserStrategy->StartProcessNode(nodeId);
     }
     
-    virtual bool NeedProcessChild(ObjectId nodeId, ObjectId childId)
+    virtual bool NeedProcessChild(ObjectId nodeId, ObjectId childId, ObjectId edge)
     {
-        return m_pUserStrategy->NeedProcessChild(nodeId, childId) &&
+        return m_pUserStrategy->NeedProcessChild(nodeId, childId, edge) &&
             processedNode.find(childId) == processedNode.end();
     }
     
@@ -49,10 +49,55 @@ public:
         m_pUserStrategy->FinishProcessNode(nodeId);
     }
     
+    // Default Strategy.
+    virtual DefaultEnumStrategy GetDefaultStrategy()
+    {
+        return DES_NONE;
+    }
+    
 protected:
     IEnumStrategy* m_pUserStrategy;
     std::unordered_set<ObjectId> processedNode;
 };
+
+// Base Enum to exclude infinity loop using Edges.
+class BaseEdgeEnumStrategy : public IEnumStrategy
+{
+public:
+    BaseEdgeEnumStrategy (IEnumStrategy* pUserStrategy) : m_pUserStrategy(pUserStrategy) {;}
+    
+    virtual void StartProcessNode(ObjectId nodeId)
+    {
+        m_pUserStrategy->StartProcessNode(nodeId);
+    }
+    
+    virtual bool NeedProcessChild(ObjectId nodeId, ObjectId childId, ObjectId edge)
+    {
+        bool res = m_pUserStrategy->NeedProcessChild(nodeId, childId, edge) &&
+        (processedEdge.find(edge) == processedEdge.end());
+        if (res)
+        {
+            processedEdge.insert(edge);
+        }
+        return res;
+    }
+    
+    virtual void FinishProcessNode(ObjectId nodeId)
+    {
+        m_pUserStrategy->FinishProcessNode(nodeId);
+    }
+    
+    // Default Strategy.
+    virtual DefaultEnumStrategy GetDefaultStrategy()
+    {
+        return DES_NONE;
+    }
+    
+protected:
+    IEnumStrategy* m_pUserStrategy;
+    std::unordered_set<ObjectId> processedEdge;
+};
+
 
 template<class WeightInterface, typename WeightType> Graph<WeightInterface, WeightType>::Graph(void)
 {
@@ -235,7 +280,7 @@ template<class WeightInterface, typename WeightType>  IndexType Graph<WeightInte
     NodePtr nodePtr;
     if (IsValidNodeId(source, nodePtr) && nodePtr)
     {
-        res = nodePtr->targets.size();
+        res = nodePtr->GetTargets().size();
     }
     return res;
 }
@@ -247,7 +292,7 @@ template<class WeightInterface, typename WeightType>  ObjectId Graph<WeightInter
     NodePtr sourcePtr;
     if (IsValidNodeId(source, sourcePtr))
     {
-        res = sourcePtr->targets[index]->privateId;
+        res = sourcePtr->GetTargets().at(index)->privateId;
     }
     return res;
 }
@@ -259,7 +304,7 @@ template<class WeightInterface, typename WeightType>  bool Graph<WeightInterface
   NodePtr sourcePtr, targetPtr;
   if (IsValidNodeId(source, sourcePtr) && IsValidNodeId(target, targetPtr))
   {
-    res = Has<Node*, NodePtr>(sourcePtr->targets, targetPtr);
+    res = Has<Node*, NodePtr>(sourcePtr->GetTargets(), targetPtr);
   }
   return res;
 }
@@ -433,7 +478,7 @@ template<class WeightInterface, typename WeightType> Graph<WeightInterface, Weig
                 edge->direct = false;
                 
                 // Add another nodes.
-                res->AddToTargets(edge->target, edge->source);
+                edge->target->AddToTargets(edge->source.get(), edge->privateId);
             }
         }
     }
@@ -456,26 +501,17 @@ template<class WeightInterface, typename WeightType> typename Graph<WeightInterf
         
         m_edges.push_back(res);
         
-        AddToTargets(sourceNode, targetNode);
+        sourceNode->AddToTargets(targetNode.get(), res->privateId);
         
         if (!direct)
         {
-            AddToTargets(targetNode, sourceNode);
+            targetNode->AddToTargets(sourceNode.get(), res->privateId);
         }
         
         m_bDirected = m_bDirected || direct;
     }
     
     return res;
-}
-
-
-template<class WeightInterface, typename WeightType> void Graph<WeightInterface, WeightType>::AddToTargets(NodePtr source, NodePtr target)
-{
-    if (!FindNode(target->privateId, source->targets))
-    {
-        source->targets.push_back(target.get());
-    }
 }
 
 
@@ -518,8 +554,20 @@ template<class WeightInterface, typename WeightType> Graph<WeightInterface, Weig
 
 template<class WeightInterface, typename WeightType> void Graph<WeightInterface, WeightType>::ProcessDFS(IEnumStrategy* pEnumStrategy, ObjectId startedNode) const
 {
-    BaseEnumStrategy baseEnumStrategy(pEnumStrategy);
-    _ProcessDFS(&baseEnumStrategy, FindNode(startedNode, m_nodes).get());
+    BaseNodeEnumStrategy baseNodeEnumStrategy(pEnumStrategy);
+    BaseEdgeEnumStrategy baseEdgeEnumStrategy(pEnumStrategy);
+    
+    IEnumStrategy* pStrategy = pEnumStrategy;
+    if (pEnumStrategy->GetDefaultStrategy() == IEnumStrategy::DES_NODE)
+    {
+        pStrategy = &baseNodeEnumStrategy;
+    }
+    else if (pEnumStrategy->GetDefaultStrategy() == IEnumStrategy::DES_EDGE)
+    {
+        pStrategy = &baseEdgeEnumStrategy;
+    }
+    
+    _ProcessDFS(pStrategy, FindNode(startedNode, m_nodes).get());
 }
 
 template<class WeightInterface, typename WeightType> void Graph<WeightInterface, WeightType>::_ProcessDFS(IEnumStrategy* pEnumStrategy, Node* node) const
@@ -528,11 +576,14 @@ template<class WeightInterface, typename WeightType> void Graph<WeightInterface,
     
     pEnumStrategy->StartProcessNode(node->privateId);
     
-    for (Node* childNode : node->targets)
+    const std::vector<Node*>& nodes = node->GetTargets();
+    for (auto iterator = nodes.cbegin(); iterator != nodes.cend(); iterator++)
     {
-        if (pEnumStrategy->NeedProcessChild(node->privateId, childNode->privateId))
+        if (pEnumStrategy->NeedProcessChild(node->privateId,
+                                            (*iterator)->privateId,
+                                            node->GetEdge(iterator - nodes.cbegin())))
         {
-            _ProcessDFS(pEnumStrategy, childNode);
+            _ProcessDFS(pEnumStrategy, *iterator);
         }
     }
     
@@ -566,4 +617,32 @@ template<class WeightInterface, typename WeightType> Graph<WeightInterface, Weig
     
     return res;
 }
+
+
+template<class WeightInterface, typename WeightType> void Graph<WeightInterface, WeightType>::RemoveEdge(ObjectId source, ObjectId target)
+{
+    EdgePtr edge = FindEdge(source, target);
+    assert (edge);
+    
+    if (edge)
+    {
+        RemoveEdge(edge);
+    }
+}
+
+template<class WeightInterface, typename WeightType> void Graph<WeightInterface, WeightType>::RemoveEdge(EdgePtr edge)
+{
+    if (!edge->direct)
+    {
+        edge->target->RemoveEdge(edge->privateId);
+    }
+    
+    edge->source->RemoveEdge(edge->privateId);
+    
+    auto removeEdgePosition = std::find(m_edges.begin(), m_edges.end(), edge);
+    m_edges.erase(removeEdgePosition);
+}
+
+
+
 

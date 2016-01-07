@@ -1,0 +1,5 @@
+-elloop graph3_no.xml
+-elloop graph4_undirect.xml
+-elloop graph5_undirect.xml
+-elloop graph6_2_undirect.xml
+-elloop graph6_undirect.xml

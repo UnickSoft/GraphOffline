@@ -178,7 +178,7 @@ public:
         m_visited.insert(nodeId);
     }
     // @return true if we need to process this child node.
-    bool NeedProcessChild(ObjectId nodeId, ObjectId childId)
+    bool NeedProcessChild(ObjectId nodeId, ObjectId childId, ObjectId edgeId)
     {
         return m_visited.find(childId) == m_visited.end();
     }
@@ -189,6 +189,12 @@ public:
         {
             m_stack.push(nodeId);
         }
+    }
+    
+    // Default Strategy.
+    DefaultEnumStrategy GetDefaultStrategy()
+    {
+        return IEnumStrategy::DES_NODE;
     }
     
     std::stack<ObjectId>& GetStack ()
@@ -212,7 +218,7 @@ bool ConnectedComponent::FindStrongComponent()
     for (IndexType i = 0; i < pGraph->GetNodesCount(); i++)
     {
         ObjectId node = pGraph->GetNode(i);
-        if (invertseEnum.NeedProcessChild(0, node))
+        if (invertseEnum.NeedProcessChild(0, node, 0))
         {
             pGraph->ProcessDFS(&invertseEnum, node);
         }
@@ -227,7 +233,7 @@ bool ConnectedComponent::FindStrongComponent()
         ObjectId node = stack.top();
         stack.pop();
         
-        if (forwardEnum.NeedProcessChild(0, node))
+        if (forwardEnum.NeedProcessChild(0, node, 0))
         {
             m_pGraph->ProcessDFS(&forwardEnum, node);
             m_nConnectedCompCount++;

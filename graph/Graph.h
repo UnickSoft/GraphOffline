@@ -25,14 +25,49 @@ public:
     struct Node
     {
         String id;
-        IndexType privateId;
+        ObjectId privateId;
         
         Node(const String& id, IndexType privateId)
         {
             this->id = id;
             this->privateId = privateId;
         }
+        
+        const std::vector<Node*>& GetTargets() const
+        {
+            return targets;
+        }
+        
+        ObjectId GetEdge(IndexType index) const
+        {
+            return edges[index];
+        }
+        
+        void RemoveEdge(ObjectId edgeId)
+        {
+            auto removeEdgesPosition = std::find(edges.begin(), edges.end(), edgeId);
+            
+            if (removeEdgesPosition != edges.end())
+            {
+                IndexType index = removeEdgesPosition - edges.begin();
+                edges.erase(edges.begin() +  index);
+                targets.erase(targets.begin() + index);
+            }
+        }
+        
+        void AddToTargets(Node* node, ObjectId edgeId)
+        {
+            auto findNode = std::find(targets.begin(), targets.end(), node);
+            if (findNode == targets.end())
+            {
+                targets.push_back(node);
+                edges.push_back(edgeId);
+            }
+        }
+        
+    protected:
         std::vector<Node*> targets;
+        std::vector<ObjectId> edges;
     };
     
     class NodePtr : public std::shared_ptr<Node>
@@ -108,6 +143,8 @@ public:
     virtual bool IsDirected() const;
     // Run DFS and call callbacks.
     virtual void ProcessDFS(IEnumStrategy* pEnumStrategy, ObjectId startedNode) const;
+    // Remove edge from Graph. For undirected Graph it removes source -> target or target -> source
+    virtual void RemoveEdge(ObjectId source, ObjectId target);
 
     // Find Node by Id
     NodePtr FindNode(const String& id) const;
@@ -139,13 +176,13 @@ protected:
     
     EdgePtr AddEdge(const String& id, IndexType sourceId, IndexType targetId, bool direct, const WeightType& weight, IndexType privateId);
     
-    // Add node to targets of source.
-    void AddToTargets(NodePtr source, NodePtr target);
-    
     bool IsDouble(double value);
     
     // Run DFS and call callbacks.
     void _ProcessDFS(IEnumStrategy* pEnumStrategy, Node* node) const;
+    
+    // Remove edge from Graph.
+    void RemoveEdge(EdgePtr edge);
     
     typedef std::vector<NodePtr> NodePtrVector;
     typedef std::vector<EdgePtr> EdgePtrVector;

@@ -32,12 +32,20 @@ class IEnumStrategy
 {
 public:
     
+    // Default enum strategy.
+    // DES_NONE - has no default enum strategy.
+    // DES_NODE - will enum nodes only one time.
+    // DES_EDGE - will enum edge only one time.
+    enum DefaultEnumStrategy {DES_NONE = 0, DES_NODE, DES_EDGE};
+    
     // We started process this node.
     virtual void StartProcessNode(ObjectId nodeId) = 0;
     // @return true if we need to process this child node.
-    virtual bool NeedProcessChild(ObjectId nodeId, ObjectId childId) = 0;
+    virtual bool NeedProcessChild(ObjectId nodeId, ObjectId childId, ObjectId edgeId) = 0;
     // We finish process this node.
     virtual void FinishProcessNode(ObjectId nodeId) = 0;
+    // Default Strategy.
+    virtual DefaultEnumStrategy GetDefaultStrategy() = 0;
     
     virtual ~IEnumStrategy() {}
 };
@@ -65,7 +73,7 @@ public:
     virtual bool AreNodesConnected(ObjectId source, ObjectId target) const = 0;
     // Return graph string Id.
     virtual bool GetNodeStrId(ObjectId node, char* outBuffer, IndexType bufferSize) const = 0;
-    // Is edge exists in input graph. It is not the same with IsEgdeExists. 
+    // Is edge exists in input graph. It is not the same with AreNodesConnected.
     virtual bool IsEgdeExists(ObjectId source, ObjectId target) const = 0;
     // Get weight real type
     virtual EdgeWeightType GetEdgeWeightType() const = 0;
@@ -75,6 +83,8 @@ public:
     virtual bool IsDirected() const = 0;
     // Run DFS and call callbacks.
     virtual void ProcessDFS(IEnumStrategy* pEnumStrategy, ObjectId startedNode) const = 0;
+    // Remove edge from Graph. For undirected Graph it removes source -> target or target -> source
+    virtual void RemoveEdge(ObjectId source, ObjectId target) = 0;
     
     virtual ~IGraph() {};
 };

@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include "IAlgorithm.h"
 #include "IGraph.h"
+#include <vector>
 
 class EulerianLoop : public IAlgorithm
 {
@@ -51,8 +52,11 @@ private:
     const IGraph* m_pGraph;
     const IAlgorithmFactory* m_pAlgorithmFactory;
     
+    bool _FindEulerianLoopRecursive(GraphPtr pGraph, ObjectId node);
+    
     // Has or not EulerLoop.
     bool m_bResult;
+    std::vector<ObjectId> m_EulerianLoop;
 };
 
 #endif /* EulerianLoop_hpp */
