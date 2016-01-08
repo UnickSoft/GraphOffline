@@ -5,6 +5,7 @@
 #include "IGraph.h"
 #include "YString.h"
 #include <memory>
+#include <algorithm>
 
 
 

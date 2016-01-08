@@ -8,7 +8,7 @@ fi
 
 totalResult=0
 
-find . -type d -maxdepth 1 -mindepth 1 | while read d; do
+find . -maxdepth 1 -mindepth 1 -type d | while read d; do
     cd "$d"
     if [[ $2 != "-debug" ]]
     then

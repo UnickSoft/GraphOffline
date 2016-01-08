@@ -10,6 +10,7 @@
 #include <unordered_set>
 #include <queue>
 #include <stack>
+#include <string.h>
 
 const char* g_strongParam = "strong";
 
@@ -30,7 +31,7 @@ bool ConnectedComponent::EnumParameter(IndexType index, AlgorithmParam* outParam
 {
     if (index == 0)
     {
-        strcpy(outParamInfo->paramName, g_strongParam);
+        strncpy(outParamInfo->paramName, g_strongParam, sizeof(outParamInfo->paramName));
         outParamInfo->type = APT_FLAG;
         return true;
     }
@@ -106,7 +107,7 @@ AlgorithmResult ConnectedComponent::GetResult() const
 }
 
 // Get propery
-bool ConnectedComponent::GetProperty(ObjectId object, IndexType index, AlgorithmResult* param) const  const
+bool ConnectedComponent::GetProperty(ObjectId object, IndexType index, AlgorithmResult* param) const
 {
     return false;
 }

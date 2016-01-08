@@ -3,7 +3,7 @@
  */
 
 
-#include "DijkstraShortPath.h"
+//#include "DijkstraShortPath.h"
 #include <map>
 #include <cstddef>
 #include <algorithm>    // std::reverse
@@ -17,8 +17,10 @@ template<class WeightTypeInterface, typename WeightType> DijkstraShortPath<Weigh
     m_pGraph = NULL;
     m_result = INFINITY_PATH_INT;
     
+#if __GNUC__ > 4
     // We support only 2 types;
-    static_assert(sizeof(WeightType) == sizeof(FloatWeightType) || sizeof(WeightType) == sizeof(IntWeightType));
+    static_assert((sizeof(WeightType) == sizeof(FloatWeightType)) || (sizeof(WeightType) == sizeof(IntWeightType)));
+#endif
 }
 
 template<class WeightTypeInterface, typename WeightType> DijkstraShortPath<WeightTypeInterface, WeightType>::~DijkstraShortPath ()

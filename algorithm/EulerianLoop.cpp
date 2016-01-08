@@ -9,6 +9,7 @@
 #include "EulerianLoop.h"
 #include "IAlgorithmFactory.h"
 #include <list>
+#include <string.h>
 
 EulerianLoop::EulerianLoop () : m_pGraph(NULL), m_bResult(false)
 {
