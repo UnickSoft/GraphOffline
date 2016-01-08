@@ -44,7 +44,7 @@ bool EulerianLoop::EulerianLoop::Calculate()
 {
     m_bResult = false;
     
-    GraphPtr pGraph = GraphPtr(m_pGraph->MakeBaseCopy(GTC_REMOVE_SELF_LOOP));
+    GraphPtr pGraph = GraphPtr(m_pGraph->MakeBaseCopy(GCT_COPY));
     if (!pGraph)
     {
         return false;
@@ -56,11 +56,34 @@ bool EulerianLoop::EulerianLoop::Calculate()
     {
         bool bCanHas = false;
         
-        if (pGraph->IsDirected())
+        if (pGraph->HasDirected() && !pGraph->HasUndirected())
         {
+            AlgorithmParam param;
+            strncpy(param.paramName, "strong", sizeof(param.paramName));
+            param.data.bFlag = true;
             
+            //Search strong connected component.
+            connectedComponent->SetParameter(&param);
+            
+            connectedComponent->Calculate();
+            IntWeightType componentCount = connectedComponent->GetResult().nValue;
+            
+            if (componentCount == 1)
+            {
+                bCanHas = true;
+                
+                for (IndexType i = 0; (i < pGraph->GetNodesCount()) && bCanHas; i ++)
+                {
+                    ObjectId node = pGraph->GetNode(i);
+                    // Has odd node.
+                    if (pGraph->GetConnectedNodes(node) != pGraph->GetSourceNodesNumber(node))
+                    {
+                        bCanHas = false;
+                    }
+                }
+            }
         }
-        else
+        else if (!pGraph->HasDirected() && pGraph->HasUndirected())
         {
             connectedComponent->Calculate();
             IntWeightType componentCount = connectedComponent->GetResult().nValue;
@@ -72,17 +95,39 @@ bool EulerianLoop::EulerianLoop::Calculate()
                 {
                     ObjectId node = pGraph->GetNode(i);
                     // Has odd node.
-                    if (pGraph->GetConnectedNodes(i) % 2 == 1)
+                    if (pGraph->GetConnectedNodes(node) % 2 == 1)
                     {
                         bCanHas = false;
                     }
                 }
             }
         }
+        else
+        {
+            AlgorithmParam param;
+            strncpy(param.paramName, "strong", sizeof(param.paramName));
+            param.data.bFlag = true;
+            
+            //Search strong connected component.
+            connectedComponent->SetParameter(&param);
+            
+            connectedComponent->Calculate();
+            IntWeightType componentCount = connectedComponent->GetResult().nValue;
+            
+            bCanHas = (componentCount == 1);
+        }
         
         if (bCanHas)
         {
             m_bResult = _FindEulerianLoopRecursive(pGraph, pGraph->GetNode((IndexType)0));
+            if (m_bResult)
+            {
+                m_bResult = (m_EulerianLoop.size() - 1 == m_pGraph->GetEdgesCount());
+                if (!m_bResult)
+                {
+                    m_EulerianLoop.clear();
+                }
+            }
         }
     }
     

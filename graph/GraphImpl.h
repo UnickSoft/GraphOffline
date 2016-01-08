@@ -98,12 +98,15 @@ protected:
     std::unordered_set<ObjectId> processedEdge;
 };
 
+// 0 is invalid value. 1000 - because it is not the same as index.
+template<class WeightInterface, typename WeightType> IndexType Graph<WeightInterface, WeightType>::m_autoIncIndex = 1000;
+
 
 template<class WeightInterface, typename WeightType> Graph<WeightInterface, WeightType>::Graph(void)
 {
     m_weightType = WT_INT;
-    m_autoIncIndex = 1; // 0 is invalid value.
-    m_bDirected = false;
+    m_hasDirected   = false;
+    m_hasUndirected = false;
 }
 
 template<class WeightInterface, typename WeightType> Graph<WeightInterface, WeightType>::~Graph(void)
@@ -282,6 +285,9 @@ template<class WeightInterface, typename WeightType>  IndexType Graph<WeightInte
     {
         res = nodePtr->GetTargets().size();
     }
+    
+    assert(nodePtr);
+    
     return res;
 }
 
@@ -442,6 +448,9 @@ template<class WeightInterface, typename WeightType> IndexType Graph<WeightInter
 template<class WeightInterface, typename WeightType> Graph<WeightInterface, WeightType>* Graph<WeightInterface, WeightType>::MakeGraphCopy() const
 {
     Graph<WeightInterface, WeightType>* res = new Graph<WeightInterface, WeightType>();
+    
+    CopyPropertiesTo(res);
+    
     res->m_weightType = m_weightType;
     
     // Create all nodes.
@@ -469,7 +478,7 @@ template<class WeightInterface, typename WeightType> Graph<WeightInterface, Weig
 {
     auto* res = MakeGraphCopy();
     
-    if (res->m_bDirected)
+    if (res->m_hasDirected)
     {
         for (EdgePtr edge : res->m_edges)
         {
@@ -508,7 +517,8 @@ template<class WeightInterface, typename WeightType> typename Graph<WeightInterf
             targetNode->AddToTargets(sourceNode.get(), res->privateId);
         }
         
-        m_bDirected = m_bDirected || direct;
+        m_hasDirected = m_hasDirected || direct;
+        m_hasUndirected = m_hasUndirected || !direct;
     }
     
     return res;
@@ -521,16 +531,22 @@ template<class WeightInterface, typename WeightType> IGraph* Graph<WeightInterfa
 }
 
 // Is graph directed or not.
-template<class WeightInterface, typename WeightType> bool Graph<WeightInterface, WeightType>::IsDirected() const
+template<class WeightInterface, typename WeightType> bool Graph<WeightInterface, WeightType>::HasDirected() const
 {
-    return m_bDirected;
+    return m_hasDirected;
+}
+
+template<class WeightInterface, typename WeightType> bool Graph<WeightInterface, WeightType>::HasUndirected() const
+{
+    return m_hasUndirected;
 }
 
 // Make current graph undirected.
 template<class WeightInterface, typename WeightType> Graph<WeightInterface, WeightType>* Graph<WeightInterface, WeightType>::MakeGraphInverse() const
 {
     Graph<WeightInterface, WeightType>* res = new Graph<WeightInterface, WeightType>();
-    res->m_weightType = m_weightType;
+    
+    CopyPropertiesTo(res);
     
     // Create all nodes.
     for (NodePtr node : m_nodes)
@@ -593,7 +609,8 @@ template<class WeightInterface, typename WeightType> void Graph<WeightInterface,
 template<class WeightInterface, typename WeightType> Graph<WeightInterface, WeightType>* Graph<WeightInterface, WeightType>::MakeGraphRemoveSelfLoop() const
 {
     Graph<WeightInterface, WeightType>* res = new Graph<WeightInterface, WeightType>();
-    res->m_weightType = m_weightType;
+    
+    CopyPropertiesTo(res);
     
     // Create all nodes.
     for (NodePtr node : m_nodes)
@@ -643,6 +660,28 @@ template<class WeightInterface, typename WeightType> void Graph<WeightInterface,
     m_edges.erase(removeEdgePosition);
 }
 
+// How many nodes are source for this node.
+template<class WeightInterface, typename WeightType> IndexType Graph<WeightInterface, WeightType>::GetSourceNodesNumber(ObjectId source)
+{
+    IndexType res = 0;
+    for (EdgePtr edge : m_edges)
+    {
+        if (edge->target->privateId == source ||
+            (edge->source->privateId == source && !edge->direct))
+        {
+            res++;
+        }
+    }
+    
+    return res;
+}
 
+
+template<class WeightInterface, typename WeightType> void Graph<WeightInterface, WeightType>::CopyPropertiesTo(Graph<WeightInterface, WeightType>* pGraph) const
+{
+    pGraph->m_weightType  = m_weightType;
+    pGraph->m_hasDirected = m_hasDirected;
+    pGraph->m_hasUndirected = m_hasUndirected;
+}
 
 

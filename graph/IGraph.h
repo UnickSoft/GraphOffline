@@ -79,12 +79,16 @@ public:
     virtual EdgeWeightType GetEdgeWeightType() const = 0;
     // Create copy of graph.
     virtual IGraph* MakeBaseCopy(GraphCopyType type) const = 0;
-    // Is graph directed or not.
-    virtual bool IsDirected() const = 0;
+    // Has directed edges or not.
+    virtual bool HasDirected() const = 0;
+    // Has undirected edges or not.
+    virtual bool HasUndirected() const = 0;
     // Run DFS and call callbacks.
     virtual void ProcessDFS(IEnumStrategy* pEnumStrategy, ObjectId startedNode) const = 0;
     // Remove edge from Graph. For undirected Graph it removes source -> target or target -> source
     virtual void RemoveEdge(ObjectId source, ObjectId target) = 0;
+    // How many nodes are source for this node.
+    virtual IndexType GetSourceNodesNumber(ObjectId source) = 0;
     
     virtual ~IGraph() {};
 };

@@ -140,11 +140,14 @@ public:
     // Create copy of graph.
     virtual IGraph* MakeBaseCopy(GraphCopyType type) const;
     // Is graph directed or not.
-    virtual bool IsDirected() const;
+    virtual bool HasDirected() const;
+    virtual bool HasUndirected() const;
     // Run DFS and call callbacks.
     virtual void ProcessDFS(IEnumStrategy* pEnumStrategy, ObjectId startedNode) const;
     // Remove edge from Graph. For undirected Graph it removes source -> target or target -> source
     virtual void RemoveEdge(ObjectId source, ObjectId target);
+    // How many nodes are source for this node.
+    virtual IndexType GetSourceNodesNumber(ObjectId source);
 
     // Find Node by Id
     NodePtr FindNode(const String& id) const;
@@ -189,16 +192,21 @@ protected:
     
     IndexType GetNextId();
     
+    void CopyPropertiesTo(Graph<WeightInterface, WeightType>* pGraph) const;
+    
     // List of graph.
     NodePtrVector m_nodes;
     EdgePtrVector m_edges;
     
+    
+    // ATTANTION: If you add new fields please update CopyProperties.
     EdgeWeightType m_weightType;
-    IndexType      m_autoIncIndex;
+    static IndexType m_autoIncIndex;
     
-    bool m_bDirected;
+    bool m_hasDirected;
+    bool m_hasUndirected;
     
-    // ATTANTION: If you add new fields please update MakeGraphCopy.
+    // ATTANTION: If you add new fields please update CopyProperties.
 };
 
 typedef Graph<IGraphInt, IntWeightType> IntGraph;

@@ -62,7 +62,7 @@ bool ConnectedComponent::Calculate()
     if (m_pGraph->GetNodesCount() > 0)
     {
         // Find strong connected component.
-        if (m_bStrongComponent && m_pGraph->IsDirected())
+        if (m_bStrongComponent && m_pGraph->HasDirected())
         {
             res = FindStrongComponent();
         }
