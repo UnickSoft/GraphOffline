@@ -11,6 +11,9 @@
 #include <list>
 #include <string.h>
 
+static const char* g_indexStr = "index";
+static const char* g_indexCountStr = "indexCount";
+
 EulerianLoop::EulerianLoop () : m_pGraph(NULL), m_bResult(false)
 {
     
@@ -67,7 +70,7 @@ bool EulerianLoop::EulerianLoop::Calculate()
             connectedComponent->SetParameter(&param);
             
             connectedComponent->Calculate();
-            IntWeightType componentCount = connectedComponent->GetResult().nValue;
+            IntWeightType componentCount = connectedComponent->GetResult(0).nValue;
             
             if (componentCount == 1)
             {
@@ -87,7 +90,7 @@ bool EulerianLoop::EulerianLoop::Calculate()
         else if (!pGraph->HasDirected() && pGraph->HasUndirected())
         {
             connectedComponent->Calculate();
-            IntWeightType componentCount = connectedComponent->GetResult().nValue;
+            IntWeightType componentCount = connectedComponent->GetResult(0).nValue;
             
             if (componentCount == 1)
             {
@@ -113,7 +116,7 @@ bool EulerianLoop::EulerianLoop::Calculate()
             connectedComponent->SetParameter(&param);
             
             connectedComponent->Calculate();
-            IntWeightType componentCount = connectedComponent->GetResult().nValue;
+            IntWeightType componentCount = connectedComponent->GetResult(0).nValue;
             
             bCanHas = (componentCount == 1);
         }
@@ -162,8 +165,15 @@ NodesEdge EulerianLoop::GetHightlightEdge(IndexType index) const
     return edge;
 }
 
+
+// Get result count.
+IndexType EulerianLoop::GetResultCount() const
+{
+    return 1;
+}
+
 // Get result.
-AlgorithmResult EulerianLoop::GetResult() const
+AlgorithmResult EulerianLoop::GetResult(IndexType index) const
 {
     return AlgorithmResult((IntWeightType)m_bResult);
 }
@@ -171,11 +181,32 @@ AlgorithmResult EulerianLoop::GetResult() const
 // Get propery
 bool EulerianLoop::GetProperty(ObjectId object, IndexType index, AlgorithmResult* param) const
 {
-    return false;
+    bool res = false;
+    if (index == 0 && param)
+    {
+        auto position = std::find(m_EulerianLoop.begin(), m_EulerianLoop.end(), object);
+        
+        if (position != m_EulerianLoop.end())
+        {
+            param->type = ART_INT;
+            param->nValue = (IntWeightType)(position - m_EulerianLoop.begin());
+            res = true;
+        }
+    }
+    return res;
 }
 
 const char* EulerianLoop::GetPropertyName(IndexType index) const
 {
+    if (index == 0)
+    {
+        return g_indexCountStr;
+    }
+    else if (index == 1)
+    {
+        return g_indexStr;
+    }
+    
     return nullptr;
 }
 

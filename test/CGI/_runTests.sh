@@ -13,4 +13,5 @@ if diff --ignore-all-space graph_shortPath_3.xml.cgi.res graph_shortPath_3.xml.c
     rm *.test >/dev/null
 else
     echo "Failed."
+    exit 1
 fi

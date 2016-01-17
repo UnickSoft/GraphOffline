@@ -32,7 +32,7 @@ struct AlgorithmParam
     } data;
 };
 
-enum AlgorithmResultType {ART_UNKNOWN = 0, ART_INT, ART_FLOAT, ART_STRING};
+enum AlgorithmResultType {ART_UNKNOWN = 0, ART_INT, ART_FLOAT, ART_STRING, ART_NODES_PATH};
 
 struct AlgorithmResult
 {
@@ -80,8 +80,10 @@ public:
   virtual IndexType GetHightlightEdgesCount() const = 0;
   // Hightlight edge.
   virtual NodesEdge GetHightlightEdge(IndexType index) const = 0;
-  // Get result.
-  virtual AlgorithmResult GetResult() const = 0;
+  // Get result count.
+  virtual IndexType GetResultCount() const = 0;
+  // Get result of index. Algorithms can have complex result.
+  virtual AlgorithmResult GetResult(IndexType index) const = 0;
   // Get propery
   virtual bool GetProperty(ObjectId object, IndexType index, AlgorithmResult* param) const = 0;
   virtual const char* GetPropertyName(IndexType index) const = 0;

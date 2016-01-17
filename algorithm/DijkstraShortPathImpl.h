@@ -10,6 +10,9 @@
 #include <string.h>
 #include <list>
 
+static const char* g_lowestDistanceStr = "lowestDistance";
+static const char* g_indexStr = "index";
+
 template<class WeightTypeInterface, typename WeightType> DijkstraShortPath<WeightTypeInterface, WeightType>::DijkstraShortPath ()
 {
     m_source = 0;
@@ -176,20 +179,36 @@ template<class WeightTypeInterface, typename WeightType> NodesEdge DijkstraShort
   return edge;
 }
 
-template<class WeightTypeInterface, typename WeightType> AlgorithmResult DijkstraShortPath<WeightTypeInterface, WeightType>::GetResult() const
+// Get result count.
+template<class WeightTypeInterface, typename WeightType>  IndexType DijkstraShortPath<WeightTypeInterface, WeightType>::GetResultCount() const
+{
+    return 1 + m_path.size();
+}
+
+template<class WeightTypeInterface, typename WeightType> AlgorithmResult DijkstraShortPath<WeightTypeInterface, WeightType>::GetResult(IndexType index) const
 {
     AlgorithmResult result;
+
+    if (index == 0)
+    {
+        if (typeid(WeightType) == typeid(FloatWeightType))
+        {
+            result.type = ART_FLOAT;
+            result.fValue = (FloatWeightType) m_result;
+        }
+        else
+        {
+            result.type = ART_INT;
+            result.nValue = (IntWeightType) m_result;
+        }
+    }
+    else if (index < m_path.size() + 1)
+    {
+        result.type = ART_NODES_PATH;
+        m_pGraph->GetNodeStrId(m_path[index - 1], result.strValue,
+                               sizeof(result.strValue));
+    }
     
-    if (typeid(WeightType) == typeid(FloatWeightType))
-    {
-        result.type = ART_FLOAT;
-        result.fValue = (FloatWeightType) m_result;
-    }
-    else
-    {
-        result.type = ART_INT;
-        result.nValue = (IntWeightType) m_result;
-    }
     return result;
 }
 
@@ -211,6 +230,17 @@ template<class WeightTypeInterface, typename WeightType> bool DijkstraShortPath<
         }
         result = true;
     }
+    if (index == 1 && param)
+    {
+        auto position = std::find(m_path.begin(), m_path.end(), object);
+        
+        if (position != m_path.end())
+        {
+            param->type = ART_INT;
+            param->nValue = (IntWeightType)(position - m_path.begin());
+            result = true;
+        }
+    }
 
     return result;
 }
@@ -226,7 +256,11 @@ template<class WeightTypeInterface, typename WeightType> const char* DijkstraSho
 {
     if (index == 0)
     {
-        return "lowestDistance";
+        return g_lowestDistanceStr;
+    }
+    else if (index == 1)
+    {
+        return g_indexStr;
     }
     else
     {

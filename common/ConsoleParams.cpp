@@ -82,7 +82,7 @@ bool ConsoleParams::ProcessConsoleParams(const std::vector<String>& params)
                         
                         if (reporter)
                         {
-                            LOG_INFO("Result is " << algorithm->GetResult());
+                            LOG_INFO("Result is " << algorithm->GetResult(0));
                             
                             uint32_t neededSize = reporter->GetReport(algorithm.get(), pGraph, nullptr, 0);
                             if (neededSize > 0)

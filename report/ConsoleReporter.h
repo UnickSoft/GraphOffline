@@ -31,11 +31,11 @@ public:
         char tempBuffer[MAX_REPORT] = {0};
         if (pGraph->GetEdgeWeightType() == WT_INT)
         {
-            sprintf(tempBuffer, "Result is %d (", pAlgorithm->GetResult().nValue);
+            sprintf(tempBuffer, "Result is %d (", pAlgorithm->GetResult(0).nValue);
         }
         else
         {
-            sprintf(tempBuffer, "Result is %f (", pAlgorithm->GetResult().fValue);
+            sprintf(tempBuffer, "Result is %f (", pAlgorithm->GetResult(0).fValue);
         }
         result = String(tempBuffer);
         

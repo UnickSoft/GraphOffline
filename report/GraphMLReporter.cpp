@@ -17,9 +17,7 @@ const char* xmlStartShort = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n \
 
 const char* xmlEnd = "</graphml>\n";
 
-const char* xmlGraphHeaderMaskInt = "<graph id=\"G\" edgedefault=\"undirected\" result=\"%d\">\n";
-const char* xmlGraphHeaderMaskFloat = "<graph id=\"G\" edgedefault=\"undirected\" result=\"%f\">\n";
-
+const char* xmlGraphHeaderMask = "<graph id=\"G\" edgedefault=\"undirected\">\n";
 const char* xmlGraphFooter = "</graph>\n";
 const char* xmlGraphNodeStart = "<node id=\"%s\">\n";
 const char* xmlGraphNodeEnd = "</node>\n";
@@ -29,6 +27,11 @@ const char* xmlGraphNodePropertyInt   = "<data key=\"%s\">%d</data>\n";
 const char* xmlGraphNodePropertyFloat = "<data key=\"%s\">%f</data>\n";
 
 const char* xmlGraphNodeHightlight     = "<data key=\"hightlightNode\">%d</data>\n";
+
+const char* xmlResultHead   = "<result count=\"%d\">\n";
+const char* xmlResultFooter = "</result>\n";
+const char* xmlResultValueHead = "  <value type=\"%d\">";
+const char* xmlResultValueFooter = "</value>\n";
 
 
 #define MAX_NODE_CHAR 128
@@ -52,32 +55,66 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
     IndexType res = 0;
     if (pAlgorithm && pGraph)
     {
-        const char* xmlGraphHeaderMask = NULL;
         const char* xmlGraphNodeProperty = NULL;
         
         if (pGraph->GetEdgeWeightType() == WT_INT)
         {
-            xmlGraphHeaderMask = xmlGraphHeaderMaskInt;
             xmlGraphNodeProperty = xmlGraphNodePropertyInt;
         }
         else
         {
-            xmlGraphHeaderMask = xmlGraphHeaderMaskFloat;
             xmlGraphNodeProperty = xmlGraphNodePropertyFloat;
         }
         
+
         std::string result = xmlStartShort;
-        char graphHeader[MAX_NODE_CHAR]  = {0};
-        AlgorithmResult algorithResult =  pAlgorithm->GetResult();
-        sprintf(graphHeader, xmlGraphHeaderMask, (WeightType)(algorithResult.type == ART_INT ? algorithResult.nValue : algorithResult.fValue));
-        result += graphHeader;
+        result += xmlGraphHeaderMask;
         
+
+        char strBuffer[MAX_NODE_CHAR] = {0};
+        sprintf(strBuffer, xmlResultHead, pAlgorithm->GetResultCount());
+        result += strBuffer;
+        
+        // Add result.
+        for (IndexType i = 0; i < pAlgorithm->GetResultCount(); i++)
+        {
+            AlgorithmResult res = pAlgorithm->GetResult(i);
+            
+            sprintf(strBuffer, xmlResultValueHead, res.type);
+            
+            result += strBuffer;
+            
+            switch (res.type) {
+                case ART_INT:
+                    sprintf(strBuffer, "%d", res.nValue);
+                    break;
+                case ART_FLOAT:
+                    sprintf(strBuffer, "%f", res.fValue);
+                    break;
+                case ART_STRING:
+                    sprintf(strBuffer, "%s", res.strValue);
+                    break;
+                case ART_NODES_PATH:
+                    sprintf(strBuffer, "%s", res.strValue);
+                    break;
+                default:
+                    strBuffer[0] = 0;
+                    break;
+            }
+            result += strBuffer;
+            
+            result += xmlResultValueFooter;
+        }
+        
+        result += xmlResultFooter;
+        
+        // Add nodes. <node>
         std::map<ObjectId, bool> hightlightNodes;
         for (int i = 0; i < pAlgorithm->GetHightlightNodesCount(); i++)
         {
             hightlightNodes[pAlgorithm->GetHightlightNode(i)] = true;
         }
-        
+    
         for (int i = 0; i < pGraph->GetNodesCount(); i++)
         {
             char* strNodeStrId[MAX_ID] = {0};
@@ -104,6 +141,7 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
             result += xmlGraphNodeEnd;
         }
         
+        // Add edges. <edge>
         for (int i = 0; i < pAlgorithm->GetHightlightEdgesCount(); i++)
         {
             NodesEdge edge = pAlgorithm->GetHightlightEdge(i);

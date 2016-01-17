@@ -40,8 +40,10 @@ public:
     virtual IndexType GetHightlightEdgesCount() const;
     // Hightlight edge.
     virtual NodesEdge GetHightlightEdge(IndexType index) const;
-    // Get result.
-    virtual AlgorithmResult GetResult() const;
+    // Get result count.
+    virtual IndexType GetResultCount() const;
+    // Get result of index. Algorithms can have complex result.
+    virtual AlgorithmResult GetResult(IndexType index) const;
     // Get propery
     virtual bool GetProperty(ObjectId object, IndexType index, AlgorithmResult* param) const;
     virtual const char* GetPropertyName(IndexType index) const;

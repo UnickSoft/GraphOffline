@@ -100,8 +100,14 @@ NodesEdge ConnectedComponent::GetHightlightEdge(IndexType index) const
     return NodesEdge();
 }
 
+// Get result count.
+IndexType ConnectedComponent::GetResultCount() const
+{
+    return 1;
+}
+
 // Get result.
-AlgorithmResult ConnectedComponent::GetResult() const
+AlgorithmResult ConnectedComponent::GetResult(IndexType index) const
 {
     return AlgorithmResult(m_nConnectedCompCount);
 }
