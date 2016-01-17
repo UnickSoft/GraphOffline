@@ -3,8 +3,19 @@ Content-Type: text/html
 <?xml version="1.0" encoding="UTF-8"?>
      <graphml>
 <graph id="G" edgedefault="undirected">
-<result count="1">
+<result count="12">
   <value type="1">1</value>
+  <value type="4">n0</value>
+  <value type="4">n2</value>
+  <value type="4">n3</value>
+  <value type="4">n1</value>
+  <value type="4">n5</value>
+  <value type="4">n0</value>
+  <value type="4">n7</value>
+  <value type="4">n5</value>
+  <value type="4">n6</value>
+  <value type="4">n1</value>
+  <value type="4">n0</value>
 </result>
 <node id="n0">
 <data key="indexCount">0</data>

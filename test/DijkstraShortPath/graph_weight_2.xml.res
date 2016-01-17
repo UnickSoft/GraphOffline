@@ -1,1 +1,1 @@
-Result is 7 (0->1,1->3)
+Result is 7 (0->1->3)

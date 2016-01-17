@@ -169,13 +169,26 @@ NodesEdge EulerianLoop::GetHightlightEdge(IndexType index) const
 // Get result count.
 IndexType EulerianLoop::GetResultCount() const
 {
-    return 1;
+    return 1 + m_EulerianLoop.size();
 }
 
 // Get result.
 AlgorithmResult EulerianLoop::GetResult(IndexType index) const
 {
-    return AlgorithmResult((IntWeightType)m_bResult);
+    AlgorithmResult result;
+    
+    if (index == 0)
+    {
+        result = AlgorithmResult((IntWeightType)m_bResult);
+    }
+    else if (index < m_EulerianLoop.size() + 1)
+    {
+        result.type = ART_NODES_PATH;
+        m_pGraph->GetNodeStrId(m_EulerianLoop[index - 1], result.strValue,
+                               sizeof(result.strValue));
+    }
+    
+    return result;
 }
 
 // Get propery

@@ -39,15 +39,14 @@ public:
         }
         result = String(tempBuffer);
         
-        for (int i = 0; i < pAlgorithm->GetHightlightEdgesCount(); i++)
+        for (int i = 1; i < pAlgorithm->GetResultCount(); i++)
         {
-            NodesEdge edge = pAlgorithm->GetHightlightEdge(i);
-            char* strSourceNodeId[MAX_ID] = {0};
-            pGraph->GetNodeStrId(edge.source, (char *)strSourceNodeId, MAX_ID);
-            char* strTargetNodeId[MAX_ID] = {0};
-            pGraph->GetNodeStrId(edge.target, (char *)strTargetNodeId, MAX_ID);
+            AlgorithmResult node = pAlgorithm->GetResult(i);
             
-            result = result + String(i > 0 ? "," : "") + String ((char *)strSourceNodeId) + String("->") + String((char *)strTargetNodeId);
+            if (node.type == ART_NODES_PATH)
+            {
+                result = result + String (node.strValue) + String(i < pAlgorithm->GetResultCount() - 1 ? "->" : "");
+            }
         }
         
         result = result + String(")");

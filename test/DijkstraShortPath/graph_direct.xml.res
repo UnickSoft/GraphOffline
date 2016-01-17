@@ -1,1 +1,1 @@
-Result is 2 (0->1,1->2)
+Result is 2 (0->1->2)
