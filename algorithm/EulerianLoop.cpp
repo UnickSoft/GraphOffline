@@ -10,6 +10,7 @@
 #include "IAlgorithmFactory.h"
 #include <list>
 #include <string.h>
+#include <algorithm>
 
 static const char* g_indexStr = "index";
 static const char* g_indexCountStr = "indexCount";
