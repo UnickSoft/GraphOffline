@@ -8,9 +8,8 @@
 
 #include "AlgorithmFactory.h"
 #include "DijkstraShortPath.h"
-#include "EulerianLoop.h"
 #include "ConnectedComponent.h"
-
+#include "EulerianPath.h"
 
 IAlgorithm* AlgorithmFactory::CreateAlgorithm(const char* name, const IGraph* pGraph) const
 {
@@ -130,13 +129,19 @@ IAlgorithm* AlgorithmFactory::_CreateAlgorithm(IndexType index, bool bFloat) con
         }
         case 1:
         {
-            res = new EulerianLoop();
+            res = new EulerianPath(true);//EulerianLoop();
             break;
         }
             
         case 2:
         {
             res = new ConnectedComponent();
+            break;
+        }
+        
+        case 3:
+        {
+            res = new EulerianPath(false);
             break;
         }
     }

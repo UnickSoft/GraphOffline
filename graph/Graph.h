@@ -27,11 +27,13 @@ public:
     {
         String id;
         ObjectId privateId;
+        bool fake;
         
-        Node(const String& id, IndexType privateId)
+        Node(const String& id, IndexType privateId, bool fake)
         {
             this->id = id;
             this->privateId = privateId;
+            this->fake = fake;
         }
         
         const std::vector<Node*>& GetTargets() const
@@ -133,7 +135,7 @@ public:
     // Return graph string Id.
     virtual bool GetNodeStrId(ObjectId node, char* outBuffer, IndexType bufferSize) const;
     // Is edge exists in input graph.
-    virtual bool IsEgdeExists(ObjectId source, ObjectId target) const;
+    virtual bool IsEgdeExists(ObjectId source, ObjectId target, bool onlyInSourceGraph = true) const;
     // Get weight real type
     virtual EdgeWeightType GetEdgeWeightType() const;
     // Create copy of graph.
@@ -149,9 +151,18 @@ public:
     virtual void RemoveEdge(ObjectId source, ObjectId target);
     // How many nodes are source for this node.
     virtual IndexType GetSourceNodesNumber(ObjectId source);
+    
+    // Add edge
+    virtual bool AddEdge(ObjectId source, ObjectId target, bool direct, const FloatWeightType& weight) override;
+    
+    // Add node
+    virtual ObjectId AddNode(bool fake) override;
 
     // Find Node by Id
     NodePtr FindNode(const String& id) const;
+    
+    // Fake node
+    bool IsFakeNode(ObjectId source) override;
     
 protected:
     
@@ -194,6 +205,8 @@ protected:
     IndexType GetNextId();
     
     void CopyPropertiesTo(Graph<WeightInterface, WeightType>* pGraph) const;
+    
+    ObjectId AddNode(const String& idNode, IndexType privateId, bool fake);
     
     // List of graph.
     NodePtrVector m_nodes;

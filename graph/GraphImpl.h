@@ -163,7 +163,8 @@ template<class WeightInterface, typename WeightType> bool Graph<WeightInterface,
                 pugi::xml_object_range<pugi::xml_named_node_iterator> nodeList = graph.children("node");
                 for (pugi::xml_named_node_iterator node = nodeList.begin(); node != nodeList.end(); node++)
                 {
-                    m_nodes.push_back(NodePtr(new Node(String(node->attribute("id").value()), GetNextId())));
+                    AddNode(String(node->attribute("id").value()), GetNextId(), false);
+                    //m_nodes.push_back(NodePtr(new Node(String(node->attribute("id").value()), GetNextId())));
                 }
                 
                 // Enum edges.
@@ -316,7 +317,7 @@ template<class WeightInterface, typename WeightType>  bool Graph<WeightInterface
 }
 
 // Is edge exists in input graph.
-template<class WeightInterface, typename WeightType>  bool Graph<WeightInterface, WeightType>::IsEgdeExists(ObjectId source, ObjectId target) const
+template<class WeightInterface, typename WeightType>  bool Graph<WeightInterface, WeightType>::IsEgdeExists(ObjectId source, ObjectId target, bool onlyInSourceGraph) const
 {
   bool res = false;
   NodePtr sourcePtr, targetPtr;
@@ -324,7 +325,9 @@ template<class WeightInterface, typename WeightType>  bool Graph<WeightInterface
   {
     for (int i = 0; i < m_edges.size(); i++)
     {
-      if (m_edges[i]->source == sourcePtr && m_edges[i]->target == targetPtr)
+      auto& edge = m_edges[i];
+      if ((edge->source == sourcePtr && edge->target == targetPtr)
+      || (!onlyInSourceGraph && !edge->direct && edge->source == targetPtr && edge->target == sourcePtr))
       {
         res = true;
         break;
@@ -456,7 +459,7 @@ template<class WeightInterface, typename WeightType> Graph<WeightInterface, Weig
     // Create all nodes.
     for (NodePtr node : m_nodes)
     {
-        res->m_nodes.push_back(NodePtr(new Node(node->id, node->privateId)));
+        res->m_nodes.push_back(NodePtr(new Node(node->id, node->privateId, node->fake)));
     }
     
     // Add edges.
@@ -551,7 +554,7 @@ template<class WeightInterface, typename WeightType> Graph<WeightInterface, Weig
     // Create all nodes.
     for (NodePtr node : m_nodes)
     {
-        res->m_nodes.push_back(NodePtr(new Node(node->id, node->privateId)));
+        res->m_nodes.push_back(NodePtr(new Node(node->id, node->privateId, node->fake)));
     }
     
     // Add edges.
@@ -615,7 +618,7 @@ template<class WeightInterface, typename WeightType> Graph<WeightInterface, Weig
     // Create all nodes.
     for (NodePtr node : m_nodes)
     {
-        res->m_nodes.push_back(NodePtr(new Node(node->id, node->privateId)));
+        res->m_nodes.push_back(NodePtr(new Node(node->id, node->privateId, node->fake)));
     }
     
     // Add edges.
@@ -684,4 +687,39 @@ template<class WeightInterface, typename WeightType> void Graph<WeightInterface,
     pGraph->m_hasUndirected = m_hasUndirected;
 }
 
+// Add edge
+template<class WeightInterface, typename WeightType> bool Graph<WeightInterface, WeightType>::AddEdge(ObjectId source, ObjectId target, bool direct, const FloatWeightType& weight)
+{
+    auto indexId = GetNextId();
+    
+    EdgePtr edge = AddEdge(String().FromInt(indexId), source, target, direct, (WeightType)weight, indexId);
+    
+    return edge != nullptr;
+}
 
+// Add node
+template<class WeightInterface, typename WeightType> ObjectId Graph<WeightInterface, WeightType>::AddNode(bool fake)
+{
+    auto idNode = GetNextId();
+    return AddNode(String().FromInt(idNode), idNode, fake);
+}
+
+template<class WeightInterface, typename WeightType> ObjectId Graph<WeightInterface, WeightType>::AddNode(const String& idNode, IndexType privateId, bool fake)
+{
+    m_nodes.push_back(NodePtr(new Node(idNode, privateId, fake)));
+    return m_nodes.back()->privateId;
+}
+
+template<class WeightInterface, typename WeightType> bool Graph<WeightInterface, WeightType>::IsFakeNode(ObjectId source)
+{
+    bool res = false;
+    NodePtr nodePtr;
+    if (IsValidNodeId(source, nodePtr) && nodePtr)
+    {
+        res = nodePtr->fake;
+    }
+    
+    assert(nodePtr);
+    
+    return res;
+}

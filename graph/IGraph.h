@@ -74,7 +74,7 @@ public:
     // Return graph string Id.
     virtual bool GetNodeStrId(ObjectId node, char* outBuffer, IndexType bufferSize) const = 0;
     // Is edge exists in input graph. It is not the same with AreNodesConnected.
-    virtual bool IsEgdeExists(ObjectId source, ObjectId target) const = 0;
+    virtual bool IsEgdeExists(ObjectId source, ObjectId target, bool onlyInSourceGraph = true) const = 0;
     // Get weight real type
     virtual EdgeWeightType GetEdgeWeightType() const = 0;
     // Create copy of graph.
@@ -89,6 +89,12 @@ public:
     virtual void RemoveEdge(ObjectId source, ObjectId target) = 0;
     // How many nodes are source for this node.
     virtual IndexType GetSourceNodesNumber(ObjectId source) = 0;
+    // Add edge
+    virtual bool AddEdge(ObjectId source, ObjectId target, bool direct, const FloatWeightType& weight) = 0;
+    // Add node
+    virtual ObjectId AddNode(bool fake) = 0;
+    // Is fake node or not.
+    virtual bool IsFakeNode(ObjectId source) = 0;
     
     virtual ~IGraph() {};
 };
