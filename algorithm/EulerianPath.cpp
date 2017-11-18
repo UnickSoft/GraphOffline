@@ -77,7 +77,7 @@ bool EulerianPath::EulerianPath::Calculate()
             connectedComponent->Calculate();
             IntWeightType componentCount = connectedComponent->GetResult(0).nValue;
             
-            if (componentCount <= 2)
+            if ((componentCount == 1 && m_loop) || (componentCount >= 1 && !m_loop))
             {
                 bCanHasLoop = true;
                 ObjectId startObject  = -1;
