@@ -1,12 +1,12 @@
 //
-//  EulerianLoop.cpp
+//  EulerianPath.cpp
 //  Graphoffline
 //
 //  Created by Олег on 26.12.15.
 //
 //
 
-#include "EulerianLoop.h"
+#include "EulerianPath.h"
 #include "IAlgorithmFactory.h"
 #include <list>
 #include <string.h>
@@ -15,37 +15,37 @@
 static const char* g_indexStr = "index";
 static const char* g_indexCountStr = "indexCount";
 
-EulerianLoop::EulerianLoop () : m_pGraph(NULL), m_bResult(false)
+EulerianPath::EulerianPath (bool loop) : m_pGraph(NULL), m_bResult(false), m_loop(loop)
 {
     
 }
 
-EulerianLoop::~EulerianLoop ()
+EulerianPath::~EulerianPath ()
 {
     
 }
 
 // Enum parameters
-bool EulerianLoop::EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const
+bool EulerianPath::EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const
 {
     return false;
 }
 
 
 // Set parameter to algorithm.
-void EulerianLoop::SetParameter(const AlgorithmParam* outParamInfo)
+void EulerianPath::SetParameter(const AlgorithmParam* outParamInfo)
 {
     
 }
 
 // Set graph
-void EulerianLoop::SetGraph(const IGraph* pGraph)
+void EulerianPath::SetGraph(const IGraph* pGraph)
 {
     m_pGraph = pGraph;
 }
 
 // Calculate algorithm.
-bool EulerianLoop::EulerianLoop::Calculate()
+bool EulerianPath::EulerianPath::Calculate()
 {
     m_bResult = false;
     
@@ -59,8 +59,12 @@ bool EulerianLoop::EulerianLoop::Calculate()
     
     if (connectedComponent)
     {
-        bool bCanHas = false;
+        bool bCanHasLoop   = false;
+        bool greedyTry     = false; // Try greedy algorithm to find path.
         
+        std::vector<ObjectId> odd_vertex;
+        
+        // Find in full directed graph.
         if (pGraph->HasDirected() && !pGraph->HasUndirected())
         {
             AlgorithmParam param;
@@ -73,21 +77,43 @@ bool EulerianLoop::EulerianLoop::Calculate()
             connectedComponent->Calculate();
             IntWeightType componentCount = connectedComponent->GetResult(0).nValue;
             
-            if (componentCount == 1)
+            if (componentCount <= 2)
             {
-                bCanHas = true;
+                bCanHasLoop = true;
+                ObjectId startObject  = -1;
+                ObjectId finishObject = -1;
                 
-                for (IndexType i = 0; (i < pGraph->GetNodesCount()) && bCanHas; i ++)
+                // Try to connect 2 nodes to has loop.
+                for (IndexType i = 0; i < pGraph->GetNodesCount(); i ++)
                 {
                     ObjectId node = pGraph->GetNode(i);
                     // Has odd node.
                     if (pGraph->GetConnectedNodes(node) != pGraph->GetSourceNodesNumber(node))
                     {
-                        bCanHas = false;
+                        bCanHasLoop = false;
+                    }
+                    
+                    if (pGraph->GetConnectedNodes(node) + 1 == pGraph->GetSourceNodesNumber(node)&& startObject == -1)
+                    {
+                        startObject = node;
+                    }
+                    
+                    if (pGraph->GetConnectedNodes(node) - 1 == pGraph->GetSourceNodesNumber(node)&& finishObject == -1)
+                    {
+                        finishObject = node;
                     }
                 }
+                
+                // If we serach path and has no loop, try to connect.
+                if (!m_loop && !bCanHasLoop && startObject != -1 && finishObject != -1)
+                {
+                    pGraph->AddEdge(startObject, finishObject, false, 1.0);
+                    odd_vertex.push_back(startObject);
+                    odd_vertex.push_back(finishObject);
+                    bCanHasLoop = true;
+                }
             }
-        }
+        } // Find in full undirected graph.
         else if (!pGraph->HasDirected() && pGraph->HasUndirected())
         {
             connectedComponent->Calculate();
@@ -95,15 +121,36 @@ bool EulerianLoop::EulerianLoop::Calculate()
             
             if (componentCount == 1)
             {
-                bCanHas = true;
-                for (IndexType i = 0; (i < pGraph->GetNodesCount()) && bCanHas; i ++)
+                bCanHasLoop = true;
+                
+                for (IndexType i = 0; i < pGraph->GetNodesCount(); i ++)
                 {
                     ObjectId node = pGraph->GetNode(i);
                     // Has odd node.
                     if (pGraph->GetConnectedNodes(node) % 2 == 1)
                     {
-                        bCanHas = false;
+                        bCanHasLoop = false;
+                        if (!m_loop)
+                        {
+                            odd_vertex.push_back(node);
+                        }
                     }
+                }
+                
+                if (!m_loop && odd_vertex.size() == 2)
+                {
+                    // Create the same second egde.
+                    if (pGraph->IsEgdeExists(odd_vertex[0], odd_vertex[1]))
+                    {
+                        auto fakeNodeId = pGraph->AddNode(true);
+                        pGraph->AddEdge(odd_vertex[0], fakeNodeId, false, 1.0);
+                        pGraph->AddEdge(fakeNodeId, odd_vertex[1], false, 1.0);
+                    }
+                    else
+                    {
+                        pGraph->AddEdge(odd_vertex[0], odd_vertex[1], false, 1.0);
+                    }
+                    bCanHasLoop = true;
                 }
             }
         }
@@ -119,18 +166,81 @@ bool EulerianLoop::EulerianLoop::Calculate()
             connectedComponent->Calculate();
             IntWeightType componentCount = connectedComponent->GetResult(0).nValue;
             
-            bCanHas = (componentCount == 1);
+            bCanHasLoop = (componentCount == 1);
+            greedyTry   = (componentCount <= 2) && !m_loop;
         }
         
-        if (bCanHas)
+        if (bCanHasLoop || greedyTry)
         {
-            m_bResult = _FindEulerianLoopRecursive(pGraph, pGraph->GetNode((IndexType)0));
-            if (m_bResult)
             {
-                m_bResult = (m_EulerianLoop.size() - 1 == m_pGraph->GetEdgesCount());
-                if (!m_bResult)
+                auto edgesNumber = pGraph->GetEdgesCount();
+                
+                if (greedyTry)
                 {
-                    m_EulerianLoop.clear();
+                    GraphPtr pCopyGraph = GraphPtr(pGraph->MakeBaseCopy(GCT_COPY));
+                    m_bResult = _FindEulerianLoopRecursive(pCopyGraph, (odd_vertex.size() == 2) ? odd_vertex[1] : pCopyGraph->GetNode((IndexType)0));
+                }
+                else
+                {
+                    m_bResult = _FindEulerianLoopRecursive(pGraph, (odd_vertex.size() == 2) ? odd_vertex[1] : pGraph->GetNode((IndexType)0));
+                }
+                if (m_bResult)
+                {
+                    m_bResult = (m_EulerianLoop.size() - 1 == edgesNumber);
+                    if (!m_bResult)
+                    {
+                        m_EulerianLoop.clear();
+                        
+                        // Try greedy algorithm for path.
+                        if (greedyTry)
+                        {
+                            // Run greedy. Create edge between all pair of all vertexes.
+                            // TODO: Optimize greedy, use not all vertexes.
+                            for (IndexType i = 0; i < pGraph->GetNodesCount() && m_EulerianLoop.size() == 0; i ++)
+                            {
+                                for (IndexType j = 0; j < pGraph->GetNodesCount() && m_EulerianLoop.size() == 0; j ++)
+                                {
+                                    auto start  = pGraph->GetNode(i);
+                                    auto finish = pGraph->GetNode(j);
+                                    
+                                    if (i != j && !pGraph->IsEgdeExists(start, finish, false))
+                                    {
+                                        GraphPtr pCopyGraph = GraphPtr(pGraph->MakeBaseCopy(GCT_COPY));
+                                        pCopyGraph->AddEdge(start, finish, true, 1.0);
+                                        auto edgesNumber = pCopyGraph->GetEdgesCount();
+                                        m_bResult = _FindEulerianLoopRecursive(pCopyGraph, finish);
+                                        if (m_bResult)
+                                        {
+                                            m_bResult = (m_EulerianLoop.size() - 1 == edgesNumber);
+                                            if (!m_bResult)
+                                            {
+                                                m_EulerianLoop.clear();
+                                            }
+                                            else
+                                            {
+                                                m_EulerianLoop.erase(m_EulerianLoop.end() - 1);
+                                                for (int k = 0; k < m_EulerianLoop.size() - 1; k++)
+                                                {
+                                                    if (m_EulerianLoop[k] == start && m_EulerianLoop[k + 1] == finish)
+                                                    {
+                                                        m_EulerianLoop.insert(m_EulerianLoop.end(), m_EulerianLoop.begin(), m_EulerianLoop.begin() + k + 1);
+                                                        m_EulerianLoop.erase(m_EulerianLoop.begin(), m_EulerianLoop.begin() + k + 1);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (odd_vertex.size() == 2)
+                    {
+                        m_EulerianLoop.erase(m_EulerianLoop.end() - 1);
+                        m_EulerianLoop.erase(std::remove_if(m_EulerianLoop.begin(), m_EulerianLoop.end(), [pGraph](const ObjectId& idObj){
+                            return pGraph->IsFakeNode(idObj);
+                        }), m_EulerianLoop.end());
+                    }
                 }
             }
         }
@@ -140,25 +250,25 @@ bool EulerianLoop::EulerianLoop::Calculate()
 }
 
 // Hightlight nodes count.
-IndexType EulerianLoop::GetHightlightNodesCount() const
+IndexType EulerianPath::GetHightlightNodesCount() const
 {
     return m_EulerianLoop.size();
 }
 
 // Hightlight node.
-ObjectId EulerianLoop::GetHightlightNode(IndexType index) const
+ObjectId EulerianPath::GetHightlightNode(IndexType index) const
 {
     return m_EulerianLoop[index];
 }
 
 // Hightlight edges count.
-IndexType EulerianLoop::GetHightlightEdgesCount() const
+IndexType EulerianPath::GetHightlightEdgesCount() const
 {
     return m_EulerianLoop.size() ? m_EulerianLoop.size() - 1 : 0;
 }
 
 // Hightlight edge.
-NodesEdge EulerianLoop::GetHightlightEdge(IndexType index) const
+NodesEdge EulerianPath::GetHightlightEdge(IndexType index) const
 {
     NodesEdge edge;
     edge.source = m_EulerianLoop[index];
@@ -168,13 +278,13 @@ NodesEdge EulerianLoop::GetHightlightEdge(IndexType index) const
 
 
 // Get result count.
-IndexType EulerianLoop::GetResultCount() const
+IndexType EulerianPath::GetResultCount() const
 {
     return 1 + m_EulerianLoop.size();
 }
 
 // Get result.
-AlgorithmResult EulerianLoop::GetResult(IndexType index) const
+AlgorithmResult EulerianPath::GetResult(IndexType index) const
 {
     AlgorithmResult result;
     
@@ -193,7 +303,7 @@ AlgorithmResult EulerianLoop::GetResult(IndexType index) const
 }
 
 // Get propery
-bool EulerianLoop::GetProperty(ObjectId object, IndexType index, AlgorithmResult* param) const
+bool EulerianPath::GetProperty(ObjectId object, IndexType index, AlgorithmResult* param) const
 {
     bool res = false;
     if (index == 0 && param)
@@ -210,7 +320,7 @@ bool EulerianLoop::GetProperty(ObjectId object, IndexType index, AlgorithmResult
     return res;
 }
 
-const char* EulerianLoop::GetPropertyName(IndexType index) const
+const char* EulerianPath::GetPropertyName(IndexType index) const
 {
     if (index == 0)
     {
@@ -224,7 +334,7 @@ const char* EulerianLoop::GetPropertyName(IndexType index) const
     return nullptr;
 }
 
-void EulerianLoop::SetAlgorithmFactory(const IAlgorithmFactory* pAlgorithmFactory)
+void EulerianPath::SetAlgorithmFactory(const IAlgorithmFactory* pAlgorithmFactory)
 {
     m_pAlgorithmFactory = pAlgorithmFactory;
 }
@@ -284,7 +394,7 @@ protected:
     std::list<ObjectId> m_loop;
 };
 
-bool EulerianLoop::_FindEulerianLoopRecursive(GraphPtr pGraph, ObjectId node)
+bool EulerianPath::_FindEulerianLoopRecursive(GraphPtr pGraph, ObjectId node)
 {
     bool res = false;
     
