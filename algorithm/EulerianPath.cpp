@@ -187,45 +187,46 @@ bool EulerianPath::EulerianPath::Calculate()
                 if (m_bResult)
                 {
                     m_bResult = (m_EulerianLoop.size() - 1 == edgesNumber);
-                    if (!m_bResult)
+                }
+                
+                if (!m_bResult)
+                {
+                    m_EulerianLoop.clear();
+                    
+                    // Try greedy algorithm for path.
+                    if (greedyTry)
                     {
-                        m_EulerianLoop.clear();
-                        
-                        // Try greedy algorithm for path.
-                        if (greedyTry)
+                        // Run greedy. Create edge between all pair of all vertexes.
+                        // TODO: Optimize greedy, use not all vertexes.
+                        for (IndexType i = 0; i < pGraph->GetNodesCount() && m_EulerianLoop.size() == 0; i ++)
                         {
-                            // Run greedy. Create edge between all pair of all vertexes.
-                            // TODO: Optimize greedy, use not all vertexes.
-                            for (IndexType i = 0; i < pGraph->GetNodesCount() && m_EulerianLoop.size() == 0; i ++)
+                            for (IndexType j = 0; j < pGraph->GetNodesCount() && m_EulerianLoop.size() == 0; j ++)
                             {
-                                for (IndexType j = 0; j < pGraph->GetNodesCount() && m_EulerianLoop.size() == 0; j ++)
+                                auto start  = pGraph->GetNode(i);
+                                auto finish = pGraph->GetNode(j);
+                                
+                                if (i != j && !pGraph->IsEgdeExists(start, finish, false))
                                 {
-                                    auto start  = pGraph->GetNode(i);
-                                    auto finish = pGraph->GetNode(j);
-                                    
-                                    if (i != j && !pGraph->IsEgdeExists(start, finish, false))
+                                    GraphPtr pCopyGraph = GraphPtr(pGraph->MakeBaseCopy(GCT_COPY));
+                                    pCopyGraph->AddEdge(start, finish, true, 1.0);
+                                    auto edgesNumber = pCopyGraph->GetEdgesCount();
+                                    m_bResult = _FindEulerianLoopRecursive(pCopyGraph, finish);
+                                    if (m_bResult)
                                     {
-                                        GraphPtr pCopyGraph = GraphPtr(pGraph->MakeBaseCopy(GCT_COPY));
-                                        pCopyGraph->AddEdge(start, finish, true, 1.0);
-                                        auto edgesNumber = pCopyGraph->GetEdgesCount();
-                                        m_bResult = _FindEulerianLoopRecursive(pCopyGraph, finish);
-                                        if (m_bResult)
+                                        m_bResult = (m_EulerianLoop.size() - 1 == edgesNumber);
+                                        if (!m_bResult)
                                         {
-                                            m_bResult = (m_EulerianLoop.size() - 1 == edgesNumber);
-                                            if (!m_bResult)
+                                            m_EulerianLoop.clear();
+                                        }
+                                        else
+                                        {
+                                            m_EulerianLoop.erase(m_EulerianLoop.end() - 1);
+                                            for (int k = 0; k < m_EulerianLoop.size() - 1; k++)
                                             {
-                                                m_EulerianLoop.clear();
-                                            }
-                                            else
-                                            {
-                                                m_EulerianLoop.erase(m_EulerianLoop.end() - 1);
-                                                for (int k = 0; k < m_EulerianLoop.size() - 1; k++)
+                                                if (m_EulerianLoop[k] == start && m_EulerianLoop[k + 1] == finish)
                                                 {
-                                                    if (m_EulerianLoop[k] == start && m_EulerianLoop[k + 1] == finish)
-                                                    {
-                                                        m_EulerianLoop.insert(m_EulerianLoop.end(), m_EulerianLoop.begin(), m_EulerianLoop.begin() + k + 1);
-                                                        m_EulerianLoop.erase(m_EulerianLoop.begin(), m_EulerianLoop.begin() + k + 1);
-                                                    }
+                                                    m_EulerianLoop.insert(m_EulerianLoop.end(), m_EulerianLoop.begin(), m_EulerianLoop.begin() + k + 1);
+                                                    m_EulerianLoop.erase(m_EulerianLoop.begin(), m_EulerianLoop.begin() + k + 1);
                                                 }
                                             }
                                         }
@@ -234,18 +235,18 @@ bool EulerianPath::EulerianPath::Calculate()
                             }
                         }
                     }
-                    else if (odd_vertex.size() == 2)
-                    {
-                        m_EulerianLoop.erase(m_EulerianLoop.end() - 1);
-                        m_EulerianLoop.erase(std::remove_if(m_EulerianLoop.begin(), m_EulerianLoop.end(), [pGraph](const ObjectId& idObj){
-                            return pGraph->IsFakeNode(idObj);
-                        }), m_EulerianLoop.end());
-                    }
+                }
+                else if (odd_vertex.size() == 2)
+                {
+                    m_EulerianLoop.erase(m_EulerianLoop.end() - 1);
+                    m_EulerianLoop.erase(std::remove_if(m_EulerianLoop.begin(), m_EulerianLoop.end(), [pGraph](const ObjectId& idObj){
+                        return pGraph->IsFakeNode(idObj);
+                    }), m_EulerianLoop.end());
                 }
             }
         }
     }
-    
+
     return true;
 }
 
