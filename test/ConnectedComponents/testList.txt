@@ -7,3 +7,4 @@
 -concomp graph1_strong.xml true
 -concomp graph2_strong.xml true
 -concomp graph3_strong.xml true
+-concomp graph5.xml true

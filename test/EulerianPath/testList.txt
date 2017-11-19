@@ -15,3 +15,7 @@
 -elpath graph8_yes.xml
 -elpath graph9.xml
 -elpath graph10.xml
+-elpath graph11.xml
+-elpath graph12.xml
+-elpath graph13.xml
+-elpath graph14.xml

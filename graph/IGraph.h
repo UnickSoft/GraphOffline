@@ -47,6 +47,11 @@ public:
     // Default Strategy.
     virtual DefaultEnumStrategy GetDefaultStrategy() = 0;
     
+    // We started process this edge.
+    virtual void StartProcessEdge(ObjectId edgeId) = 0;
+    // We finish process this edge.
+    virtual void FinishProcessEdge(ObjectId edgeId) = 0;
+    
     virtual ~IEnumStrategy() {}
 };
 
@@ -95,6 +100,8 @@ public:
     virtual ObjectId AddNode(bool fake) = 0;
     // Is fake node or not.
     virtual bool IsFakeNode(ObjectId source) = 0;
+    // Return graph struct
+    virtual const char* PrintGraph() = 0;
     
     virtual ~IGraph() {};
 };

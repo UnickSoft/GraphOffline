@@ -72,7 +72,7 @@ bool ConsoleParams::ProcessConsoleParams(const std::vector<String>& params)
                         }
                     }
                     
-                    LOG_INFO("Graph has nodes " << pGraph->GetNodesCount() << " and edges " << pGraph->GetEdgesCount());
+                    LOG_INFO(pGraph->PrintGraph());
                     
                     std::shared_ptr<IAlgorithm> algorithm =  AlgorithmFactory::GetSingleton().CreateAlgorithm(pGraph, algorithmShortName, commands);
                     if (algorithm)

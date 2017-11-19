@@ -209,6 +209,11 @@ public:
         return m_stack;
     }
     
+    // We started process this edge.
+    void StartProcessEdge(ObjectId edgeId) override {}
+    // We finish process this edge.
+    void FinishProcessEdge(ObjectId edgeId) override {}
+    
 protected:
     std::unordered_set<ObjectId> m_visited;
     std::stack<ObjectId>         m_stack;

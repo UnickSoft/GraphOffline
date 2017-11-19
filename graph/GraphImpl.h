@@ -55,6 +55,11 @@ public:
         return DES_NONE;
     }
     
+    // We started process this edge.
+    void StartProcessEdge(ObjectId edgeId) override {}
+    // We finish process this edge.
+    void FinishProcessEdge(ObjectId edgeId) override {}
+    
 protected:
     IEnumStrategy* m_pUserStrategy;
     std::unordered_set<ObjectId> processedNode;
@@ -73,13 +78,8 @@ public:
     
     virtual bool NeedProcessChild(ObjectId nodeId, ObjectId childId, ObjectId edge)
     {
-        bool res = m_pUserStrategy->NeedProcessChild(nodeId, childId, edge) &&
+        return m_pUserStrategy->NeedProcessChild(nodeId, childId, edge) &&
         (processedEdge.find(edge) == processedEdge.end());
-        if (res)
-        {
-            processedEdge.insert(edge);
-        }
-        return res;
     }
     
     virtual void FinishProcessNode(ObjectId nodeId)
@@ -91,6 +91,18 @@ public:
     virtual DefaultEnumStrategy GetDefaultStrategy()
     {
         return DES_NONE;
+    }
+    
+    // We started process this edge.
+    void StartProcessEdge(ObjectId edgeId) override
+    {
+        processedEdge.insert(edgeId);
+    }
+    
+    // We finish process this edge.
+    void FinishProcessEdge(ObjectId edgeId) override
+    {
+        processedEdge.erase(edgeId);
     }
     
 protected:
@@ -586,7 +598,9 @@ template<class WeightInterface, typename WeightType> void Graph<WeightInterface,
         pStrategy = &baseEdgeEnumStrategy;
     }
     
+    LOG_INFO("DFS start");
     _ProcessDFS(pStrategy, FindNode(startedNode, m_nodes).get());
+    LOG_INFO("DFS finish");
 }
 
 template<class WeightInterface, typename WeightType> void Graph<WeightInterface, WeightType>::_ProcessDFS(IEnumStrategy* pEnumStrategy, Node* node) const
@@ -595,17 +609,22 @@ template<class WeightInterface, typename WeightType> void Graph<WeightInterface,
     
     pEnumStrategy->StartProcessNode(node->privateId);
     
+    LOG_INFO("DFS: start " << node->id.Locale().Data());
+    
     const std::vector<Node*>& nodes = node->GetTargets();
     for (auto iterator = nodes.cbegin(); iterator != nodes.cend(); iterator++)
     {
+        auto edge = node->GetEdge(iterator - nodes.cbegin());
         if (pEnumStrategy->NeedProcessChild(node->privateId,
-                                            (*iterator)->privateId,
-                                            node->GetEdge(iterator - nodes.cbegin())))
+                                            (*iterator)->privateId, edge))
         {
+            pEnumStrategy->StartProcessEdge(edge);
             _ProcessDFS(pEnumStrategy, *iterator);
+            pEnumStrategy->FinishProcessEdge(edge);
         }
     }
     
+    LOG_INFO("DFS: finish " << node->id.Locale().Data());
     pEnumStrategy->FinishProcessNode(node->privateId);
 }
 
@@ -723,3 +742,26 @@ template<class WeightInterface, typename WeightType> bool Graph<WeightInterface,
     
     return res;
 }
+
+template<class WeightInterface, typename WeightType> const char* Graph<WeightInterface, WeightType>::PrintGraph()
+{
+    static std::string report;
+    
+    report = "Graph has nodes " + std::to_string(GetNodesCount()) + " and edges " + std::to_string(GetEdgesCount());
+
+    report += "\nNodes:\n";
+    for (auto node : m_nodes)
+    {
+        report += std::string("Public id: ") + node->id.Locale().Data() + " " + "private id: " + std::to_string(node->privateId) + (node->fake ? " is fake\n" : "\n");
+    }
+    
+    report += "Edges:\n";
+    for (auto edge : m_edges)
+    {
+        report += std::string("Public id: ") + edge->id.Locale().Data() + " " + "private id: " + std::to_string(edge->privateId) + "\n";
+    }
+    
+    return report.c_str();
+}
+
+

@@ -11,6 +11,7 @@
 #include <list>
 #include <string.h>
 #include <algorithm>
+#include "Logger.h"
 
 static const char* g_indexStr = "index";
 static const char* g_indexCountStr = "indexCount";
@@ -347,7 +348,7 @@ public:
     FindLoopStrategy (ObjectId startNode) : m_startNode(startNode), m_bLoopFound(false) {;}
     
     // We started process this node.
-    void StartProcessNode(ObjectId nodeId)
+    void StartProcessNode(ObjectId nodeId) override
     {
         if (!m_bLoopFound)
         {
@@ -356,16 +357,17 @@ public:
             if (m_loop.size() > 1 && nodeId == m_startNode)
             {
                 m_bLoopFound = true;
+                LOG_INFO("EulerianLoop found");
             }
         }
     }
     // @return true if we need to process this child node.
-    bool NeedProcessChild(ObjectId nodeId, ObjectId childId, ObjectId edge)
+    bool NeedProcessChild(ObjectId nodeId, ObjectId childId, ObjectId edge) override
     {
         return !m_bLoopFound;
     }
     // We finish process this node.
-    void FinishProcessNode(ObjectId nodeId)
+    void FinishProcessNode(ObjectId nodeId) override
     {
         if (!m_bLoopFound)
         {
@@ -374,7 +376,7 @@ public:
     }
     
     // Default Strategy.
-    virtual DefaultEnumStrategy GetDefaultStrategy()
+    virtual DefaultEnumStrategy GetDefaultStrategy() override
     {
         return IEnumStrategy::DES_EDGE;
     }
@@ -389,6 +391,11 @@ public:
         return m_bLoopFound;
     }
     
+    // We started process this edge.
+    void StartProcessEdge(ObjectId edgeId) override {}
+    // We finish process this edge.
+    void FinishProcessEdge(ObjectId edgeId) override {}
+    
 protected:
     bool m_bLoopFound;
     ObjectId m_startNode;
@@ -401,7 +408,9 @@ bool EulerianPath::_FindEulerianLoopRecursive(GraphPtr pGraph, ObjectId node)
     
     FindLoopStrategy findLoop(node);
     
+    LOG_INFO("Start search EulerianLoop");
     pGraph->ProcessDFS(&findLoop, node);
+    LOG_INFO("Finish search EulerianLoop");
     
     if (findLoop.HasLoop())
     {

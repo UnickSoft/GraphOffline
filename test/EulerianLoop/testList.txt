@@ -9,3 +9,5 @@
 -elloop graph6_2_direct.xml
 -elloop graph6.xml
 -elloop no_graph6.xml
+-elloop graph7.xml
+-elloop graph8.xml
