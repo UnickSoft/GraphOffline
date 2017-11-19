@@ -446,7 +446,7 @@ void EulerianPath::RemoveFakeFromLoop(GraphPtr graph, ObjectId start, ObjectId f
 
 void EulerianPath::AddEdgeForPath(GraphPtr graph, ObjectId start, ObjectId finish, bool direct)
 {
-    if (graph->IsEgdeExists(start, finish, !direct))
+    if (graph->IsEgdeExists(start, finish, false))
     {
         auto fakeNodeId = graph->AddNode(true);
         graph->AddEdge(start, fakeNodeId, direct, 1.0);
@@ -454,6 +454,6 @@ void EulerianPath::AddEdgeForPath(GraphPtr graph, ObjectId start, ObjectId finis
     }
     else
     {
-        graph->AddEdge(start, finish, true, 1.0);
+        graph->AddEdge(start, finish, direct, 1.0);
     }
 }
