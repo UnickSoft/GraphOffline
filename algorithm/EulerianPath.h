@@ -58,6 +58,10 @@ private:
     
     bool _FindEulerianLoopRecursive(GraphPtr pGraph, ObjectId node);
     
+    void RemoveFakeFromLoop(GraphPtr graph, ObjectId start, ObjectId finish);
+    
+    void AddEdgeForPath(GraphPtr graph, ObjectId start, ObjectId finish, bool direct);
+    
     // Has or not EulerLoop.
     bool m_bResult;
     std::vector<ObjectId> m_EulerianLoop;

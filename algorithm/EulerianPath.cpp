@@ -105,10 +105,10 @@ bool EulerianPath::EulerianPath::Calculate()
                     }
                 }
                 
-                // If we serach path and has no loop, try to connect.
+                // If we search path and has no loop, try to connect.
                 if (!m_loop && !bCanHasLoop && startObject != -1 && finishObject != -1)
                 {
-                    pGraph->AddEdge(startObject, finishObject, false, 1.0);
+                    pGraph->AddEdge(startObject, finishObject, true, 1.0);
                     odd_vertex.push_back(startObject);
                     odd_vertex.push_back(finishObject);
                     bCanHasLoop = true;
@@ -141,16 +141,7 @@ bool EulerianPath::EulerianPath::Calculate()
                 if (!m_loop && odd_vertex.size() == 2)
                 {
                     // Create the same second egde.
-                    if (pGraph->IsEgdeExists(odd_vertex[0], odd_vertex[1]))
-                    {
-                        auto fakeNodeId = pGraph->AddNode(true);
-                        pGraph->AddEdge(odd_vertex[0], fakeNodeId, false, 1.0);
-                        pGraph->AddEdge(fakeNodeId, odd_vertex[1], false, 1.0);
-                    }
-                    else
-                    {
-                        pGraph->AddEdge(odd_vertex[0], odd_vertex[1], false, 1.0);
-                    }
+                    AddEdgeForPath(pGraph, odd_vertex[0], odd_vertex[1], false);
                     bCanHasLoop = true;
                 }
             }
@@ -206,10 +197,12 @@ bool EulerianPath::EulerianPath::Calculate()
                                 auto start  = pGraph->GetNode(i);
                                 auto finish = pGraph->GetNode(j);
                                 
-                                if (i != j && !pGraph->IsEgdeExists(start, finish, false))
+                                if (i != j && !pGraph->IsEgdeExists(start, finish))
                                 {
                                     GraphPtr pCopyGraph = GraphPtr(pGraph->MakeBaseCopy(GCT_COPY));
-                                    pCopyGraph->AddEdge(start, finish, true, 1.0);
+                                    
+                                    AddEdgeForPath(pCopyGraph, start, finish, true);
+                                    
                                     auto edgesNumber = pCopyGraph->GetEdgesCount();
                                     m_bResult = _FindEulerianLoopRecursive(pCopyGraph, finish);
                                     if (m_bResult)
@@ -221,15 +214,7 @@ bool EulerianPath::EulerianPath::Calculate()
                                         }
                                         else
                                         {
-                                            m_EulerianLoop.erase(m_EulerianLoop.end() - 1);
-                                            for (int k = 0; k < m_EulerianLoop.size() - 1; k++)
-                                            {
-                                                if (m_EulerianLoop[k] == start && m_EulerianLoop[k + 1] == finish)
-                                                {
-                                                    m_EulerianLoop.insert(m_EulerianLoop.end(), m_EulerianLoop.begin(), m_EulerianLoop.begin() + k + 1);
-                                                    m_EulerianLoop.erase(m_EulerianLoop.begin(), m_EulerianLoop.begin() + k + 1);
-                                                }
-                                            }
+                                            RemoveFakeFromLoop(pCopyGraph, start, finish);
                                         }
                                     }
                                 }
@@ -239,10 +224,9 @@ bool EulerianPath::EulerianPath::Calculate()
                 }
                 else if (odd_vertex.size() == 2)
                 {
-                    m_EulerianLoop.erase(m_EulerianLoop.end() - 1);
-                    m_EulerianLoop.erase(std::remove_if(m_EulerianLoop.begin(), m_EulerianLoop.end(), [pGraph](const ObjectId& idObj){
-                        return pGraph->IsFakeNode(idObj);
-                    }), m_EulerianLoop.end());
+                    auto start  = odd_vertex[0];
+                    auto finish = odd_vertex[1];
+                    RemoveFakeFromLoop(pGraph, start, finish);
                 }
             }
         }
@@ -443,4 +427,33 @@ bool EulerianPath::_FindEulerianLoopRecursive(GraphPtr pGraph, ObjectId node)
 }
 
 
+void EulerianPath::RemoveFakeFromLoop(GraphPtr graph, ObjectId start, ObjectId finish)
+{
+    m_EulerianLoop.erase(m_EulerianLoop.end() - 1);
+    m_EulerianLoop.erase(std::remove_if(m_EulerianLoop.begin(), m_EulerianLoop.end(), [graph](const ObjectId& idObj){
+        return graph->IsFakeNode(idObj);
+    }), m_EulerianLoop.end());
+    
+    for (int k = 0; k < m_EulerianLoop.size() - 1; k++)
+    {
+        if (m_EulerianLoop[k] == start && m_EulerianLoop[k + 1] == finish)
+        {
+            m_EulerianLoop.insert(m_EulerianLoop.end(), m_EulerianLoop.begin(), m_EulerianLoop.begin() + k + 1);
+            m_EulerianLoop.erase(m_EulerianLoop.begin(), m_EulerianLoop.begin() + k + 1);
+        }
+    }
+}
 
+void EulerianPath::AddEdgeForPath(GraphPtr graph, ObjectId start, ObjectId finish, bool direct)
+{
+    if (graph->IsEgdeExists(start, finish, !direct))
+    {
+        auto fakeNodeId = graph->AddNode(true);
+        graph->AddEdge(start, fakeNodeId, direct, 1.0);
+        graph->AddEdge(fakeNodeId, finish, direct, 1.0);
+    }
+    else
+    {
+        graph->AddEdge(start, finish, true, 1.0);
+    }
+}

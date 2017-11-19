@@ -8,7 +8,7 @@ fi
 
 totalResult=0
 
-find . -maxdepth 1 -mindepth 1 -type d | while read d; do
+while read d; do
     cd "$d"
     if [[ $2 != "-debug" ]]
     then
@@ -22,13 +22,13 @@ find . -maxdepth 1 -mindepth 1 -type d | while read d; do
     if [[ $rc != 0 ]]
     then
         echo " Failed"
-        totalResult = $rc
+        totalResult=$rc
     else
         echo " Ok"
     fi
 
     cd ..
-done
+done <<< "$(find . -maxdepth 1 -mindepth 1 -type d)"
 
 if [[ $totalResult != 0 ]]
 then

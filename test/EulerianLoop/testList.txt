@@ -11,3 +11,4 @@
 -elloop no_graph6.xml
 -elloop graph7.xml
 -elloop graph8.xml
+-elloop graph15.xml
