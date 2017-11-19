@@ -8,7 +8,11 @@ export QUERY_STRING="elloop=cgiInput&report=xml"
 
 cat "graph6.xml" | $exePath $2 >graph6.xml.cgi.test
 
-if diff --ignore-all-space graph_shortPath_3.xml.cgi.res graph_shortPath_3.xml.cgi.test >/dev/null && diff --ignore-all-space graph6.xml.cgi.res graph6.xml.cgi.test >/dev/null ; then
+export QUERY_STRING="elpath=cgiInput&report=xml"
+
+cat "elpath_graph7.xml" | $exePath $2 >elpath_graph7.xml.cgi.test
+
+if diff --ignore-all-space graph_shortPath_3.xml.cgi.res graph_shortPath_3.xml.cgi.test >/dev/null && diff --ignore-all-space graph6.xml.cgi.res graph6.xml.cgi.test >/dev/null && diff --ignore-all-space elpath_graph7.xml.cgi.res elpath_graph7.xml.cgi.test >/dev/null ; then
     echo "Ok."
     rm *.test >/dev/null
 else
