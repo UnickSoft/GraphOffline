@@ -126,9 +126,9 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
             // Low dist
             IndexType index = 0;
             AlgorithmResult property;
-            while (pAlgorithm->GetProperty(pGraph->GetNode(i), index, &property) && property.type != ART_UNKNOWN)
+            while (pAlgorithm->GetNodeProperty(pGraph->GetNode(i), index, &property) && property.type != ART_UNKNOWN)
             {
-                sprintf(graphNode, xmlGraphNodeProperty, pAlgorithm->GetPropertyName(index), (WeightType)(property.type == ART_INT ? property.nValue : property.fValue));
+                sprintf(graphNode, xmlGraphNodeProperty, pAlgorithm->GetNodePropertyName(index), (WeightType)(property.type == ART_INT ? property.nValue : property.fValue));
                 result += graphNode;
                 index++;
             }

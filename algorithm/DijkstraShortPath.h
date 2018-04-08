@@ -12,40 +12,39 @@
 #include <map>
 #include <unordered_map>
 
-template<class WeightTypeInterface, typename WeightType> class DijkstraShortPath : public IAlgorithm
+template<class WeightTypeInterface, typename WeightType> class DijkstraShortPath : public BaseAlgorithm
 {
 public:
     DijkstraShortPath ();
     virtual ~DijkstraShortPath ();
     
     // Long name of algoright: DijkstraShortPath.
-    virtual const char* GetFullName() const {return "DijkstraShortPath";};
+    virtual const char* GetFullName() const override {return "DijkstraShortPath";}
     // Short name of algorithm: dsp
-    virtual const char* GetShortName() const {return "dsp";};
+    virtual const char* GetShortName() const override {return "dsp";}
     // Enum parameters.
-    virtual bool EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const;
+    virtual bool EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const override;
     // Set parameter to algorithm.
-    virtual void SetParameter(const AlgorithmParam* outParamInfo);
+    virtual void SetParameter(const AlgorithmParam* outParamInfo) override;
     // Set graph.
-    virtual void SetGraph(const IGraph* pGraph);
+    virtual void SetGraph(const IGraph* pGraph) override;
     // Calculate algorithm.
-    virtual bool Calculate();
+    virtual bool Calculate() override;
     // Hightlight nodes count.
-    virtual IndexType GetHightlightNodesCount() const;
+    virtual IndexType GetHightlightNodesCount() const override;
     // Hightlight node.
-    virtual ObjectId GetHightlightNode(IndexType index) const;
+    virtual ObjectId GetHightlightNode(IndexType index) const override;
     // Hightlight edges count.
-    virtual IndexType GetHightlightEdgesCount() const;
+    virtual IndexType GetHightlightEdgesCount() const override;
     // Hightlight edge.
-    virtual NodesEdge GetHightlightEdge(IndexType index) const;
+    virtual NodesEdge GetHightlightEdge(IndexType index) const override;
     // Get result count.
-    virtual IndexType GetResultCount() const;
+    virtual IndexType GetResultCount() const override;
     // Get result of index. Algorithms can have complex result.
-    virtual AlgorithmResult GetResult(IndexType index) const;
+    virtual AlgorithmResult GetResult(IndexType index) const override;
     // Get property.
-    virtual bool GetProperty(ObjectId object, IndexType index, AlgorithmResult* param) const;
-    virtual const char* GetPropertyName(IndexType index) const;
-    virtual void SetAlgorithmFactory(const IAlgorithmFactory* pAlgorithmFactory);
+    virtual bool GetNodeProperty(ObjectId object, IndexType index, AlgorithmResult* param) const override;
+    virtual const char* GetNodePropertyName(IndexType index) const override;
     
 protected:
     ObjectId m_source;

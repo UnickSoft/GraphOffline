@@ -48,12 +48,6 @@ void ConnectedComponent::SetParameter(const AlgorithmParam* outParamInfo)
     }
 }
 
-// Set graph
-void ConnectedComponent::SetGraph(const IGraph* pGraph)
-{
-    m_pGraph = pGraph;
-}
-
 // Calculate algorithm.
 bool ConnectedComponent::Calculate()
 {
@@ -76,29 +70,6 @@ bool ConnectedComponent::Calculate()
     return res;
 }
 
-// Hightlight nodes count.
-IndexType ConnectedComponent::GetHightlightNodesCount() const
-{
-    return 0;
-}
-
-// Hightlight node.
-ObjectId ConnectedComponent::GetHightlightNode(IndexType index) const
-{
-    return 0;
-}
-
-// Hightlight edges count.
-IndexType ConnectedComponent::GetHightlightEdgesCount() const
-{
-    return 0;
-}
-
-// Hightlight edge.
-NodesEdge ConnectedComponent::GetHightlightEdge(IndexType index) const
-{
-    return NodesEdge();
-}
 
 // Get result count.
 IndexType ConnectedComponent::GetResultCount() const
@@ -110,17 +81,6 @@ IndexType ConnectedComponent::GetResultCount() const
 AlgorithmResult ConnectedComponent::GetResult(IndexType index) const
 {
     return AlgorithmResult(m_nConnectedCompCount);
-}
-
-// Get propery
-bool ConnectedComponent::GetProperty(ObjectId object, IndexType index, AlgorithmResult* param) const
-{
-    return false;
-}
-
-const char* ConnectedComponent::GetPropertyName(IndexType index) const
-{
-    return nullptr;
 }
 
 bool ConnectedComponent::FindWeakComponent()
@@ -254,8 +214,5 @@ bool ConnectedComponent::FindStrongComponent()
     
     return res;
 }
-
-void ConnectedComponent::SetAlgorithmFactory(const IAlgorithmFactory* pAlgorithmFactory)
-{}
 
 

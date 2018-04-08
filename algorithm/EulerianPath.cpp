@@ -16,7 +16,7 @@
 static const char* g_indexStr = "index";
 static const char* g_indexCountStr = "indexCount";
 
-EulerianPath::EulerianPath (bool loop) : m_pGraph(NULL), m_bResult(false), m_loop(loop)
+EulerianPath::EulerianPath (bool loop) : m_bResult(false), m_loop(loop)
 {
     
 }
@@ -26,24 +26,6 @@ EulerianPath::~EulerianPath ()
     
 }
 
-// Enum parameters
-bool EulerianPath::EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const
-{
-    return false;
-}
-
-
-// Set parameter to algorithm.
-void EulerianPath::SetParameter(const AlgorithmParam* outParamInfo)
-{
-    
-}
-
-// Set graph
-void EulerianPath::SetGraph(const IGraph* pGraph)
-{
-    m_pGraph = pGraph;
-}
 
 // Calculate algorithm.
 bool EulerianPath::EulerianPath::Calculate()
@@ -289,7 +271,7 @@ AlgorithmResult EulerianPath::GetResult(IndexType index) const
 }
 
 // Get propery
-bool EulerianPath::GetProperty(ObjectId object, IndexType index, AlgorithmResult* param) const
+bool EulerianPath::GetNodeProperty(ObjectId object, IndexType index, AlgorithmResult* param) const
 {
     bool res = false;
     if (index == 0 && param)
@@ -306,7 +288,7 @@ bool EulerianPath::GetProperty(ObjectId object, IndexType index, AlgorithmResult
     return res;
 }
 
-const char* EulerianPath::GetPropertyName(IndexType index) const
+const char* EulerianPath::GetNodePropertyName(IndexType index) const
 {
     if (index == 0)
     {
@@ -320,10 +302,6 @@ const char* EulerianPath::GetPropertyName(IndexType index) const
     return nullptr;
 }
 
-void EulerianPath::SetAlgorithmFactory(const IAlgorithmFactory* pAlgorithmFactory)
-{
-    m_pAlgorithmFactory = pAlgorithmFactory;
-}
 
 class FindLoopStrategy : public IEnumStrategy
 {

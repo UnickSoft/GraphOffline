@@ -84,10 +84,14 @@ public:
   virtual IndexType GetResultCount() const = 0;
   // Get result of index. Algorithms can have complex result.
   virtual AlgorithmResult GetResult(IndexType index) const = 0;
-  // Get propery
-  virtual bool GetProperty(ObjectId object, IndexType index, AlgorithmResult* param) const = 0;
-  virtual const char* GetPropertyName(IndexType index) const = 0;
-    
+  // Get propery for Node
+  virtual bool GetNodeProperty(ObjectId object, IndexType index, AlgorithmResult* param) const = 0;
+  virtual const char* GetNodePropertyName(IndexType index) const = 0;
+
+  // Get propery for Edge
+  virtual bool GetEdgeProperty(ObjectId object, IndexType index, AlgorithmResult* param) const = 0;
+  virtual const char* GetEdgePropertyName(IndexType index) const = 0;
+      
   virtual ~IAlgorithmResult() {}
 };
 
@@ -98,3 +102,31 @@ class IAlgorithm : public IAlgorithmEngine, public IAlgorithmResult
 
 typedef std::shared_ptr<IAlgorithm> AlgorithmPtr;
 
+
+class BaseAlgorithm : public IAlgorithm
+{
+public:
+  BaseAlgorithm() : m_pGraph(NULL), m_pAlgorithmFactory(NULL) {}
+
+  IndexType GetHightlightNodesCount() const override {return 0;}
+  ObjectId GetHightlightNode(IndexType index) const override {return 0;}
+  IndexType GetHightlightEdgesCount() const override {return 0;}
+  NodesEdge GetHightlightEdge(IndexType index) const override {return NodesEdge();}
+  IndexType GetResultCount() const override {return 0;}
+  AlgorithmResult GetResult(IndexType index) const override {return AlgorithmResult();}
+  bool GetNodeProperty(ObjectId object, IndexType index, AlgorithmResult* param) const override {return false;}
+  const char* GetNodePropertyName(IndexType index) const override {return 0;}
+  bool GetEdgeProperty(ObjectId object, IndexType index, AlgorithmResult* param) const override {return false;}
+  const char* GetEdgePropertyName(IndexType index) const override {return 0;}
+  
+  bool EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const override {return false;};
+  void SetParameter(const AlgorithmParam* param) override {};
+  void SetGraph(const IGraph* pGraph) override {m_pGraph = pGraph;}
+  void SetAlgorithmFactory(const IAlgorithmFactory* pAlgorithmFactory) override {m_pAlgorithmFactory = pAlgorithmFactory;}
+
+protected:
+
+    const IGraph* m_pGraph;
+    const IAlgorithmFactory* m_pAlgorithmFactory;
+
+};

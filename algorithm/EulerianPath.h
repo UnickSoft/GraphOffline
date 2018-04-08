@@ -14,47 +14,38 @@
 #include "IGraph.h"
 #include <vector>
 
-class EulerianPath : public IAlgorithm
+class EulerianPath : public BaseAlgorithm
 {
 public:
     EulerianPath (bool loop);
     virtual ~EulerianPath ();
     
     // Long name of algoright: DijkstraShortPath.
-    virtual const char* GetFullName() const {return (m_loop ? "Eulerian Loop" : "Eulerian Path");};
+    virtual const char* GetFullName() const override {return (m_loop ? "Eulerian Loop" : "Eulerian Path");};
     // Short name of algorithm: dsp
-    virtual const char* GetShortName() const {return (m_loop ? "elloop" : "elpath"); };
-    // Enum parameters
-    virtual bool EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const;
-    // Set parameter to algorithm.
-    virtual void SetParameter(const AlgorithmParam* outParamInfo);
-    // Set graph
-    virtual void SetGraph(const IGraph* pGraph);
+    virtual const char* GetShortName() const override {return (m_loop ? "elloop" : "elpath"); };
     // Calculate algorithm.
-    virtual bool Calculate();
+    virtual bool Calculate() override ;
     // Hightlight nodes count.
-    virtual IndexType GetHightlightNodesCount() const;
+    virtual IndexType GetHightlightNodesCount() const override;
     // Hightlight node.
-    virtual ObjectId GetHightlightNode(IndexType index) const;
+    virtual ObjectId GetHightlightNode(IndexType index) const override;
     // Hightlight edges count.
-    virtual IndexType GetHightlightEdgesCount() const;
+    virtual IndexType GetHightlightEdgesCount() const override;
     // Hightlight edge.
-    virtual NodesEdge GetHightlightEdge(IndexType index) const;
+    virtual NodesEdge GetHightlightEdge(IndexType index) const override;
     // Get result count.
-    virtual IndexType GetResultCount() const;
+    virtual IndexType GetResultCount() const override;
     // Get result of index. Algorithms can have complex result.
-    virtual AlgorithmResult GetResult(IndexType index) const;
+    virtual AlgorithmResult GetResult(IndexType index) const override;
     // Get propery
-    virtual bool GetProperty(ObjectId object, IndexType index, AlgorithmResult* param) const;
-    virtual const char* GetPropertyName(IndexType index) const;
-    virtual void SetAlgorithmFactory(const IAlgorithmFactory* pAlgorithmFactory);
+    virtual bool GetNodeProperty(ObjectId object, IndexType index, AlgorithmResult* param) const override;
+    virtual const char* GetNodePropertyName(IndexType index) const override;
     
 private:
     
     // Search loop.
     const bool m_loop;
-    const IGraph* m_pGraph;
-    const IAlgorithmFactory* m_pAlgorithmFactory;
     
     bool _FindEulerianLoopRecursive(GraphPtr pGraph, ObjectId node);
     

@@ -212,7 +212,7 @@ template<class WeightTypeInterface, typename WeightType> AlgorithmResult Dijkstr
     return result;
 }
 
-template<class WeightTypeInterface, typename WeightType> bool DijkstraShortPath<WeightTypeInterface, WeightType>::GetProperty(ObjectId object, IndexType index, AlgorithmResult* param) const
+template<class WeightTypeInterface, typename WeightType> bool DijkstraShortPath<WeightTypeInterface, WeightType>::GetNodeProperty(ObjectId object, IndexType index, AlgorithmResult* param) const
 {
     bool result = false;
     
@@ -252,7 +252,7 @@ template<class WeightTypeInterface, typename WeightType> void DijkstraShortPath<
     m_pGraph = dynamic_cast<const WeightTypeInterface*>(pGraph);
 }
 
-template<class WeightTypeInterface, typename WeightType> const char* DijkstraShortPath<WeightTypeInterface, WeightType>::GetPropertyName(IndexType index) const
+template<class WeightTypeInterface, typename WeightType> const char* DijkstraShortPath<WeightTypeInterface, WeightType>::GetNodePropertyName(IndexType index) const
 {
     if (index == 0)
     {
@@ -268,7 +268,3 @@ template<class WeightTypeInterface, typename WeightType> const char* DijkstraSho
     }
 }
 
-template<class WeightTypeInterface, typename WeightType> void DijkstraShortPath<WeightTypeInterface, WeightType>::SetAlgorithmFactory(const IAlgorithmFactory* pAlgorithmFactory)
-{
-    
-}

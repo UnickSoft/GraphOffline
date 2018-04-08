@@ -25,7 +25,7 @@ public:
     
     // IAlgorithmFactory
     // Create algorithm for given Graph.
-    virtual IAlgorithm* CreateAlgorithm(const char* name, const IGraph* pGraph) const;
+    virtual IAlgorithm* CreateAlgorithm(const char* name, const IGraph* pGraph) const override;
     
     std::shared_ptr<IAlgorithm> CreateAlgorithm(const IGraph* pGraph, const String& name, const ParametersMap& map) const;
     
