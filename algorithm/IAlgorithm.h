@@ -89,7 +89,7 @@ public:
   virtual const char* GetNodePropertyName(IndexType index) const = 0;
 
   // Get propery for Edge
-  virtual bool GetEdgeProperty(ObjectId object, IndexType index, AlgorithmResult* param) const = 0;
+  virtual bool GetEdgeProperty(const NodesEdge& object, IndexType index, AlgorithmResult* param) const = 0;
   virtual const char* GetEdgePropertyName(IndexType index) const = 0;
       
   virtual ~IAlgorithmResult() {}
@@ -116,7 +116,7 @@ public:
   AlgorithmResult GetResult(IndexType index) const override {return AlgorithmResult();}
   bool GetNodeProperty(ObjectId object, IndexType index, AlgorithmResult* param) const override {return false;}
   const char* GetNodePropertyName(IndexType index) const override {return 0;}
-  bool GetEdgeProperty(ObjectId object, IndexType index, AlgorithmResult* param) const override {return false;}
+  bool GetEdgeProperty(const NodesEdge& object, IndexType index, AlgorithmResult* param) const override {return false;}
   const char* GetEdgePropertyName(IndexType index) const override {return 0;}
   
   bool EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const override {return false;};
