@@ -10,6 +10,7 @@
 #include "DijkstraShortPath.h"
 #include "ConnectedComponent.h"
 #include "EulerianPath.h"
+#include "MaxFlowPushRelabel.h"
 
 IAlgorithm* AlgorithmFactory::CreateAlgorithm(const char* name, const IGraph* pGraph) const
 {
@@ -142,6 +143,22 @@ IAlgorithm* AlgorithmFactory::_CreateAlgorithm(IndexType index, bool bFloat) con
         case 3:
         {
             res = new EulerianPath(false);
+            break;
+        }
+        
+        case 4:
+        {
+            IAlgorithm* pAlgorithm = nullptr;
+            if (bFloat)
+            {
+                pAlgorithm = new MaxFlowPushRelabel<IGraphFloat, FloatWeightType>();
+            }
+            else
+            {
+                pAlgorithm = new MaxFlowPushRelabel<IGraphInt, IntWeightType>();
+            }
+            
+            res = pAlgorithm;
             break;
         }
     }

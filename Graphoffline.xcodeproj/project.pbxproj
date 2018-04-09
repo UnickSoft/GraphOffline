@@ -65,6 +65,8 @@
 		683D17041C0B6CF100C804DF /* IReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IReporter.h; path = report/IReporter.h; sourceTree = SOURCE_ROOT; };
 		683D170C1C0B6E4000C804DF /* GraphOffline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphOffline.cpp; sourceTree = SOURCE_ROOT; };
 		686E49C31C3DB36A00EB71C8 /* IAlgorithmFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IAlgorithmFactory.h; sourceTree = SOURCE_ROOT; };
+		68CF70642078FE9200E996F5 /* MaxFlowPushRelabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MaxFlowPushRelabel.h; path = algorithm/MaxFlowPushRelabel.h; sourceTree = SOURCE_ROOT; };
+		68CF70652078FF5100E996F5 /* MaxFlowPushRelableImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MaxFlowPushRelableImpl.h; path = algorithm/MaxFlowPushRelableImpl.h; sourceTree = SOURCE_ROOT; };
 		68DEA7731C19DC0F003BBEE2 /* AlgorithmFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AlgorithmFactory.cpp; path = algorithm/AlgorithmFactory.cpp; sourceTree = SOURCE_ROOT; };
 		68DEA7741C19DC0F003BBEE2 /* AlgorithmFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlgorithmFactory.h; path = algorithm/AlgorithmFactory.h; sourceTree = SOURCE_ROOT; };
 		68DF5ACA1C308AF4005502FA /* ConnectedComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConnectedComponent.cpp; path = algorithm/ConnectedComponent.cpp; sourceTree = SOURCE_ROOT; };
@@ -132,6 +134,8 @@
 		683D17091C0B6D6800C804DF /* Algorithms */ = {
 			isa = PBXGroup;
 			children = (
+				68CF70652078FF5100E996F5 /* MaxFlowPushRelableImpl.h */,
+				68CF70642078FE9200E996F5 /* MaxFlowPushRelabel.h */,
 				682E71FF1FB88E6E00907C11 /* EulerianPath.cpp */,
 				682E72001FB88E6E00907C11 /* EulerianPath.h */,
 				68DEA7731C19DC0F003BBEE2 /* AlgorithmFactory.cpp */,
