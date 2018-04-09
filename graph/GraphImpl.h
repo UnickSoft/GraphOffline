@@ -352,7 +352,7 @@ template<class WeightInterface, typename WeightType>  bool Graph<WeightInterface
 // Get Egde weight. TODO: float.
 template<class WeightInterface, typename WeightType> WeightType Graph<WeightInterface, WeightType>::GetEdgeWeight(ObjectId source, ObjectId target) const
 {
-    WeightType res = 1;
+    WeightType res = 0;
     EdgePtr edge = FindEdge(source, target);
     assert(edge);
 
