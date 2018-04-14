@@ -43,6 +43,10 @@ public:
     virtual const char* GetEdgePropertyName(IndexType index) const override;
     
 protected:
+
+    void findFlowValues(IndexType drainIndex, IndexType sourceIndex, std::vector<std::vector<WeightType>>& origin_adjacencyMatrix, std::vector<std::vector<WeightType>>& adjacencyMatrix);
+    void debugPring();
+
     ObjectId _source;
     ObjectId _drain;
     const WeightTypeInterface*  _pGraph;

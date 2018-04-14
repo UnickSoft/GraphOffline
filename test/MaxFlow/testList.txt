@@ -1,0 +1,9 @@
+-mfpr graph_weight_3_no.xml 0 5 console
+-mfpr graph_weight_3.xml 0 5 console
+-mfpr graph_direct.xml 0 2 xml
+-mfpr graph_weight_5.xml 0 3 console
+-mfpr graph_shortPath.xml n7 n0 xml
+-mfpr graph_float_weight.xml 4 0 xml
+-mfpr graph_weight_4.xml 0 5 xml
+-mfpr graph_direct_2.xml 0 2 xml
+-mfpr graph_direct_3.xml 0 3 xml

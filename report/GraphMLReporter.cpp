@@ -23,6 +23,7 @@ const char* xmlGraphFooter = "</graph>\n";
 const char* xmlGraphNodeStart = "<node id=\"%s\">\n";
 const char* xmlGraphNodeEnd = "</node>\n";
 
+const char* xmlGraphEdge = "<edge source=\"%s\" target=\"%s\"/>\n";
 const char* xmlGraphEdgeStart = "<edge source=\"%s\" target=\"%s\">\n";
 const char* xmlGraphEdgeEnd   = "</edge>\n";
 
@@ -35,13 +36,6 @@ const char* xmlResultHead   = "<result count=\"%d\">\n";
 const char* xmlResultFooter = "</result>\n";
 const char* xmlResultValueHead = "  <value type=\"%d\">";
 const char* xmlResultValueFooter = "</value>\n";
-
-bool operator < (const NodesEdge& a, const NodesEdge& b)
-{
-    if (a.source < b.source) return true;
-    if (a.source == b.source) return a.target < b.target;
-    return false;
-}
 
 
 #define MAX_NODE_CHAR 128
@@ -170,21 +164,30 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
                 pGraph->GetNodeStrId(edge.source, (char *)strTargetNodeId, MAX_ID);
             }
             
-            char graphEdge[MAX_NODE_CHAR]  = {0};
-            sprintf(graphEdge, xmlGraphEdgeStart, strSourceNodeId, strTargetNodeId);
-            result += graphEdge;
-            
-            // Low dist
-            IndexType index = 0;
             AlgorithmResult property;
-            while (pAlgorithm->GetEdgeProperty(edge, index, &property) && property.type != ART_UNKNOWN)
+            if (pAlgorithm->GetEdgeProperty(edge, 0, &property) && property.type != ART_UNKNOWN)
             {
-                sprintf(graphEdge, xmlGraphNodeProperty, pAlgorithm->GetEdgePropertyName(index), (WeightType)(property.type == ART_INT ? property.nValue : property.fValue));
+                char graphEdge[MAX_NODE_CHAR]  = {0};
+                sprintf(graphEdge, xmlGraphEdgeStart, strSourceNodeId, strTargetNodeId);
                 result += graphEdge;
-                index++;
+                
+                // Low dist
+                IndexType index = 0;
+                while (pAlgorithm->GetEdgeProperty(edge, index, &property) && property.type != ART_UNKNOWN)
+                {
+                    sprintf(graphEdge, xmlGraphNodeProperty, pAlgorithm->GetEdgePropertyName(index), (WeightType)(property.type == ART_INT ? property.nValue : property.fValue));
+                    result += graphEdge;
+                    index++;
+                }
+                
+                result += xmlGraphEdgeEnd;
             }
-            
-            result += xmlGraphEdgeEnd;
+            else
+            {
+                char graphEdge[MAX_NODE_CHAR]  = {0};
+                sprintf(graphEdge, xmlGraphEdge, strSourceNodeId, strTargetNodeId);
+                result += graphEdge;
+            }
         }
         
         result += xmlGraphFooter;

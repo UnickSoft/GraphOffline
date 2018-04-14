@@ -72,7 +72,11 @@ template<class WeightTypeInterface, typename WeightType> void MaxFlowPushRelabel
 template<class WeightTypeInterface, typename WeightType> bool MaxFlowPushRelabel<WeightTypeInterface, WeightType>::Calculate()
 {
     bool res = false;
+    _flowValue.clear();
+    m_result = 0;
+    
     // Look algorithm: https://en.wikipedia.org/wiki/Push–relabel_maximum_flow_algorithm
+    // http://acm.mipt.ru/twiki/bin/view/Algorithms/MaxFlowPushRelabelCPP
     if (_pGraph && _source && _drain && _pGraph->GetNodesCount() > 0)
     {
         auto n = _pGraph->GetNodesCount();
@@ -165,8 +169,6 @@ template<class WeightTypeInterface, typename WeightType> bool MaxFlowPushRelabel
         
         // Init
         excessFlow.resize(n);
-        
-        // Init
         for (IndexType i = 0; i < _pGraph->GetNodesCount(); i++)
         {
             if (_pGraph->GetNode(i) == sourceIndex)
@@ -212,53 +214,9 @@ template<class WeightTypeInterface, typename WeightType> bool MaxFlowPushRelabel
         
         m_result = excessFlow[drainIndex];
         
-        // Find flow for edges
-        std::list<int> backQ;
-        backQ.push_back(drainIndex);
+        findFlowValues(drainIndex, sourceIndex, origin_adjacencyMatrix, adjacencyMatrix);
         
-        std::vector<WeightType> realFlow;
-        realFlow.resize(n);
-        std::fill(realFlow.begin(), realFlow.end(), 0);
-        realFlow[drainIndex] = m_result;
-        
-        while (!backQ.empty())
-        {
-            auto currentNode = backQ.front();
-            backQ.pop_front();
-            auto currentFlow = realFlow[currentNode];
-            for (IndexType i = 0; i < n; i++)
-            {
-                if (/*height[currentNode] <= height[i] &&*/ origin_adjacencyMatrix[i][currentNode] > 0)
-                {
-                    auto deltaFlow = (i != sourceIndex) ? - adjacencyMatrix[i][currentNode] + origin_adjacencyMatrix[i][currentNode] : adjacencyMatrix[i][currentNode];
-                    
-                    if (deltaFlow > 0)
-                    {
-                        EdgeFlowValue edge;
-                        auto s = _pGraph->GetNode(i);
-                        auto d = _pGraph->GetNode(currentNode);
-                        
-                        edge.edge.source = _pGraph->IsEgdeExists(s, d) ? s : d;
-                        edge.edge.target = _pGraph->IsEgdeExists(s, d) ? d : s;
-                        edge.value       = std::min(currentFlow, deltaFlow);
-
-                        currentFlow -= edge.value;
-                        
-                        _flowValue.push_back(edge);
-                        
-                        realFlow[i] += edge.value;
-                        backQ.push_back(i);
-                    }
-                }
-                
-                if (currentFlow <= 0)
-                {
-                    break;
-                }
-            }
-        }
-        
-        
+        // debugPring();
         res = true;
     }
     
@@ -352,3 +310,107 @@ template<class WeightTypeInterface, typename WeightType> const char* MaxFlowPush
     }
 }
 
+
+template<class WeightTypeInterface, typename WeightType> void MaxFlowPushRelabel<WeightTypeInterface, WeightType>::findFlowValues(IndexType drainIndex, IndexType sourceIndex, std::vector<std::vector<WeightType>>& origin_adjacencyMatrix, std::vector<std::vector<WeightType>>& adjacencyMatrix)
+{
+    auto n = _pGraph->GetNodesCount();
+    // Find flow for edges
+    std::list<int> backQ;
+    backQ.push_back(drainIndex);
+    
+    std::vector<WeightType> realFlow;
+    realFlow.resize(n);
+    std::fill(realFlow.begin(), realFlow.end(), 0);
+    realFlow[drainIndex]  = m_result;
+    realFlow[sourceIndex] = m_result;
+    
+    while (!backQ.empty())
+    {
+        auto currentNode = backQ.front();
+        backQ.pop_front();
+        auto& currentFlow = realFlow[currentNode];
+        for (IndexType i = 0; i < n; i++)
+        {
+            if (i != currentNode && origin_adjacencyMatrix[i][currentNode] > 0)
+            {
+                auto deltaFlow = (i != sourceIndex) ? - adjacencyMatrix[i][currentNode] + origin_adjacencyMatrix[i][currentNode] : origin_adjacencyMatrix[i][currentNode];
+                
+                if (deltaFlow > 0)
+                {
+                    EdgeFlowValue edge;
+                    auto s = _pGraph->GetNode(i);
+                    auto d = _pGraph->GetNode(currentNode);
+                    
+                    edge.edge.source = _pGraph->IsEgdeExists(s, d) ? s : d;
+                    edge.edge.target = _pGraph->IsEgdeExists(s, d) ? d : s;
+                    edge.value       = std::min(currentFlow, deltaFlow);
+                    
+                    if (i != sourceIndex)
+                    {
+                        adjacencyMatrix[i][currentNode] += edge.value;
+                    }
+                    else
+                    {
+                        origin_adjacencyMatrix[i][currentNode] -= edge.value;
+                    }
+                    //printf ("%d -> %d = %f\n", i, currentNode, edge.value);
+                    
+                    currentFlow -= edge.value;
+                    
+                    _flowValue.push_back(edge);
+                    
+                    if (i != sourceIndex)
+                    {
+                        realFlow[i] += edge.value;
+                        backQ.push_back(i);
+                    }
+                }
+            }
+            
+            if (currentFlow <= 0)
+            {
+                break;
+            }
+        }
+    }
+    
+    // Remove dublications.
+    std::sort(_flowValue.begin(), _flowValue.end(), [](const EdgeFlowValue& a, const EdgeFlowValue& b){
+            return a.edge < b.edge;
+    });
+    
+    auto flowValueCopy = _flowValue;
+    
+    auto last = std::unique(_flowValue.begin(), _flowValue.end(), [](const EdgeFlowValue& a, const EdgeFlowValue& b){
+            return a.edge == b.edge;
+    });
+    
+    _flowValue.erase(last, _flowValue.end());
+    
+    for(auto element = _flowValue.begin(); element != last; element++)
+    {
+        element->value = 0;
+        for (auto comapare = flowValueCopy.begin(); comapare != flowValueCopy.end(); comapare++)
+        {
+            if (element->edge.source == comapare->edge.source && element->edge.target == comapare->edge.target)
+            {
+                element->value += comapare->value;
+            }
+        }
+    }
+}
+
+
+template<class WeightTypeInterface, typename WeightType> void MaxFlowPushRelabel<WeightTypeInterface, WeightType>::debugPring()
+{
+    for (auto& edge : _flowValue)
+    {
+        char s[255] = {};
+        char d[255] = {};
+        
+        _pGraph->GetNodeStrId(edge.edge.source, s, 255);
+        _pGraph->GetNodeStrId(edge.edge.target, d, 255);
+        
+        printf ("%s -> %s = %f\n", s, d, edge.value);
+    }
+}

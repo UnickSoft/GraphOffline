@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
+     http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+     
+<key id="d0" for="node" attr.name="weight" attr.type="double">
+<default>1</default>
+</key>
+
+  <graph id="G" edgedefault="undirected">
+    <node id="n0"/>
+    <node id="n1"/>
+    <node id="n2"/>
+    <node id="n3"/>                                   
+    <node id="n4"/>                                   
+    <node id="n5"/>                                   
+    <node id="n6"/>                                   
+    <node id="n7"/>                                   
+    <edge source="n0" target="n1"><data key="d0">5</data></edge>
+    <edge source="n1" target="n2"><data key="d0">10</data></edge>
+    <edge source="n2" target="n3"><data key="d0">4</data></edge>
+    <edge source="n3" target="n4"/>
+    <edge source="n3" target="n5"/>
+    <edge source="n6" target="n5"/>
+    <edge source="n6" target="n7"/>
+    <edge source="n3" target="n7"><data key="d0">2</data></edge>
+  </graph>
+</graphml>
+
+<!--
+n0 -(5)-n1
+        |
+       (10)
+        |
+       n2
+       |
+       (4)
+       |
+n4 -  n3 - n5 - n6
+         \       |
+           (2)- n7
+-->

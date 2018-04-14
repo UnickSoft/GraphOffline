@@ -19,6 +19,18 @@ struct NodesEdge
   ObjectId target;
 };
 
+inline bool operator < (const NodesEdge& a, const NodesEdge& b)
+{
+    if (a.source < b.source) return true;
+    if (a.source == b.source) return a.target < b.target;
+    return false;
+}
+
+inline bool operator == (const NodesEdge& a, const NodesEdge& b)
+{
+    return a.source == b.source && a.target == b.target;
+}
+
 enum AlgorithmParamType {APT_NODE = 0, APT_FLAG};
 
 struct AlgorithmParam
