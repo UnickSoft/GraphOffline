@@ -54,7 +54,8 @@ protected:
     struct EdgeFlowValue
     {
         NodesEdge edge;
-        WeightType value;
+        bool backToFront = false;
+        WeightType value = (WeightType)0;
     };
     
     std::vector<EdgeFlowValue> _flowValue;

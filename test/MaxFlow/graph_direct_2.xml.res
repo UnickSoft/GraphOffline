@@ -15,9 +15,11 @@
 </node>
 <edge source="0" target="1">
 <data key="flowValue">1</data>
+<data key="backToFront">0</data>
 </edge>
 <edge source="1" target="2">
 <data key="flowValue">1</data>
+<data key="backToFront">0</data>
 </edge>
 </graph>
 </graphml>

@@ -11,6 +11,8 @@
 #include <list>
 
 static const char* g_flowValueStr = "flowValue";
+static const char* g_backTpFrontValueStr = "backToFront";
+
 
 template<class WeightTypeInterface, typename WeightType> MaxFlowPushRelabel<WeightTypeInterface, WeightType>::MaxFlowPushRelabel ()
 {
@@ -266,7 +268,7 @@ template<class WeightTypeInterface, typename WeightType> bool MaxFlowPushRelabel
 {
     bool result = false;
     
-    if (index == 0 && param)
+    if ((index == 0 || index == 1) && param)
     {
         auto findRes = std::find_if(_flowValue.begin(), _flowValue.end(), [&object](const EdgeFlowValue& edge)
             {
@@ -274,20 +276,30 @@ template<class WeightTypeInterface, typename WeightType> bool MaxFlowPushRelabel
             });
         
         bool found   = findRes != _flowValue.end();
-        if (typeid(WeightType) == typeid(FloatWeightType))
+        
+        if (index == 0)
         {
-            param->type   = ART_FLOAT;
-            param->fValue = found ? (FloatWeightType) findRes->value : 0.0;
+            if (typeid(WeightType) == typeid(FloatWeightType))
+            {
+                param->type   = ART_FLOAT;
+                param->fValue = found ? (FloatWeightType) findRes->value : 0.0;
+            }
+            else
+            {
+                param->type   = ART_INT;
+                param->nValue = found ? (IntWeightType) findRes->value : 0;
+            }
         }
-        else
+        else if (index == 1)
         {
-            param->type   = ART_INT;
-            param->nValue = found ? (IntWeightType) findRes->value : 0;
+                param->type   = ART_INT;
+                param->nValue = found ? (IntWeightType) findRes->backToFront : 0;
         }
         
         result = true;
     }
 
+    
     return result;
 }
 
@@ -303,6 +315,10 @@ template<class WeightTypeInterface, typename WeightType> const char* MaxFlowPush
     if (index == 0)
     {
         return g_flowValueStr;
+    }
+    else if (index == 1)
+    {
+        return g_backTpFrontValueStr;
     }
     else
     {
@@ -341,8 +357,8 @@ template<class WeightTypeInterface, typename WeightType> void MaxFlowPushRelabel
                     auto s = _pGraph->GetNode(i);
                     auto d = _pGraph->GetNode(currentNode);
                     
-                    edge.edge.source = _pGraph->IsEgdeExists(s, d) ? s : d;
-                    edge.edge.target = _pGraph->IsEgdeExists(s, d) ? d : s;
+                    edge.edge.source = s;
+                    edge.edge.target = d;
                     edge.value       = std::min(currentFlow, deltaFlow);
                     
                     if (i != sourceIndex)
@@ -398,6 +414,14 @@ template<class WeightTypeInterface, typename WeightType> void MaxFlowPushRelabel
             }
         }
     }
+    
+    std::for_each(_flowValue.begin(), _flowValue.end(), [this](EdgeFlowValue& edge){
+        if (!_pGraph->IsEgdeExists(edge.edge.source, edge.edge.target))
+        {
+            std::swap(edge.edge.source, edge.edge.target);
+            edge.backToFront = true;
+        }
+    });
 }
 
 

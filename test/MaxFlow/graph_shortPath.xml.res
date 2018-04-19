@@ -30,24 +30,31 @@
 </node>
 <edge source="n0" target="n1">
 <data key="flowValue">3</data>
+<data key="backToFront">1</data>
 </edge>
 <edge source="n1" target="n2">
 <data key="flowValue">3</data>
+<data key="backToFront">1</data>
 </edge>
 <edge source="n2" target="n3">
 <data key="flowValue">3</data>
+<data key="backToFront">1</data>
 </edge>
 <edge source="n3" target="n5">
 <data key="flowValue">1</data>
-</edge>
-<edge source="n3" target="n7">
-<data key="flowValue">2</data>
+<data key="backToFront">1</data>
 </edge>
 <edge source="n6" target="n5">
 <data key="flowValue">1</data>
+<data key="backToFront">0</data>
+</edge>
+<edge source="n3" target="n7">
+<data key="flowValue">2</data>
+<data key="backToFront">1</data>
 </edge>
 <edge source="n6" target="n7">
 <data key="flowValue">1</data>
+<data key="backToFront">1</data>
 </edge>
 </graph>
 </graphml>

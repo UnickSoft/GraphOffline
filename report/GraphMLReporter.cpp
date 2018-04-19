@@ -59,16 +59,17 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
     IndexType res = 0;
     if (pAlgorithm && pGraph)
     {
-        const char* xmlGraphNodeProperty = NULL;
-        
-        if (pGraph->GetEdgeWeightType() == WT_INT)
+        auto getPropertyMask = [](const AlgorithmResultType& type) -> const char*
         {
-            xmlGraphNodeProperty = xmlGraphNodePropertyInt;
+        if (type == ART_INT)
+        {
+            return xmlGraphNodePropertyInt;
         }
         else
         {
-            xmlGraphNodeProperty = xmlGraphNodePropertyFloat;
+            return xmlGraphNodePropertyFloat;
         }
+        };
         
 
         std::string result = xmlStartShort;
@@ -132,7 +133,7 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
             AlgorithmResult property;
             while (pAlgorithm->GetNodeProperty(pGraph->GetNode(i), index, &property) && property.type != ART_UNKNOWN)
             {
-                sprintf(graphNode, xmlGraphNodeProperty, pAlgorithm->GetNodePropertyName(index), (WeightType)(property.type == ART_INT ? property.nValue : property.fValue));
+                sprintf(graphNode, getPropertyMask(property.type), pAlgorithm->GetNodePropertyName(index), (WeightType)(property.type == ART_INT ? property.nValue : property.fValue));
                 result += graphNode;
                 index++;
             }
@@ -175,7 +176,14 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
                 IndexType index = 0;
                 while (pAlgorithm->GetEdgeProperty(edge, index, &property) && property.type != ART_UNKNOWN)
                 {
-                    sprintf(graphEdge, xmlGraphNodeProperty, pAlgorithm->GetEdgePropertyName(index), (WeightType)(property.type == ART_INT ? property.nValue : property.fValue));
+                    if (property.type == ART_INT)
+                    {
+                        sprintf(graphEdge, getPropertyMask(property.type), pAlgorithm->GetEdgePropertyName(index), property.nValue);
+                    }
+                    else
+                    {
+                        sprintf(graphEdge, getPropertyMask(property.type), pAlgorithm->GetEdgePropertyName(index), property.fValue);
+                    }
                     result += graphEdge;
                     index++;
                 }
