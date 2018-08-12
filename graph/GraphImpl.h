@@ -32,25 +32,25 @@ class BaseNodeEnumStrategy : public IEnumStrategy
 public:
     BaseNodeEnumStrategy (IEnumStrategy* pUserStrategy) : m_pUserStrategy(pUserStrategy) {;}
     
-    virtual void StartProcessNode(ObjectId nodeId)
+    virtual void StartProcessNode(ObjectId nodeId) override
     {
         processedNode.insert(nodeId);
         m_pUserStrategy->StartProcessNode(nodeId);
     }
     
-    virtual bool NeedProcessChild(ObjectId nodeId, ObjectId childId, ObjectId edge)
+    virtual bool NeedProcessChild(ObjectId nodeId, ObjectId childId, ObjectId edge) override
     {
         return m_pUserStrategy->NeedProcessChild(nodeId, childId, edge) &&
             processedNode.find(childId) == processedNode.end();
     }
     
-    virtual void FinishProcessNode(ObjectId nodeId)
+    virtual void FinishProcessNode(ObjectId nodeId) override
     {
         m_pUserStrategy->FinishProcessNode(nodeId);
     }
     
     // Default Strategy.
-    virtual DefaultEnumStrategy GetDefaultStrategy()
+    virtual DefaultEnumStrategy GetDefaultStrategy() override
     {
         return DES_NONE;
     }
@@ -71,24 +71,24 @@ class BaseEdgeEnumStrategy : public IEnumStrategy
 public:
     BaseEdgeEnumStrategy (IEnumStrategy* pUserStrategy) : m_pUserStrategy(pUserStrategy) {;}
     
-    virtual void StartProcessNode(ObjectId nodeId)
+    virtual void StartProcessNode(ObjectId nodeId) override
     {
         m_pUserStrategy->StartProcessNode(nodeId);
     }
     
-    virtual bool NeedProcessChild(ObjectId nodeId, ObjectId childId, ObjectId edge)
+    virtual bool NeedProcessChild(ObjectId nodeId, ObjectId childId, ObjectId edge) override
     {
         return m_pUserStrategy->NeedProcessChild(nodeId, childId, edge) &&
         (processedEdge.find(edge) == processedEdge.end());
     }
     
-    virtual void FinishProcessNode(ObjectId nodeId)
+    virtual void FinishProcessNode(ObjectId nodeId) override
     {
         m_pUserStrategy->FinishProcessNode(nodeId);
     }
     
     // Default Strategy.
-    virtual DefaultEnumStrategy GetDefaultStrategy()
+    virtual DefaultEnumStrategy GetDefaultStrategy() override
     {
         return DES_NONE;
     }
@@ -268,7 +268,7 @@ template<class WeightInterface, typename WeightType> template <typename T> T Gra
 // Get Nodes count.
 template<class WeightInterface, typename WeightType> IndexType Graph<WeightInterface, WeightType>::GetNodesCount() const
 {
-  return m_nodes.size();
+  return IndexType(m_nodes.size());
 }
 
 template<class WeightInterface, typename WeightType> ObjectId Graph<WeightInterface, WeightType>::GetNode(IndexType index) const
@@ -286,7 +286,7 @@ template<class WeightInterface, typename WeightType>  ObjectId Graph<WeightInter
 // Get Edges count.
 template<class WeightInterface, typename WeightType>  IndexType Graph<WeightInterface, WeightType>::GetEdgesCount() const
 {
-  return m_edges.size();
+  return IndexType(m_edges.size());
 }
 
 // Get connected graph count.
@@ -296,7 +296,7 @@ template<class WeightInterface, typename WeightType>  IndexType Graph<WeightInte
     NodePtr nodePtr;
     if (IsValidNodeId(source, nodePtr) && nodePtr)
     {
-        res = nodePtr->GetTargets().size();
+        res = IndexType(nodePtr->GetTargets().size());
     }
     
     assert(nodePtr);
@@ -412,8 +412,8 @@ template<class WeightInterface, typename WeightType> typename Graph<WeightInterf
     NodePtr sourcePtr, targetPtr;
     if (IsValidNodeId(source, sourcePtr) && IsValidNodeId(target, targetPtr))
     {
-        Node* sourceNode = (Node*)source;
-        Node* targetNode = (Node*)target;
+        //Node* sourceNode = (Node*)source;
+        //Node* targetNode = (Node*)target;
         
         auto edgeIterator =
         std::find_if(m_edges.begin(), m_edges.end(), FindEdgeFunctor<WeightInterface, WeightType>(sourcePtr.get(), targetPtr.get()));
@@ -614,7 +614,7 @@ template<class WeightInterface, typename WeightType> void Graph<WeightInterface,
     const std::vector<Node*>& nodes = node->GetTargets();
     for (auto iterator = nodes.cbegin(); iterator != nodes.cend(); iterator++)
     {
-        auto edge = node->GetEdge(iterator - nodes.cbegin());
+        auto edge = node->GetEdge(IndexType(iterator - nodes.cbegin()));
         if (pEnumStrategy->NeedProcessChild(node->privateId,
                                             (*iterator)->privateId, edge))
         {

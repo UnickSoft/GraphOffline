@@ -84,7 +84,7 @@ template<class WeightTypeInterface, typename WeightType> bool DijkstraShortPath<
         std::unordered_map<ObjectId, ObjectId> previous;
         std::list<ObjectId> q;
         
-        for (size_t i = 0; i < m_pGraph->GetNodesCount(); i ++)
+        for (IndexType i = 0; i < m_pGraph->GetNodesCount(); i ++)
         {
             ObjectId object  = m_pGraph->GetNode(i);
             dist[object]     = 1E9;
@@ -96,7 +96,7 @@ template<class WeightTypeInterface, typename WeightType> bool DijkstraShortPath<
         
         while (q.size() > 0)
         {
-            int index = -1;
+            //int index = -1;
             WeightType nMinFromQ  = 1E9;
             
             auto uIterator = q.begin();
@@ -129,11 +129,11 @@ template<class WeightTypeInterface, typename WeightType> bool DijkstraShortPath<
         
         m_lowestDistance = dist;
         
-        if (previous[u] != NULL)
+        if (previous[u] != 0)
         {
             m_result = 0;
         }
-        while (previous[u] != NULL)
+        while (previous[u] != 0)
         {
             m_path.push_back(u);
             m_result += m_pGraph->GetEdgeWeight(previous[u], u);
@@ -155,7 +155,7 @@ template<class WeightTypeInterface, typename WeightType> bool DijkstraShortPath<
 // Hightlight nodes count.
 template<class WeightTypeInterface, typename WeightType> IndexType DijkstraShortPath<WeightTypeInterface, WeightType>::GetHightlightNodesCount() const
 {
-  return m_path.size();
+  return IndexType(m_path.size());
 }
 
 // Hightlight node.
@@ -167,7 +167,7 @@ template<class WeightTypeInterface, typename WeightType> ObjectId DijkstraShortP
 // Hightlight edges count.
 template<class WeightTypeInterface, typename WeightType> IndexType DijkstraShortPath<WeightTypeInterface, WeightType>::GetHightlightEdgesCount() const
 {
-  return m_path.size() ? m_path.size() - 1 : 0;
+  return IndexType(m_path.size() ? m_path.size() - 1 : 0);
 }
 
 // Hightlight edge.
@@ -182,7 +182,7 @@ template<class WeightTypeInterface, typename WeightType> NodesEdge DijkstraShort
 // Get result count.
 template<class WeightTypeInterface, typename WeightType>  IndexType DijkstraShortPath<WeightTypeInterface, WeightType>::GetResultCount() const
 {
-    return 1 + m_path.size();
+    return IndexType(1 + m_path.size());
 }
 
 template<class WeightTypeInterface, typename WeightType> AlgorithmResult DijkstraShortPath<WeightTypeInterface, WeightType>::GetResult(IndexType index) const

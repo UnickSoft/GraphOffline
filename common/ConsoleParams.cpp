@@ -145,7 +145,7 @@ template <class GraphType> bool ConsoleParams::LoadGraph(const String& sourceNam
         char* pBuffer = new char[fileSize];
         file.readData(pBuffer, fileSize);
         
-        graph.LoadFromGraphML(pBuffer, fileSize);
+        graph.LoadFromGraphML(pBuffer, uint32_t(fileSize));
         
         delete[] pBuffer;
         file.closeFile();
@@ -155,7 +155,7 @@ template <class GraphType> bool ConsoleParams::LoadGraph(const String& sourceNam
     {
         String cgiInputXML = m_cgiHelper.GetGraphBuffer();
         BufferChar buffer = cgiInputXML.Locale();
-        graph.LoadFromGraphML(buffer.Data(), buffer.Size());
+        graph.LoadFromGraphML(buffer.Data(), uint32_t(buffer.Size()));
         res = true;
     }
     else
@@ -192,7 +192,7 @@ String ConsoleParams::GetHelp()
     const AlgorithmFactory& algorithmFactory = AlgorithmFactory::GetSingleton();
     std::shared_ptr<IAlgorithm> algorithm;
     
-    while (algorithm = algorithmFactory.CreateAlgorithm(index))
+    while ((algorithm = algorithmFactory.CreateAlgorithm(index)))
     {
         res = res + String(" ") + String(algorithm->GetFullName()) + String(" - shortname is ") + String(algorithm->GetShortName()) +
             String("\n Parameters:\n");
@@ -216,7 +216,7 @@ String ConsoleParams::GetHelp()
     const ReporterFactory& reporterFactory = ReporterFactory::GetSingleton();
     std::shared_ptr<IReporter> reporter;
     
-    while (reporter = reporterFactory.CreateReporter(index))
+    while ((reporter = reporterFactory.CreateReporter(index)))
     {
         res = res + String(" ") + String(reporter->GetFullName()) + String(" - shortname is ") + String(reporter->GetShortName()) + String("\n");
         ++index;

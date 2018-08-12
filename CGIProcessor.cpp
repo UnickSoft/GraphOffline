@@ -74,7 +74,7 @@ std::vector<String> CGIProcessor::SplitString(const String& inputString, const s
     
     while (!input.IsEmpty())
     {
-        int nMinPosition = input.Count();
+        int nMinPosition = int(input.Count());
         for (const String& delemiter : delemiters)
         {
             int pos = input.Find(delemiter);

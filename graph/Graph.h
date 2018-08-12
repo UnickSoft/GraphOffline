@@ -52,7 +52,7 @@ public:
             
             if (removeEdgesPosition != edges.end())
             {
-                IndexType index = removeEdgesPosition - edges.begin();
+                IndexType index = IndexType(removeEdgesPosition - edges.begin());
                 edges.erase(edges.begin() +  index);
                 targets.erase(targets.begin() + index);
             }
@@ -117,40 +117,40 @@ public:
     
     // IGraph
     // Get Nodes count.
-    virtual IndexType GetNodesCount() const;
+    virtual IndexType GetNodesCount() const override;
     // Get Edges count.
-    virtual IndexType GetEdgesCount() const;
+    virtual IndexType GetEdgesCount() const override;
     // Get node of this graph.
-    virtual ObjectId GetNode(IndexType index) const;
+    virtual ObjectId GetNode(IndexType index) const override;
     // Get node of this graph.
-    virtual ObjectId GetNode(const char* nodeId) const;
+    virtual ObjectId GetNode(const char* nodeId) const override;
     // Get connected graph count.
-    virtual IndexType GetConnectedNodes(ObjectId source) const;
+    virtual IndexType GetConnectedNodes(ObjectId source) const override;
     // Get connected graph for this graph.
-    virtual ObjectId GetConnectedNode(ObjectId source, IndexType index) const;
+    virtual ObjectId GetConnectedNode(ObjectId source, IndexType index) const override;
     // Is edge exists.
-    virtual bool AreNodesConnected(ObjectId source, ObjectId target) const;
+    virtual bool AreNodesConnected(ObjectId source, ObjectId target) const override;
     // Get Egde weight. TODO: float.
-    virtual WeightType GetEdgeWeight(ObjectId source, ObjectId target) const;
+    virtual WeightType GetEdgeWeight(ObjectId source, ObjectId target) const override;
     // Return graph string Id.
-    virtual bool GetNodeStrId(ObjectId node, char* outBuffer, IndexType bufferSize) const;
+    virtual bool GetNodeStrId(ObjectId node, char* outBuffer, IndexType bufferSize) const override;
     // Is edge exists in input graph.
-    virtual bool IsEgdeExists(ObjectId source, ObjectId target, bool onlyInSourceGraph = true) const;
+    virtual bool IsEgdeExists(ObjectId source, ObjectId target, bool onlyInSourceGraph = true) const override;
     // Get weight real type
-    virtual EdgeWeightType GetEdgeWeightType() const;
+    virtual EdgeWeightType GetEdgeWeightType() const override;
     // Create copy of graph.
-    virtual WeightInterface* MakeCopy(GraphCopyType type) const;
+    virtual WeightInterface* MakeCopy(GraphCopyType type) const override;
     // Create copy of graph.
-    virtual IGraph* MakeBaseCopy(GraphCopyType type) const;
+    virtual IGraph* MakeBaseCopy(GraphCopyType type) const override;
     // Is graph directed or not.
-    virtual bool HasDirected() const;
-    virtual bool HasUndirected() const;
+    virtual bool HasDirected() const override;
+    virtual bool HasUndirected() const override;
     // Run DFS and call callbacks.
-    virtual void ProcessDFS(IEnumStrategy* pEnumStrategy, ObjectId startedNode) const;
+    virtual void ProcessDFS(IEnumStrategy* pEnumStrategy, ObjectId startedNode) const override;
     // Remove edge from Graph. For undirected Graph it removes source -> target or target -> source
-    virtual void RemoveEdge(ObjectId source, ObjectId target);
+    virtual void RemoveEdge(ObjectId source, ObjectId target) override;
     // How many nodes are source for this node.
-    virtual IndexType GetSourceNodesNumber(ObjectId source);
+    virtual IndexType GetSourceNodesNumber(ObjectId source) override;
     
     // Add edge
     virtual bool AddEdge(ObjectId source, ObjectId target, bool direct, const FloatWeightType& weight) override;
