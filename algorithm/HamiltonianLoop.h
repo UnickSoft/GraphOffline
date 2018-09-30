@@ -1,31 +1,30 @@
 //
-//  EulerianPath.hpp
+//  HamiltonianLoop.hpp
 //  Graphoffline
 //
 //  Created by Олег on 26.12.15.
 //
 //
 
-#ifndef EulerianPath_hpp
-#define EulerianPath_hpp
+#pragma once
 
 #include <stdio.h>
 #include "BaseAlgorithm.h"
 #include "IGraph.h"
 #include <vector>
 
-class EulerianPath : public BaseAlgorithm
+class HamiltonianLoop : public BaseAlgorithm
 {
 public:
-    EulerianPath (bool loop);
-    virtual ~EulerianPath ();
+    HamiltonianLoop (bool loop);
+    virtual ~HamiltonianLoop ();
     
     // Long name of algoright: DijkstraShortPath.
-    virtual const char* GetFullName() const override {return (m_loop ? "Eulerian Loop" : "Eulerian Path");};
+    virtual const char* GetFullName() const override {return (m_path ? "Hamiltonian Path" : "Hamiltonian Loop");};
     // Short name of algorithm: dsp
-    virtual const char* GetShortName() const override {return (m_loop ? "elloop" : "elpath"); };
+    virtual const char* GetShortName() const override {return (m_path ? "hampath" : "hamloop"); };
     // Calculate algorithm.
-    virtual bool Calculate() override ;
+    virtual bool Calculate() override;
     // Hightlight nodes count.
     virtual IndexType GetHightlightNodesCount() const override;
     // Hightlight node.
@@ -43,19 +42,16 @@ public:
     virtual const char* GetNodePropertyName(IndexType index) const override;
     
 private:
+
+    bool _FindHamiltonianLoopRecursive(int currentNodeNumber, const std::vector<std::vector<bool>> & adjacencyMatrix, std::vector<int> & path, std::vector<int> & step);
     
     // Search loop.
-    const bool m_loop;
-    
-    bool _FindEulerianLoopRecursive(GraphPtr pGraph, ObjectId node);
-    
-    void RemoveFakeFromLoop(GraphPtr graph, ObjectId start, ObjectId finish);
-    
-    void AddEdgeForPath(GraphPtr graph, ObjectId start, ObjectId finish, bool direct);
+    const bool m_path;
     
     // Has or not EulerLoop.
     bool m_bResult;
-    std::vector<ObjectId> m_EulerianLoop;
+    std::vector<ObjectId> m_HamiltonianLoop;
+    
+    int m_startNode = 0;
 };
 
-#endif /* EulerianLoop_hpp */

@@ -11,6 +11,7 @@
 #include "ConnectedComponent.h"
 #include "EulerianPath.h"
 #include "MaxFlowPushRelabel.h"
+#include "HamiltonianLoop.h"
 
 IAlgorithm* AlgorithmFactory::CreateAlgorithm(const char* name, const IGraph* pGraph) const
 {
@@ -159,6 +160,18 @@ IAlgorithm* AlgorithmFactory::_CreateAlgorithm(IndexType index, bool bFloat) con
             }
             
             res = pAlgorithm;
+            break;
+        }
+        
+        case 5:
+        {
+            res = new HamiltonianLoop(false);
+            break;
+        }
+        
+        case 6:
+        {
+            res = new HamiltonianLoop(true);
             break;
         }
     }

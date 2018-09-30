@@ -17,6 +17,8 @@
 		683D17001C0B6CE600C804DF /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D16FE1C0B6CE600C804DF /* pugixml.cpp */; };
 		683D17051C0B6CF100C804DF /* GraphMLReporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D17021C0B6CF100C804DF /* GraphMLReporter.cpp */; };
 		683D170D1C0B6E4000C804DF /* GraphOffline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D170C1C0B6E4000C804DF /* GraphOffline.cpp */; };
+		68AC9242215F889D0033E6E4 /* HamiltonianLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68AC9240215F889D0033E6E4 /* HamiltonianLoop.cpp */; };
+		68AC9245215FD9950033E6E4 /* BaseAlgorithm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68AC9243215FD9940033E6E4 /* BaseAlgorithm.cpp */; };
 		68DEA7751C19DC0F003BBEE2 /* AlgorithmFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68DEA7731C19DC0F003BBEE2 /* AlgorithmFactory.cpp */; };
 		68DF5ACC1C308AF4005502FA /* ConnectedComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68DF5ACA1C308AF4005502FA /* ConnectedComponent.cpp */; };
 		68E271701C1F64AE00B6E3C1 /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68E2716E1C1F64AE00B6E3C1 /* Logger.cpp */; };
@@ -65,6 +67,10 @@
 		683D17041C0B6CF100C804DF /* IReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IReporter.h; path = report/IReporter.h; sourceTree = SOURCE_ROOT; };
 		683D170C1C0B6E4000C804DF /* GraphOffline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphOffline.cpp; sourceTree = SOURCE_ROOT; };
 		686E49C31C3DB36A00EB71C8 /* IAlgorithmFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IAlgorithmFactory.h; sourceTree = SOURCE_ROOT; };
+		68AC9240215F889D0033E6E4 /* HamiltonianLoop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HamiltonianLoop.cpp; path = algorithm/HamiltonianLoop.cpp; sourceTree = SOURCE_ROOT; };
+		68AC9241215F889D0033E6E4 /* HamiltonianLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HamiltonianLoop.h; path = algorithm/HamiltonianLoop.h; sourceTree = SOURCE_ROOT; };
+		68AC9243215FD9940033E6E4 /* BaseAlgorithm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BaseAlgorithm.cpp; path = algorithm/BaseAlgorithm.cpp; sourceTree = SOURCE_ROOT; };
+		68AC9244215FD9950033E6E4 /* BaseAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseAlgorithm.h; path = algorithm/BaseAlgorithm.h; sourceTree = SOURCE_ROOT; };
 		68CF70642078FE9200E996F5 /* MaxFlowPushRelabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MaxFlowPushRelabel.h; path = algorithm/MaxFlowPushRelabel.h; sourceTree = SOURCE_ROOT; };
 		68CF70652078FF5100E996F5 /* MaxFlowPushRelableImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MaxFlowPushRelableImpl.h; path = algorithm/MaxFlowPushRelableImpl.h; sourceTree = SOURCE_ROOT; };
 		68DEA7731C19DC0F003BBEE2 /* AlgorithmFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AlgorithmFactory.cpp; path = algorithm/AlgorithmFactory.cpp; sourceTree = SOURCE_ROOT; };
@@ -134,6 +140,10 @@
 		683D17091C0B6D6800C804DF /* Algorithms */ = {
 			isa = PBXGroup;
 			children = (
+				68AC9243215FD9940033E6E4 /* BaseAlgorithm.cpp */,
+				68AC9244215FD9950033E6E4 /* BaseAlgorithm.h */,
+				68AC9240215F889D0033E6E4 /* HamiltonianLoop.cpp */,
+				68AC9241215F889D0033E6E4 /* HamiltonianLoop.h */,
 				68CF70652078FF5100E996F5 /* MaxFlowPushRelableImpl.h */,
 				68CF70642078FE9200E996F5 /* MaxFlowPushRelabel.h */,
 				682E71FF1FB88E6E00907C11 /* EulerianPath.cpp */,
@@ -258,6 +268,7 @@
 				683D16F51C0B6CCE00C804DF /* ConsoleParams.cpp in Sources */,
 				682E72011FB88E6E00907C11 /* EulerianPath.cpp in Sources */,
 				683D17051C0B6CF100C804DF /* GraphMLReporter.cpp in Sources */,
+				68AC9245215FD9950033E6E4 /* BaseAlgorithm.cpp in Sources */,
 				683D16E71C0B6CBC00C804DF /* DijkstraShortPathImpl.h in Sources */,
 				683D16F61C0B6CCE00C804DF /* YString.cpp in Sources */,
 				68E3A3DE1C1C30740050FB32 /* ReporterFactory.cpp in Sources */,
@@ -265,6 +276,7 @@
 				68E271701C1F64AE00B6E3C1 /* Logger.cpp in Sources */,
 				68DEA7751C19DC0F003BBEE2 /* AlgorithmFactory.cpp in Sources */,
 				683D17001C0B6CE600C804DF /* pugixml.cpp in Sources */,
+				68AC9242215F889D0033E6E4 /* HamiltonianLoop.cpp in Sources */,
 				683D16FB1C0B6CD900C804DF /* GraphImpl.h in Sources */,
 				683D16F41C0B6CCE00C804DF /* CaseFunctions.cpp in Sources */,
 				68DF5ACC1C308AF4005502FA /* ConnectedComponent.cpp in Sources */,

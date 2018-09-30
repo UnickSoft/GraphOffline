@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 #include <stdio.h>
-#include "IAlgorithm.h"
+#include "BaseAlgorithm.h"
 #include "IGraph.h"
 
 class ConnectedComponent : public BaseAlgorithm
