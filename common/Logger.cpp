@@ -8,6 +8,7 @@
 
 #include "Logger.h"
 #include <fstream>
+#include <cassert>
 
 Logger::LogLevel Logger::m_topLevel = LE_NOTHING;
 std::string Logger::m_logFilename;

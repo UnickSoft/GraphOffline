@@ -9,6 +9,7 @@
 
 #include "IAlgorithm.h"
 #include <ostream>
+#include <vector>
 
 class BaseAlgorithm : public IAlgorithm
 {
