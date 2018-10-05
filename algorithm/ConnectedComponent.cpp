@@ -140,17 +140,17 @@ public:
     EnumStrategy (bool saveInStack) : m_saveInStack(saveInStack) {;}
 
     // We started process this node.
-    void StartProcessNode(ObjectId nodeId)
+    void StartProcessNode(ObjectId nodeId) override
     {
         m_visited.insert(nodeId);
     }
     // @return true if we need to process this child node.
-    bool NeedProcessChild(ObjectId nodeId, ObjectId childId, ObjectId edgeId)
+    bool NeedProcessChild(ObjectId nodeId, ObjectId childId, ObjectId edgeId) override
     {
         return m_visited.find(childId) == m_visited.end();
     }
     // We finish process this node.
-    void FinishProcessNode(ObjectId nodeId)
+    void FinishProcessNode(ObjectId nodeId) override
     {
         if (m_saveInStack)
         {
@@ -159,7 +159,7 @@ public:
     }
     
     // Default Strategy.
-    DefaultEnumStrategy GetDefaultStrategy()
+    DefaultEnumStrategy GetDefaultStrategy() override
     {
         return IEnumStrategy::DES_NODE;
     }

@@ -164,7 +164,7 @@
 
     size_t pointPos = len;
 
-    for (int i = len + afterPoint; i >= 0; --i)
+    for (int i = int(len + afterPoint); i >= 0; --i)
     {
       if(i == pointPos) 
       { 
@@ -576,7 +576,7 @@
     if (!bIgnoreCase && IsLatin()) // small optimization
     {
       const Char8 * p = StrStr(pStr, line.Line());
-      res = ((p == NULL) ? -1 : pos + (p - pStr));
+      res = ((p == NULL) ? -1 : int(pos + (p - pStr)));
     }
     else             
     { 
@@ -629,7 +629,7 @@
 
   int String::RFind(const String & search, size_t pos, bool bIgnoreCase) const //@todo optimize
   {
-    size_t count = Count();
+    //size_t count = Count();
     int cur = Find(search, 0, bIgnoreCase);
     while (cur >= 0 && (size_t)cur <= pos)
     {
@@ -1078,6 +1078,7 @@
     if(value < 1000000000000000000) return 18;
     if(value < 10000000000000000000) return 19;
 #else  //_MSC_VER
+/*
     if(value < 1000000000 * 10) return 10; 
     if(value < 1000000000 * 100) return 11;
     if(value < 1000000000 * 1000) return 12;
@@ -1088,6 +1089,7 @@
     if(value < 1000000000 * 100000000) return 17;
     if(value < 1000000000 * 1000000000) return 18;
     if(value < 1000000000 * 1000000000 * 10) return 19;
+*/
 #endif //_MSC_VER
     assert(0);
     return 0;
@@ -1119,6 +1121,7 @@
     case 18: return (unsigned long)1000000000000000000;
     case 19: return (unsigned long)10000000000000000000;
 #else
+/*
     case 10: return (unsigned long)(1000000000 * 10); 
     case 11: return (unsigned long)(1000000000 * 100);
     case 12: return (unsigned long)(1000000000 * 1000);
@@ -1129,7 +1132,8 @@
     case 17: return (unsigned long)(1000000000 * 100000000);
     case 18: return (unsigned long)(1000000000 * 1000000000);
     case 19: return (unsigned long)(1000000000 * 1000000000 * 10);                                         
-#endif //_MSC_VER                   
+*/
+#endif //_MSC_VER
     }
     assert(0);
     return 0;

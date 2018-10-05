@@ -53,7 +53,7 @@ public:
         
         Buffer8 bufferUTF = result.UTF8();
         
-        uint32_t outBufferSize = bufferUTF.Size() + 1;
+        uint32_t outBufferSize = uint32_t(bufferUTF.Size() + 1);
         
         if (outBufferSize <= bufferSize)
         {

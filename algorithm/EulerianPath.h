@@ -10,7 +10,7 @@
 #define EulerianPath_hpp
 
 #include <stdio.h>
-#include "IAlgorithm.h"
+#include "BaseAlgorithm.h"
 #include "IGraph.h"
 #include <vector>
 

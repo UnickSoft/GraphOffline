@@ -83,7 +83,7 @@ template<class WeightTypeInterface, typename WeightType> bool MaxFlowPushRelabel
     {
         auto n = _pGraph->GetNodesCount();
         std::vector<WeightType> excessFlow;
-        std::vector<std::vector<WeightType>> adjacencyMatrix;
+        std::vector<std::vector<WeightType>> adjacencyMatrix = this->GetAdjacencyMatrix<WeightType, WeightTypeInterface>(*_pGraph);
         std::vector<std::vector<WeightType>> origin_adjacencyMatrix;
         std::vector<WeightType> height;
         
@@ -131,7 +131,6 @@ template<class WeightTypeInterface, typename WeightType> bool MaxFlowPushRelabel
             }
         };
         
-        adjacencyMatrix.resize(n);
         height.resize(n);
         
         int sourceIndex = 0;
@@ -139,22 +138,6 @@ template<class WeightTypeInterface, typename WeightType> bool MaxFlowPushRelabel
         
         for (IndexType i = 0; i < n; i++)
         {
-            adjacencyMatrix[i].resize(n);
-            
-            for (IndexType j = 0; j < n; j++)
-            {
-                auto s = _pGraph->GetNode(i);
-                auto f = _pGraph->GetNode(j);
-                if (_pGraph->IsEgdeExists(s, f, false))
-                {
-                    adjacencyMatrix[i][j] = _pGraph->GetEdgeWeight(s, f);
-                }
-                else
-                {
-                    adjacencyMatrix[i][j] = 0;
-                }
-            }
-            
             if (_pGraph->GetNode(i) == _source)
             {
                 sourceIndex = i;

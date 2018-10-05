@@ -16,7 +16,7 @@
 static const char* g_indexStr = "index";
 static const char* g_indexCountStr = "indexCount";
 
-EulerianPath::EulerianPath (bool loop) : m_bResult(false), m_loop(loop)
+EulerianPath::EulerianPath (bool loop) : m_loop(loop), m_bResult(false)
 {
     
 }
@@ -220,7 +220,7 @@ bool EulerianPath::EulerianPath::Calculate()
 // Hightlight nodes count.
 IndexType EulerianPath::GetHightlightNodesCount() const
 {
-    return m_EulerianLoop.size();
+    return (IndexType)m_EulerianLoop.size();
 }
 
 // Hightlight node.
@@ -232,7 +232,7 @@ ObjectId EulerianPath::GetHightlightNode(IndexType index) const
 // Hightlight edges count.
 IndexType EulerianPath::GetHightlightEdgesCount() const
 {
-    return m_EulerianLoop.size() ? m_EulerianLoop.size() - 1 : 0;
+    return (IndexType)(m_EulerianLoop.size() ? m_EulerianLoop.size() - 1 : 0);
 }
 
 // Hightlight edge.
@@ -248,7 +248,7 @@ NodesEdge EulerianPath::GetHightlightEdge(IndexType index) const
 // Get result count.
 IndexType EulerianPath::GetResultCount() const
 {
-    return 1 + m_EulerianLoop.size();
+    return (IndexType)(1 + m_EulerianLoop.size());
 }
 
 // Get result.
@@ -307,7 +307,7 @@ class FindLoopStrategy : public IEnumStrategy
 {
 public:
     
-    FindLoopStrategy (ObjectId startNode) : m_startNode(startNode), m_bLoopFound(false) {;}
+    FindLoopStrategy (ObjectId startNode) : m_bLoopFound(false), m_startNode(startNode) {;}
     
     // We started process this node.
     void StartProcessNode(ObjectId nodeId) override

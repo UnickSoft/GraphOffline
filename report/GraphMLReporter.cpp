@@ -201,7 +201,7 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
         result += xmlGraphFooter;
         result += xmlEnd;
         
-        res = result.length() + 1;
+        res = (IndexType)(result.length() + 1);
         
         if (bufferSize >= res)
         {

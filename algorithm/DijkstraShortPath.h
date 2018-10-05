@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "IAlgorithm.h"
+#include "BaseAlgorithm.h"
 #include "IGraph.h"
 #include <vector>
 #include <map>
