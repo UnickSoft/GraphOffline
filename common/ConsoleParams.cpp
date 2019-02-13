@@ -158,6 +158,15 @@ template <class GraphType> bool ConsoleParams::LoadGraph(const String& sourceNam
         graph.LoadFromGraphML(buffer.Data(), uint32_t(buffer.Size()));
         res = true;
     }
+    else if (sourceName == "cgiInput_ping")
+    {
+        String cgiInputXML = m_cgiHelper.GetGraphBuffer();
+        BufferChar buffer = cgiInputXML.Locale();
+
+        printf("%s\n", buffer.Data());
+
+        res = false;
+    }
     else
     {
         LOG_ERROR("Cannot load graph");
