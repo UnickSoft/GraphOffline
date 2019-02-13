@@ -61,7 +61,7 @@ String CGIProcessor::GetGraphBuffer()
                         if (readed_size == 0)
                             break;
                     }
-                    postdata[total_readed_size + 1] = 0;
+                    postdata[contentLength] = 0;
                     res.FromLocale(postdata);
                     delete[] postdata;
                 }
