@@ -53,8 +53,15 @@ String CGIProcessor::GetGraphBuffer()
                 if (contentLength > 0)
                 {
                     char* postdata = new char[contentLength + 1];
-                    fread(postdata, contentLength, 1, stdin);
-                    postdata[contentLength + 1] = 0;
+                    size_t total_readed_size = 0;
+                    while (total_readed_size < contentLength)
+                    {
+                        size_t readed_size = fread(postdata + total_readed_size, 1, contentLength - total_readed_size, stdin);
+                        total_readed_size += readed_size;
+                        if (readed_size == 0)
+                            break;
+                    }
+                    postdata[total_readed_size + 1] = 0;
                     res.FromLocale(postdata);
                     delete[] postdata;
                 }
