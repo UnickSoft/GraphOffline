@@ -6,6 +6,7 @@
 #define __FILE_READER__
 
 #ifdef _WIN32
+  #define NOMINMAX
   #include <Windows.h>
   #include <TCHAR.h>
 #else

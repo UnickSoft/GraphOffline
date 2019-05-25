@@ -63,10 +63,18 @@ UserInterfaceState.xcuserstate
 
 *.xcbkptlist
 
-*.xcuserstate
 
-*.xcbkptlist
 
 *.xcscheme
 
 bin/Linux/Release/GraphOffline
+/.vs/
+/bin/Windows/obj/
+/_UpgradeReport_Files/
+/bin/Windows/Release/GraphOffline.iobj
+/bin/Windows/Release/GraphOffline.ipdb
+/bin/Windows/Release/GraphOffline.pdb
+*.vcxproj.user
+*.sdf
+/bin/Windows/Debug/GraphOffline.ilk
+/bin/Windows/Debug/GraphOffline.pdb

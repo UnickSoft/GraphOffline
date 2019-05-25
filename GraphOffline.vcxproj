@@ -14,17 +14,18 @@
     <ProjectGuid>{54CF9F11-74D2-4AE2-A80A-7838E804611F}</ProjectGuid>
     <RootNamespace>GraphCGI</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -89,18 +90,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="algorithm\AlgorithmFactory.cpp" />
+    <ClCompile Include="algorithm\BaseAlgorithm.cpp" />
+    <ClCompile Include="algorithm\ConnectedComponent.cpp" />
+    <ClCompile Include="algorithm\EulerianPath.cpp" />
+    <ClCompile Include="algorithm\HamiltonianLoop.cpp" />
     <ClCompile Include="CGIProcessor.cpp" />
+    <ClCompile Include="common\Logger.cpp" />
     <ClCompile Include="GraphOffline.cpp" />
     <ClCompile Include="pugixml\pugixml.cpp" />
-    <ClCompile Include="algorithm\DijkstraShortPath.cpp" />
     <ClCompile Include="report\GraphMLReporter.cpp" />
     <ClCompile Include="Common\CaseFunctions.cpp" />
     <ClCompile Include="Common\ConsoleParams.cpp" />
     <ClCompile Include="Common\YString.cpp" />
-    <ClCompile Include="graph\Graph.cpp" />
+    <ClCompile Include="report\ReporterFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="algorithm\AlgorithmFactory.h" />
+    <ClInclude Include="algorithm\BaseAlgorithm.h" />
+    <ClInclude Include="algorithm\ConnectedComponent.h" />
+    <ClInclude Include="algorithm\DijkstraShortPathImpl.h" />
+    <ClInclude Include="algorithm\EulerianPath.h" />
+    <ClInclude Include="algorithm\HamiltonianLoop.h" />
+    <ClInclude Include="algorithm\MaxFlowPushRelabel.h" />
+    <ClInclude Include="algorithm\MaxFlowPushRelableImpl.h" />
     <ClInclude Include="CGIProcessor.h" />
+    <ClInclude Include="common\Logger.h" />
+    <ClInclude Include="graph\GraphImpl.h" />
     <ClInclude Include="pugixml\foreach.hpp" />
     <ClInclude Include="pugixml\pugiconfig.hpp" />
     <ClInclude Include="pugixml\pugixml.hpp" />
@@ -117,6 +133,7 @@
     <ClInclude Include="Common\YString.h" />
     <ClInclude Include="graph\Graph.h" />
     <ClInclude Include="graph\IGraph.h" />
+    <ClInclude Include="report\ReporterFactory.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

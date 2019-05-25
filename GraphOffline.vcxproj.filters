@@ -54,9 +54,6 @@
     <ClCompile Include="pugixml\pugixml.cpp">
       <Filter>Source Files\pugixml</Filter>
     </ClCompile>
-    <ClCompile Include="algorithm\DijkstraShortPath.cpp">
-      <Filter>Source Files\algorithm</Filter>
-    </ClCompile>
     <ClCompile Include="report\GraphMLReporter.cpp">
       <Filter>Source Files\report</Filter>
     </ClCompile>
@@ -69,8 +66,26 @@
     <ClCompile Include="Common\YString.cpp">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="graph\Graph.cpp">
-      <Filter>Source Files\graph</Filter>
+    <ClCompile Include="algorithm\AlgorithmFactory.cpp">
+      <Filter>Source Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="algorithm\BaseAlgorithm.cpp">
+      <Filter>Source Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="algorithm\ConnectedComponent.cpp">
+      <Filter>Source Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="algorithm\EulerianPath.cpp">
+      <Filter>Source Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="algorithm\HamiltonianLoop.cpp">
+      <Filter>Source Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Logger.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="report\ReporterFactory.cpp">
+      <Filter>Source Files\report</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +139,39 @@
     </ClInclude>
     <ClInclude Include="graph\IGraph.h">
       <Filter>Header Files\graph</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\AlgorithmFactory.h">
+      <Filter>Header Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\BaseAlgorithm.h">
+      <Filter>Header Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\ConnectedComponent.h">
+      <Filter>Header Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\EulerianPath.h">
+      <Filter>Header Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\HamiltonianLoop.h">
+      <Filter>Header Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\MaxFlowPushRelabel.h">
+      <Filter>Header Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\MaxFlowPushRelableImpl.h">
+      <Filter>Source Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\DijkstraShortPathImpl.h">
+      <Filter>Source Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="graph\GraphImpl.h">
+      <Filter>Source Files\graph</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Logger.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="report\ReporterFactory.h">
+      <Filter>Header Files\report</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -9,6 +9,7 @@
 #include <string.h>
    
 #if defined(WIN32) || defined(WIN64)
+  #define NOMINMAX
   #include <Windows.h>
 #endif
 
