@@ -130,6 +130,9 @@ bool EulerianPath::EulerianPath::Calculate()
         }
         else
         {
+            connectedComponent->Calculate();
+            IntWeightType weakComponentCount = connectedComponent->GetResult(0).nValue;
+            
             AlgorithmParam param;
             strncpy(param.paramName, "strong", sizeof(param.paramName));
             param.data.bFlag = true;
@@ -141,7 +144,7 @@ bool EulerianPath::EulerianPath::Calculate()
             IntWeightType componentCount = connectedComponent->GetResult(0).nValue;
             
             bCanHasLoop = (componentCount == 1);
-            greedyTry   = (componentCount <= 2) && !m_loop;
+            greedyTry   = (weakComponentCount == 1 && !m_loop);
         }
         
         if (bCanHasLoop || greedyTry)
