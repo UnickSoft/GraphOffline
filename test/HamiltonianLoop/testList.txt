@@ -10,3 +10,4 @@
 -hamloop graph_disconneted.xml
 -hamloop graph12_disconnected.xml
 -hamloop one.xml
+-hamloop graph14.xml

@@ -77,7 +77,8 @@ bool HamiltonianLoop::Calculate()
             connectedComponent->Calculate();
             IntWeightType componentCount = connectedComponent->GetResult(0).nValue;
             
-            bCanHasLoop = (componentCount == 1);
+            bCanHasLoop = (componentCount == 1) &&
+              (m_path || m_pGraph->GetNodesCount() != 2); // Fix K2 case https://www.reddit.com/r/math/comments/7404nz/is_the_complete_graph_on_two_vertices_k2/?utm_source=amp&utm_medium=&utm_content=comments_view_all
         }
 
         if (bCanHasLoop)
