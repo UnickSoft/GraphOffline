@@ -88,6 +88,8 @@ public:
     virtual bool HasDirected() const = 0;
     // Has undirected edges or not.
     virtual bool HasUndirected() const = 0;
+    // Has multi graph
+    virtual bool IsMultiGraph() const = 0;
     // Run DFS and call callbacks.
     virtual void ProcessDFS(IEnumStrategy* pEnumStrategy, ObjectId startedNode) const = 0;
     // Remove edge from Graph. For undirected Graph it removes source -> target or target -> source
@@ -107,17 +109,16 @@ public:
 };
 
 
-class IGraphInt : public IGraph
+class IGraphInt: public IGraph
 {
 public:
     // Get Egde weight of int graph.
     virtual IntWeightType GetEdgeWeight(ObjectId source, ObjectId target) const = 0;
-    
     // Create copy of graph.
     virtual IGraphInt* MakeCopy(GraphCopyType type) const = 0;
 };
 
-class IGraphFloat : public IGraph
+class IGraphFloat: public IGraph
 {
 public:
     // Get Egde weight of int graph.
@@ -125,6 +126,24 @@ public:
     
     // Create copy of graph.
     virtual IGraphFloat* MakeCopy(GraphCopyType type) const = 0;
+};
+
+class IMultiGraph : public IGraph
+{
+public:
+    // Number of edges between nodes
+    virtual IndexType GetEdgesNumber(ObjectId source, ObjectId target) const = 0;
+    // Return Id of edge.
+    virtual ObjectId GetEdge(ObjectId source, ObjectId target, const IndexType & index) const = 0;
+    // Return edge string Id.
+    virtual bool GetEdgeStrId(ObjectId edge, char* outBuffer, IndexType bufferSize) const = 0;
+    // Remove by id
+    virtual void RemoveEdgeByID(ObjectId edgeId) = 0;
+    // Add edge for multigraph
+    virtual ObjectId AddEdgeEx(ObjectId source, ObjectId target, bool direct, const FloatWeightType& weight) = 0;
+private:
+    // Dont use
+    void RemoveEdge(ObjectId source, ObjectId target) final {}
 };
 
 

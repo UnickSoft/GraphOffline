@@ -6,21 +6,20 @@
 #include "YString.h"
 #include <memory>
 #include <algorithm>
-
-
+#include <variant>
 
 /**
  * Main Graph class.
- *
  */
-template<class WeightInterface, typename WeightType> class Graph : public WeightInterface
+class Graph: public IGraph
 {
 public:
     
     struct Node;
     struct Edge;
     
-    typedef std::shared_ptr<Edge> EdgePtr;
+    using EdgePtr    = std::shared_ptr<Edge>;
+    using WeightType = std::variant<IntWeightType, FloatWeightType>;
     
     // Node sturct
     struct Node
@@ -93,9 +92,9 @@ public:
         NodePtr target;
         bool  direct;
         WeightType weight;
-        IndexType privateId;
+        ObjectId privateId;
         
-        Edge(const String& id, NodePtr source, NodePtr target, bool direct, const WeightType& weight, IndexType privateId)
+        Edge(const String& id, NodePtr source, NodePtr target, bool direct, const WeightType& weight, ObjectId privateId)
         {
             this->id = id;
             this->source = source;
@@ -130,16 +129,12 @@ public:
     virtual ObjectId GetConnectedNode(ObjectId source, IndexType index) const override;
     // Is edge exists.
     virtual bool AreNodesConnected(ObjectId source, ObjectId target) const override;
-    // Get Egde weight. TODO: float.
-    virtual WeightType GetEdgeWeight(ObjectId source, ObjectId target) const override;
     // Return graph string Id.
     virtual bool GetNodeStrId(ObjectId node, char* outBuffer, IndexType bufferSize) const override;
     // Is edge exists in input graph.
     virtual bool IsEgdeExists(ObjectId source, ObjectId target, bool onlyInSourceGraph = true) const override;
     // Get weight real type
     virtual EdgeWeightType GetEdgeWeightType() const override;
-    // Create copy of graph.
-    virtual WeightInterface* MakeCopy(GraphCopyType type) const override;
     // Create copy of graph.
     virtual IGraph* MakeBaseCopy(GraphCopyType type) const override;
     // Is graph directed or not.
@@ -167,6 +162,38 @@ public:
     // Fake node
     bool IsFakeNode(ObjectId source) override;
     
+    // Has multi graph
+    bool IsMultiGraph() const override;
+    
+    WeightType* GetEdgeWeight(ObjectId source, ObjectId target, const IndexType & index = 0) const;
+
+    template<typename WeightTypeTmpl> WeightTypeTmpl GetEdgeWeight(ObjectId source, ObjectId target, const IndexType & index = 0) const
+    {
+        auto* variant = GetEdgeWeight(source, target, index);
+        
+        if (std::holds_alternative<WeightTypeTmpl>(*variant))
+        {
+            auto* pointer = std::get_if<WeightTypeTmpl>(variant);
+            if (pointer)
+              return *pointer;
+        }
+        
+        if (std::is_same<WeightTypeTmpl, IntWeightType>::value)
+        {
+            auto* pointer = std::get_if<FloatWeightType>(variant);
+            if (pointer)
+              return *pointer;
+        }
+        else
+        {
+            auto* pointer = std::get_if<IntWeightType>(variant);
+            if (pointer)
+              return *pointer;
+        }
+        
+        return WeightTypeTmpl();
+    }
+
 protected:
     
     // Find Node by id in vector.
@@ -181,16 +208,16 @@ protected:
     bool IsValidNodeId(ObjectId id, NodePtr& ptr) const;
     
     // Is edge exists.
-    EdgePtr FindEdge(ObjectId source, ObjectId target) const;
+    EdgePtr FindEdge(ObjectId source, ObjectId target, const IndexType & index = 0) const;
     
     // Simple make copy.
-    Graph<WeightInterface, WeightType>* MakeGraphCopy() const;
+    Graph* MakeGraphCopy() const;
     // Make current graph undirected.
-    Graph<WeightInterface, WeightType>* MakeGraphUndirected() const;
+    Graph* MakeGraphUndirected() const;
     // Inverse Graph
-    Graph<WeightInterface, WeightType>* MakeGraphInverse() const;
+    Graph* MakeGraphInverse() const;
     // Remove self loop.
-    Graph<WeightInterface, WeightType>* MakeGraphRemoveSelfLoop() const;
+    Graph* MakeGraphRemoveSelfLoop() const;
     
     EdgePtr AddEdge(const String& id, IndexType sourceId, IndexType targetId, bool direct, const WeightType& weight, IndexType privateId);
     
@@ -207,14 +234,16 @@ protected:
     
     IndexType GetNextId();
     
-    void CopyPropertiesTo(Graph<WeightInterface, WeightType>* pGraph) const;
+    void CopyPropertiesTo(Graph* pGraph) const;
     
     ObjectId AddNode(const String& idNode, IndexType privateId, bool fake);
+    
+    // Create copy of graph.
+    Graph* MakeGraphCopy(GraphCopyType type) const;
     
     // List of graph.
     NodePtrVector m_nodes;
     EdgePtrVector m_edges;
-    
     
     // ATTANTION: If you add new fields please update CopyProperties.
     EdgeWeightType m_weightType;
@@ -222,12 +251,6 @@ protected:
     
     bool m_hasDirected;
     bool m_hasUndirected;
-    
-    // ATTANTION: If you add new fields please update CopyProperties.
 };
 
-typedef Graph<IGraphInt, IntWeightType> IntGraph;
-typedef Graph<IGraphFloat, FloatWeightType> FloatGraph;
-
-#include "GraphImpl.h"
 

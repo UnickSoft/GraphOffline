@@ -12,6 +12,7 @@
 #include "AlgorithmFactory.h"
 #include "CGIProcessor.h"
 #include "Logger.h"
+#include "WeightGraph.h"
 
 #define ALGORITHM_NAME "algorithm"
 #define HELP_NAME      "help"
