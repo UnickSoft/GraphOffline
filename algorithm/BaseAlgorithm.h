@@ -32,6 +32,11 @@ public:
   void SetGraph(const IGraph* pGraph) override {m_pGraph = pGraph;}
   void SetAlgorithmFactory(const IAlgorithmFactory* pAlgorithmFactory) override {m_pAlgorithmFactory = pAlgorithmFactory;}
   
+  virtual bool IsSupportMultiGraph() const override
+  {
+    return false;
+  }
+  
   template<class WeightType, class GraphType> static std::vector<std::vector<WeightType>> GetAdjacencyMatrix(const GraphType& graph);
 
   static std::vector<std::vector<bool>> GetAdjacencyMatrixBool(const IGraph& graph);

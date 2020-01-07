@@ -15,8 +15,9 @@ class IAlgorithmFactory;
 // Edge struct.
 struct NodesEdge
 {
-  ObjectId source;
-  ObjectId target;
+    ObjectId source;
+    ObjectId target;
+    ObjectId edgeId = -1;
 };
 
 inline bool operator < (const NodesEdge& a, const NodesEdge& b)
@@ -77,6 +78,8 @@ public:
     virtual bool Calculate() = 0;
     // Set algorithm factory.
     virtual void SetAlgorithmFactory(const IAlgorithmFactory* pAlgorithmFactory) = 0;
+    // Is support multi graph
+    virtual bool IsSupportMultiGraph() const = 0;
     
     virtual ~IAlgorithmEngine() {}
 };

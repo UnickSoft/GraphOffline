@@ -10,8 +10,8 @@
  *       <node id="n0"/>
  *       <node id="n1"/>
  *       <node id="n2"/>
- *       <edge source="n0" target="n2"/>
- *       <edge source="n1" target="n2"/>
+ *       <edge source="n0" target="n2" id="e1"/>
+ *       <edge source="n1" target="n2" id="e2"/>
  *     </graph>
  *   </graphml>
  *

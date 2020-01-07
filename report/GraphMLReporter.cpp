@@ -24,6 +24,7 @@ const char* xmlGraphNodeStart = "<node id=\"%s\">\n";
 const char* xmlGraphNodeEnd = "</node>\n";
 
 const char* xmlGraphEdge = "<edge source=\"%s\" target=\"%s\"/>\n";
+const char* xmlGraphEdgeWithId = "<edge source=\"%s\" target=\"%s\" id=\"%s\"/>\n";
 const char* xmlGraphEdgeStart = "<edge source=\"%s\" target=\"%s\">\n";
 const char* xmlGraphEdgeEnd   = "</edge>\n";
 
@@ -153,7 +154,9 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
             NodesEdge edge = pAlgorithm->GetHightlightEdge(i);
             char* strSourceNodeId[MAX_ID] = {0};
             char* strTargetNodeId[MAX_ID] = {0};
-            
+            char* strEdgeId[MAX_ID]       = {0};
+            bool hasEdgeId                = edge.edgeId >= 0;
+
             if (pGraph->IsEgdeExists(edge.source, edge.target))
             {
                 pGraph->GetNodeStrId(edge.source, (char *)strSourceNodeId, MAX_ID);
@@ -163,6 +166,11 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
             {
                 pGraph->GetNodeStrId(edge.target, (char *)strSourceNodeId, MAX_ID);
                 pGraph->GetNodeStrId(edge.source, (char *)strTargetNodeId, MAX_ID);
+            }
+            
+            if (hasEdgeId)
+            {
+                pGraph->GetEdgeStrId(edge.edgeId, (char *)strEdgeId, MAX_ID);
             }
             
             AlgorithmResult property;
@@ -193,7 +201,14 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
             else
             {
                 char graphEdge[MAX_NODE_CHAR]  = {0};
-                sprintf(graphEdge, xmlGraphEdge, strSourceNodeId, strTargetNodeId);
+                if (hasEdgeId)
+                {
+                    sprintf(graphEdge, xmlGraphEdgeWithId, strSourceNodeId, strTargetNodeId, strEdgeId);
+                }
+                else
+                {
+                    sprintf(graphEdge, xmlGraphEdge, strSourceNodeId, strTargetNodeId);
+                }
                 result += graphEdge;
             }
         }

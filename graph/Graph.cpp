@@ -11,18 +11,29 @@
 class FindEdgeFunctor
 {
 public:
-  FindEdgeFunctor(Graph::Node* sourceNode, Graph::Node* targetNode)
+  FindEdgeFunctor(Graph::Node* sourceNode, Graph::Node* targetNode, const IndexType & index = 0)
   {
     this->sourceNode = sourceNode;
     this->targetNode = targetNode;
+    this->index      = index;
   }
   bool operator()(Graph::EdgePtr edge)
   {
-    return (edge->source == sourceNode && edge->target == targetNode) ||
-      (edge->source == targetNode && edge->target == sourceNode && !edge->direct);
+    if ((edge->source == sourceNode && edge->target == targetNode) ||
+      (edge->source == targetNode && edge->target == sourceNode && !edge->direct))
+    {
+        // Count indexes.
+        if (index > 0)
+          index--;
+        else
+          return true;
+    }
+    
+    return false;
   }
   Graph::Node* sourceNode;
   Graph::Node* targetNode;
+  IndexType    index;
 };
 
 
@@ -115,16 +126,16 @@ IndexType Graph::m_autoIncIndex = 1000;
 
 Graph::Graph(void)
 {
-    m_weightType = WT_INT;
+    m_weightType    = WT_INT;
     m_hasDirected   = false;
     m_hasUndirected = false;
+    m_isMultigraph  = false;
 }
 
 Graph::~Graph(void)
 {
-  Clear();
+    Clear();
 }
-
 
 // Load from GraphML format.
 bool Graph::LoadFromGraphML(const char * pBuffer, uint32_t bufferSize)
@@ -211,29 +222,21 @@ bool Graph::LoadFromGraphML(const char * pBuffer, uint32_t bufferSize)
 
 void Graph::Clear()
 {
-/*
-  for (int i = 0; i < m_nodes.size(); i++)
-  {
-    delete m_nodes[i];
-    m_nodes[i] = NULL;
-  }
-  for (int i = 0; i < m_edges.size(); i++)
-  {
-    delete m_edges[i];
-    m_edges[i] = NULL;
-  }
-*/
-
   m_nodes.clear();
   m_edges.clear();
 }
 
 Graph::NodePtr Graph::FindNode(const String& id) const
 {
-  return FindNode(id, m_nodes);
+  return FindObject(id, m_nodes);
 }
 
-template <typename T> T Graph::FindNode(const String& id, const std::vector<T>& nodes) const
+Graph* Graph::CreateGraph() const
+{
+    return new Graph();
+}
+
+template <typename T> T Graph::FindObject(const String& id, const std::vector<T>& nodes) const
 {
   T node = T(nullptr);
   for (int i = 0; i < nodes.size(); i++)
@@ -248,7 +251,7 @@ template <typename T> T Graph::FindNode(const String& id, const std::vector<T>& 
   return node;
 }
 
-template <typename T> T Graph::FindNode(ObjectId objectId, const std::vector<T>& nodes) const
+template <typename T> T Graph::FindObject(ObjectId objectId, const std::vector<T>& nodes) const
 {
     T node = T(nullptr);
     //Node* nodeObject = (Node*)objectId;
@@ -379,9 +382,26 @@ bool Graph::GetNodeStrId(ObjectId node, char* outBuffer, IndexType bufferSize) c
     return res;
 }
 
+bool Graph::GetEdgeStrId(ObjectId edge, char* outBuffer, IndexType bufferSize) const
+{
+    bool res = false;
+    EdgePtr edgePtr;
+    if (IsValidEdgeId(edge, edgePtr))
+    {
+        res = edgePtr->id.PrintLocale(outBuffer, bufferSize) > 0;
+    }
+    return res;
+}
+
 bool Graph::IsValidNodeId(ObjectId id, NodePtr& ptr) const
 {
-    ptr = FindNode(id, m_nodes);
+    ptr = FindObject(id, m_nodes);
+    return ptr != nullptr;
+}
+
+bool Graph::IsValidEdgeId(ObjectId id, EdgePtr& ptr) const
+{
+    ptr = FindObject(id, m_edges);
     return ptr != nullptr;
 }
 
@@ -410,11 +430,8 @@ Graph::EdgePtr Graph::FindEdge(ObjectId source, ObjectId target, const IndexType
     NodePtr sourcePtr, targetPtr;
     if (IsValidNodeId(source, sourcePtr) && IsValidNodeId(target, targetPtr))
     {
-        //Node* sourceNode = (Node*)source;
-        //Node* targetNode = (Node*)target;
-        
         auto edgeIterator =
-        std::find_if(m_edges.begin(), m_edges.end(), FindEdgeFunctor(sourcePtr.get(), targetPtr.get()));
+        std::find_if(m_edges.begin(), m_edges.end(), FindEdgeFunctor(sourcePtr.get(), targetPtr.get(), index));
         
         if (edgeIterator != m_edges.end())
         {
@@ -437,15 +454,15 @@ EdgeWeightType Graph::GetEdgeWeightType() const
 
 
 // Create copy of graph.
-Graph* Graph::MakeGraphCopy(GraphCopyType type) const
+Graph* Graph::MakeGraphCopy(GraphCopyType type, const std::function<Graph*()> & createFunction) const
 {
     Graph* res = NULL;
     switch (type)
     {
-        case GCT_COPY:             res = MakeGraphCopy(); break;
-        case GTC_MAKE_UNDIRECTED:  res = MakeGraphUndirected(); break;
-        case GTC_INVERSE:          res = MakeGraphInverse(); break;
-        case GTC_REMOVE_SELF_LOOP: res = MakeGraphRemoveSelfLoop(); break;
+        case GCT_COPY:             res = MakeGraphCopy(createFunction); break;
+        case GTC_MAKE_UNDIRECTED:  res = MakeGraphUndirected(createFunction); break;
+        case GTC_INVERSE:          res = MakeGraphInverse(createFunction); break;
+        case GTC_REMOVE_SELF_LOOP: res = MakeGraphRemoveSelfLoop(createFunction); break;
     }
     
     return res;
@@ -457,9 +474,9 @@ IndexType Graph::GetNextId()
 }
 
 // Simple make copy
-Graph* Graph::MakeGraphCopy() const
+Graph* Graph::MakeGraphCopy(const std::function<Graph*()> & createFunction) const
 {
-    Graph* res = new Graph();
+    Graph* res = createFunction ? createFunction() : CreateGraph();
     
     CopyPropertiesTo(res);
     
@@ -486,9 +503,9 @@ Graph* Graph::MakeGraphCopy() const
 }
 
 // Make current graph undirected.
-Graph* Graph::MakeGraphUndirected() const
+Graph* Graph::MakeGraphUndirected(const std::function<Graph*()> & createFunction) const
 {
-    auto* res = MakeGraphCopy();
+    auto* res = createFunction ? createFunction() : MakeGraphCopy(createFunction);
     
     if (res->m_hasDirected)
     {
@@ -509,29 +526,30 @@ Graph* Graph::MakeGraphUndirected() const
 
 Graph::EdgePtr Graph::AddEdge(const String& id, IndexType sourceId, IndexType targetId, bool direct, const WeightType& weight, IndexType privateId)
 {
-    EdgePtr res = FindEdge(sourceId, targetId);
-    assert (!res);
-    
-    if (!res)
+    EdgePtr checkEdge = FindEdge(sourceId, targetId);
+
+    if (checkEdge && !m_isMultigraph)
     {
-        NodePtr sourceNode = FindNode(sourceId, m_nodes);
-        NodePtr targetNode = FindNode(targetId, m_nodes);
-        
-        res = EdgePtr(new Edge(id, sourceNode, targetNode, direct,
-                       weight, privateId));
-        
-        m_edges.push_back(res);
-        
-        sourceNode->AddToTargets(targetNode.get(), res->privateId);
-        
-        if (!direct)
-        {
-            targetNode->AddToTargets(sourceNode.get(), res->privateId);
-        }
-        
-        m_hasDirected = m_hasDirected || direct;
-        m_hasUndirected = m_hasUndirected || !direct;
+      m_isMultigraph = true;
     }
+
+    NodePtr sourceNode = FindObject(sourceId, m_nodes);
+    NodePtr targetNode = FindObject(targetId, m_nodes);
+    
+    EdgePtr res = EdgePtr(new Edge(id, sourceNode, targetNode, direct,
+                   weight, privateId));
+    
+    m_edges.push_back(res);
+    
+    sourceNode->AddToTargets(targetNode.get(), res->privateId);
+    
+    if (!direct)
+    {
+        targetNode->AddToTargets(sourceNode.get(), res->privateId);
+    }
+    
+    m_hasDirected = m_hasDirected || direct;
+    m_hasUndirected = m_hasUndirected || !direct;
     
     return res;
 }
@@ -553,9 +571,9 @@ bool Graph::HasUndirected() const
 }
 
 // Make current graph undirected.
-Graph* Graph::MakeGraphInverse() const
+Graph* Graph::MakeGraphInverse(const std::function<Graph*()> & createFunction) const
 {
-    Graph* res = new Graph();
+    Graph* res = createFunction ? createFunction() : CreateGraph();
     
     CopyPropertiesTo(res);
     
@@ -595,7 +613,7 @@ void Graph::ProcessDFS(IEnumStrategy* pEnumStrategy, ObjectId startedNode) const
     }
     
     LOG_INFO("DFS start");
-    _ProcessDFS(pStrategy, FindNode(startedNode, m_nodes).get());
+    _ProcessDFS(pStrategy, FindObject(startedNode, m_nodes).get());
     LOG_INFO("DFS finish");
 }
 
@@ -624,9 +642,9 @@ void Graph::_ProcessDFS(IEnumStrategy* pEnumStrategy, Node* node) const
     pEnumStrategy->FinishProcessNode(node->privateId);
 }
 
-Graph* Graph::MakeGraphRemoveSelfLoop() const
+Graph* Graph::MakeGraphRemoveSelfLoop(const std::function<Graph*()> & createFunction) const
 {
-    Graph* res = new Graph();
+    Graph* res = createFunction ? createFunction() : CreateGraph();
     
     CopyPropertiesTo(res);
     
@@ -677,6 +695,16 @@ void Graph::RemoveEdge(EdgePtr edge)
     m_edges.erase(removeEdgePosition);
 }
 
+Graph::EdgePtr Graph::GetEdgeById(ObjectId edgeId)
+{
+    return FindObject(edgeId, m_edges);
+}
+
+const Graph::EdgePtr Graph::GetEdgeById(ObjectId edgeId) const
+{
+    return FindObject(edgeId, m_edges);
+}
+
 // How many nodes are source for this node.
 IndexType Graph::GetSourceNodesNumber(ObjectId source)
 {
@@ -695,9 +723,10 @@ IndexType Graph::GetSourceNodesNumber(ObjectId source)
 
 void Graph::CopyPropertiesTo(Graph* pGraph) const
 {
-    pGraph->m_weightType  = m_weightType;
-    pGraph->m_hasDirected = m_hasDirected;
+    pGraph->m_weightType    = m_weightType;
+    pGraph->m_hasDirected   = m_hasDirected;
     pGraph->m_hasUndirected = m_hasUndirected;
+    pGraph->m_isMultigraph  = m_isMultigraph;
 }
 
 // Add edge
@@ -761,6 +790,6 @@ const char* Graph::PrintGraph()
 // Has multi graph
 bool Graph::IsMultiGraph() const
 {
-  return false;
+  return m_isMultigraph;
 }
 

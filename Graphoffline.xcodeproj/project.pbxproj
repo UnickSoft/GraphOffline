@@ -17,6 +17,8 @@
 		683D17001C0B6CE600C804DF /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D16FE1C0B6CE600C804DF /* pugixml.cpp */; };
 		683D17051C0B6CF100C804DF /* GraphMLReporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D17021C0B6CF100C804DF /* GraphMLReporter.cpp */; };
 		683D170D1C0B6E4000C804DF /* GraphOffline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 683D170C1C0B6E4000C804DF /* GraphOffline.cpp */; };
+		687908C123BE8C93007D8D99 /* MultiGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 687908BF23BE8C93007D8D99 /* MultiGraph.cpp */; };
+		687908D823C3BCA3007D8D99 /* GraphLoadTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 687908D623C3BCA3007D8D99 /* GraphLoadTest.cpp */; };
 		68AC9242215F889D0033E6E4 /* HamiltonianLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68AC9240215F889D0033E6E4 /* HamiltonianLoop.cpp */; };
 		68AC9245215FD9950033E6E4 /* BaseAlgorithm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68AC9243215FD9940033E6E4 /* BaseAlgorithm.cpp */; };
 		68DEA7751C19DC0F003BBEE2 /* AlgorithmFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68DEA7731C19DC0F003BBEE2 /* AlgorithmFactory.cpp */; };
@@ -68,6 +70,11 @@
 		683D17041C0B6CF100C804DF /* IReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IReporter.h; path = report/IReporter.h; sourceTree = SOURCE_ROOT; };
 		683D170C1C0B6E4000C804DF /* GraphOffline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphOffline.cpp; sourceTree = SOURCE_ROOT; };
 		686E49C31C3DB36A00EB71C8 /* IAlgorithmFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IAlgorithmFactory.h; sourceTree = SOURCE_ROOT; };
+		687908BF23BE8C93007D8D99 /* MultiGraph.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MultiGraph.cpp; path = graph/MultiGraph.cpp; sourceTree = SOURCE_ROOT; };
+		687908C023BE8C93007D8D99 /* MultiGraph.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MultiGraph.h; path = graph/MultiGraph.h; sourceTree = SOURCE_ROOT; };
+		687908C223BFCA95007D8D99 /* WeightMultiGraph.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WeightMultiGraph.h; sourceTree = SOURCE_ROOT; };
+		687908D623C3BCA3007D8D99 /* GraphLoadTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = GraphLoadTest.cpp; path = algorithm/GraphLoadTest.cpp; sourceTree = SOURCE_ROOT; };
+		687908D723C3BCA3007D8D99 /* GraphLoadTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GraphLoadTest.h; path = algorithm/GraphLoadTest.h; sourceTree = SOURCE_ROOT; };
 		68AC9240215F889D0033E6E4 /* HamiltonianLoop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HamiltonianLoop.cpp; path = algorithm/HamiltonianLoop.cpp; sourceTree = SOURCE_ROOT; };
 		68AC9241215F889D0033E6E4 /* HamiltonianLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HamiltonianLoop.h; path = algorithm/HamiltonianLoop.h; sourceTree = SOURCE_ROOT; };
 		68AC9243215FD9940033E6E4 /* BaseAlgorithm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BaseAlgorithm.cpp; path = algorithm/BaseAlgorithm.cpp; sourceTree = SOURCE_ROOT; };
@@ -157,6 +164,8 @@
 				68DF5ACA1C308AF4005502FA /* ConnectedComponent.cpp */,
 				68DF5ACB1C308AF4005502FA /* ConnectedComponent.h */,
 				686E49C31C3DB36A00EB71C8 /* IAlgorithmFactory.h */,
+				687908D623C3BCA3007D8D99 /* GraphLoadTest.cpp */,
+				687908D723C3BCA3007D8D99 /* GraphLoadTest.h */,
 			);
 			name = Algorithms;
 			sourceTree = "<group>";
@@ -168,6 +177,9 @@
 				683D16F81C0B6CD900C804DF /* Graph.h */,
 				683D16F91C0B6CD900C804DF /* IGraph.h */,
 				682F0E3723B5382A006B5E64 /* WeightGraph.h */,
+				687908BF23BE8C93007D8D99 /* MultiGraph.cpp */,
+				687908C023BE8C93007D8D99 /* MultiGraph.h */,
+				687908C223BFCA95007D8D99 /* WeightMultiGraph.h */,
 			);
 			name = Graph;
 			sourceTree = "<group>";
@@ -278,8 +290,10 @@
 				683D170D1C0B6E4000C804DF /* GraphOffline.cpp in Sources */,
 				68E271701C1F64AE00B6E3C1 /* Logger.cpp in Sources */,
 				68DEA7751C19DC0F003BBEE2 /* AlgorithmFactory.cpp in Sources */,
+				687908D823C3BCA3007D8D99 /* GraphLoadTest.cpp in Sources */,
 				683D17001C0B6CE600C804DF /* pugixml.cpp in Sources */,
 				68AC9242215F889D0033E6E4 /* HamiltonianLoop.cpp in Sources */,
+				687908C123BE8C93007D8D99 /* MultiGraph.cpp in Sources */,
 				683D16FB1C0B6CD900C804DF /* Graph.cpp in Sources */,
 				683D16F41C0B6CCE00C804DF /* CaseFunctions.cpp in Sources */,
 				68DF5ACC1C308AF4005502FA /* ConnectedComponent.cpp in Sources */,

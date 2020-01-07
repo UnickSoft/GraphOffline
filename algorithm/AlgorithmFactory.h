@@ -33,6 +33,8 @@ public:
     
     std::shared_ptr<IAlgorithm> CreateAlgorithm(IndexType index, bool bFloat = true) const;
     
+    IMultiGraph* CreateMultiGraph(const IGraph* pGraph) const override;
+    
 protected:
     
     IAlgorithm* _CreateAlgorithm(IndexType index, bool bFloat = true) const;
@@ -42,7 +44,6 @@ protected:
     
     // Map of algorithms.
     std::map<String, IndexType> m_mAlgorithms;
-    
 };
 
 #endif /* AlgorithmFactory_hpp */

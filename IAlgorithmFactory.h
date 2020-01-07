@@ -19,6 +19,9 @@ public:
     // Create algorithm for given Graph.
     virtual IAlgorithm* CreateAlgorithm(const char* name, const IGraph* pGraph) const = 0;
     
+    // Create MultipleGraph from common.
+    virtual IMultiGraph* CreateMultiGraph(const IGraph* pGraph) const = 0;
+    
     virtual ~IAlgorithmFactory() {}
 };
 

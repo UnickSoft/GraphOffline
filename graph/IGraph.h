@@ -23,7 +23,6 @@ enum EdgeWeightType {WT_INT = 0, WT_FLOAT};
 // Graph copy type.
 enum GraphCopyType {GCT_COPY = 0, GTC_MAKE_UNDIRECTED, GTC_INVERSE, GTC_REMOVE_SELF_LOOP};
 
-
 /**
  * Call back for enum nodes methods (DFS, BSF).
  *
@@ -78,6 +77,8 @@ public:
     virtual bool AreNodesConnected(ObjectId source, ObjectId target) const = 0;
     // Return graph string Id.
     virtual bool GetNodeStrId(ObjectId node, char* outBuffer, IndexType bufferSize) const = 0;
+    // Return edge string Id.
+    virtual bool GetEdgeStrId(ObjectId edge, char* outBuffer, IndexType bufferSize) const = 0;
     // Is edge exists in input graph. It is not the same with AreNodesConnected.
     virtual bool IsEgdeExists(ObjectId source, ObjectId target, bool onlyInSourceGraph = true) const = 0;
     // Get weight real type
@@ -108,8 +109,7 @@ public:
     virtual ~IGraph() {};
 };
 
-
-class IGraphInt: public IGraph
+class IGraphInt: public virtual IGraph
 {
 public:
     // Get Egde weight of int graph.
@@ -118,7 +118,7 @@ public:
     virtual IGraphInt* MakeCopy(GraphCopyType type) const = 0;
 };
 
-class IGraphFloat: public IGraph
+class IGraphFloat: public virtual IGraph
 {
 public:
     // Get Egde weight of int graph.
@@ -128,7 +128,7 @@ public:
     virtual IGraphFloat* MakeCopy(GraphCopyType type) const = 0;
 };
 
-class IMultiGraph : public IGraph
+class IMultiGraph : public virtual IGraph
 {
 public:
     // Number of edges between nodes
@@ -139,14 +139,26 @@ public:
     virtual bool GetEdgeStrId(ObjectId edge, char* outBuffer, IndexType bufferSize) const = 0;
     // Remove by id
     virtual void RemoveEdgeByID(ObjectId edgeId) = 0;
-    // Add edge for multigraph
-    virtual ObjectId AddEdgeEx(ObjectId source, ObjectId target, bool direct, const FloatWeightType& weight) = 0;
-private:
-    // Dont use
-    void RemoveEdge(ObjectId source, ObjectId target) final {}
 };
 
+class IMultiGraphInt: public virtual IMultiGraph
+{
+public:
+    // Get Egde weight of int graph.
+    virtual IntWeightType GetEdgeWeight(ObjectId edgeId) const = 0;
+    // Create copy of graph.
+    virtual IMultiGraphInt* MakeCopy(GraphCopyType type) const = 0;
+};
+
+class IMultiGraphFloat: public virtual IMultiGraph
+{
+public:
+    // Get Egde weight of int graph.
+    virtual FloatWeightType GetEdgeWeight(ObjectId edgeId) const = 0;
+    
+    // Create copy of graph.
+    virtual IMultiGraphFloat* MakeCopy(GraphCopyType type) const = 0;
+};
 
 // Base typedaef
 typedef std::shared_ptr<IGraph> GraphPtr;
-

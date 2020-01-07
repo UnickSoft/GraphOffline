@@ -12,6 +12,9 @@
 #include "EulerianPath.h"
 #include "MaxFlowPushRelabel.h"
 #include "HamiltonianLoop.h"
+#include "GraphLoadTest.h"
+#include "Logger.h"
+#include "WeightMultiGraph.h"
 
 IAlgorithm* AlgorithmFactory::CreateAlgorithm(const char* name, const IGraph* pGraph) const
 {
@@ -36,8 +39,13 @@ std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(const IGraph* pGra
     
     if (res)
     {
-        res->SetGraph(pGraph);
         res->SetAlgorithmFactory(this);
+        res->SetGraph(pGraph);
+        if (pGraph->IsMultiGraph() && !res->IsSupportMultiGraph())
+        {
+            LOG_INFO("Algorithm does not support multigraph");
+            return nullptr;
+        }
         
         IndexType index = 0;
         AlgorithmParam outParamInfo;
@@ -109,6 +117,18 @@ std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(IndexType index, b
     return std::shared_ptr<IAlgorithm>(_CreateAlgorithm(index, bFloat));
 }
 
+IMultiGraph* AlgorithmFactory::CreateMultiGraph(const IGraph* pGraph) const
+{
+    if (pGraph->GetEdgeWeightType() == WT_INT)
+    {
+        return dynamic_cast<IMultiGraph*>(IntMultiGraph::CreateGraph(pGraph));
+    }
+    else
+    {
+        return dynamic_cast<IMultiGraph*>(FloatMultiGraph::CreateGraph(pGraph));
+    }
+}
+
 IAlgorithm* AlgorithmFactory::_CreateAlgorithm(IndexType index, bool bFloat) const
 {
     IAlgorithm* res = nullptr;
@@ -172,6 +192,12 @@ IAlgorithm* AlgorithmFactory::_CreateAlgorithm(IndexType index, bool bFloat) con
         case 6:
         {
             res = new HamiltonianLoop(true);
+            break;
+        }
+        
+        case 7:
+        {
+            res = new GraphLoadTest();
             break;
         }
     }
