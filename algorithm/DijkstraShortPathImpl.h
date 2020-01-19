@@ -9,6 +9,7 @@
 #include <algorithm>    // std::reverse
 #include <string.h>
 #include <list>
+#include "IAlgorithmFactory.h"
 
 static const char* g_lowestDistanceStr = "lowestDistance";
 static const char* g_indexStr = "index";
@@ -176,6 +177,7 @@ template<class WeightTypeInterface, typename WeightType> NodesEdge DijkstraShort
   NodesEdge edge;
   edge.source = m_path[index];
   edge.target = m_path[index + 1];
+  edge.edgeId = m_pGraph->GetEdge(edge.source, edge.target);
   return edge;
 }
 
@@ -248,8 +250,13 @@ template<class WeightTypeInterface, typename WeightType> bool DijkstraShortPath<
 // Set graph
 template<class WeightTypeInterface, typename WeightType> void DijkstraShortPath<WeightTypeInterface, WeightType>::SetGraph(const IGraph* pGraph)
 {
-    //(TODO)
-    m_pGraph = dynamic_cast<const WeightTypeInterface*>(pGraph);
+    if (pGraph->IsMultiGraph())
+    {
+        std::shared_ptr<IMultiGraph> multiGraph = std::shared_ptr<IMultiGraph>(m_pAlgorithmFactory->CreateMultiGraph(pGraph));
+        m_pGraph = dynamic_cast<const WeightTypeInterface*>(multiGraph->MakeBaseCopy(GTC_MULTI_TO_COMMON_GRAPH_MINIMAL_EDGES));
+    }
+    else
+        m_pGraph = dynamic_cast<const WeightTypeInterface*>(pGraph);
 }
 
 template<class WeightTypeInterface, typename WeightType> const char* DijkstraShortPath<WeightTypeInterface, WeightType>::GetNodePropertyName(IndexType index) const

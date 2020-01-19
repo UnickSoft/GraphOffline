@@ -17,7 +17,7 @@ struct NodesEdge
 {
     ObjectId source;
     ObjectId target;
-    ObjectId edgeId = -1;
+    ObjectId edgeId = 0;
 };
 
 inline bool operator < (const NodesEdge& a, const NodesEdge& b)

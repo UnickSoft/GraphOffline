@@ -192,6 +192,8 @@ public:
     // Has multi graph
     bool IsMultiGraph() const override;
     
+    ObjectId GetEdge(ObjectId source, ObjectId target) const override;
+    
     WeightType* GetEdgeWeight(ObjectId source, ObjectId target, const IndexType & index = 0) const;
 
     template<typename WeightTypeTmpl> WeightTypeTmpl GetEdgeWeight(ObjectId source, ObjectId target, const IndexType & index = 0) const
@@ -201,8 +203,16 @@ public:
     }
     
     // Create copy of graph.
-    Graph* MakeGraphCopy(GraphCopyType type, const std::function<Graph*()> & createFunction = std::function<Graph*()>()) const;
+    virtual Graph* MakeGraphCopy(GraphCopyType type, const std::function<Graph*()> & createFunction = std::function<Graph*()>()) const;
+    
+    // Get edge of this graph.
+    virtual ObjectId GetEdge(IndexType index) const;
+    
+public:
 
+    ObjectId AddNode(const String& idNode, IndexType privateId, bool fake);
+    EdgePtr AddEdge(const String& id, IndexType sourceId, IndexType targetId, bool direct, const WeightType& weight, IndexType privateId);
+    
 protected:
 
     // Create own instance
@@ -233,8 +243,6 @@ protected:
     // Remove self loop.
     Graph* MakeGraphRemoveSelfLoop(const std::function<Graph*()> & createFunction) const;
     
-    EdgePtr AddEdge(const String& id, IndexType sourceId, IndexType targetId, bool direct, const WeightType& weight, IndexType privateId);
-    
     bool IsDouble(double value);
     
     // Run DFS and call callbacks.
@@ -253,8 +261,6 @@ protected:
     IndexType GetNextId();
     
     void CopyPropertiesTo(Graph* pGraph) const;
-    
-    ObjectId AddNode(const String& idNode, IndexType privateId, bool fake);
     
     // List of graph.
     NodePtrVector m_nodes;

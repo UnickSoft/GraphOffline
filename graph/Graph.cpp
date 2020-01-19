@@ -284,7 +284,6 @@ ObjectId Graph::GetNode(const char* nodeId) const
     return res ? res.get()->privateId : 0;
 }
 
-
 // Get Edges count.
 IndexType Graph::GetEdgesCount() const
 {
@@ -468,6 +467,11 @@ Graph* Graph::MakeGraphCopy(GraphCopyType type, const std::function<Graph*()> & 
     return res;
 }
 
+ObjectId Graph::GetEdge(IndexType index) const
+{
+    return m_edges[index].get()->privateId;
+}
+
 IndexType Graph::GetNextId()
 {
     return ++m_autoIncIndex;
@@ -505,7 +509,7 @@ Graph* Graph::MakeGraphCopy(const std::function<Graph*()> & createFunction) cons
 // Make current graph undirected.
 Graph* Graph::MakeGraphUndirected(const std::function<Graph*()> & createFunction) const
 {
-    auto* res = createFunction ? createFunction() : MakeGraphCopy(createFunction);
+    auto* res = MakeGraphCopy(createFunction);
     
     if (res->m_hasDirected)
     {
@@ -793,3 +797,14 @@ bool Graph::IsMultiGraph() const
   return m_isMultigraph;
 }
 
+ObjectId Graph::GetEdge(ObjectId source, ObjectId target) const
+{
+    auto edge = FindEdge(source, target);
+    
+    if (edge)
+    {
+        return edge->privateId;
+    }
+    
+    return 0;
+}

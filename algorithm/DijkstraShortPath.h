@@ -22,6 +22,8 @@ public:
     virtual const char* GetFullName() const override {return "DijkstraShortPath";}
     // Short name of algorithm: dsp
     virtual const char* GetShortName() const override {return "dsp";}
+    // Is support multi graph
+    virtual bool IsSupportMultiGraph() const override { return true; }
     // Enum parameters.
     virtual bool EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const override;
     // Set parameter to algorithm.

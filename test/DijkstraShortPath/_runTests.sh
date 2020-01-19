@@ -4,12 +4,12 @@ isFaild=0;
 
 rm *.test &>/dev/null
 
-while IFS=$' ' read -r command xmlFile startGraph finishGraph ; do
+while IFS=$' ' read -r command xmlFile startGraph finishGraph report; do
 
   if [ "$2" == "-debug" ]; then
-    echo "$exePath ${command} ./${xmlFile} -start ${startGraph} -finish ${finishGraph} > ${xmlFile}.test"
+    echo "$exePath ${command} ./${xmlFile} -start ${startGraph} -finish ${finishGraph} -report ${report} > ${xmlFile}.test"
   fi
-  $exePath ${command} ./${xmlFile} -start ${startGraph} -finish ${finishGraph} > ${xmlFile}.test
+  $exePath ${command} ./${xmlFile} -start ${startGraph} -finish ${finishGraph} -report ${report} > ${xmlFile}.test
 
   if diff --ignore-all-space ${xmlFile}.res ${xmlFile}.test >/dev/null ; then
     continue;

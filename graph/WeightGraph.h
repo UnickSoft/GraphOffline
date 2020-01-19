@@ -25,7 +25,7 @@ public:
         return (WeightInterface*)MakeGraphCopy(type);
     }
     
-protected:
+public:
 
     Graph* CreateGraph() const override
     {

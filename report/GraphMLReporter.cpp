@@ -26,6 +26,7 @@ const char* xmlGraphNodeEnd = "</node>\n";
 const char* xmlGraphEdge = "<edge source=\"%s\" target=\"%s\"/>\n";
 const char* xmlGraphEdgeWithId = "<edge source=\"%s\" target=\"%s\" id=\"%s\"/>\n";
 const char* xmlGraphEdgeStart = "<edge source=\"%s\" target=\"%s\">\n";
+const char* xmlGraphEdgeStartWithId = "<edge source=\"%s\" target=\"%s\" id=\"%s\">\n";
 const char* xmlGraphEdgeEnd   = "</edge>\n";
 
 const char* xmlGraphNodePropertyInt   = "<data key=\"%s\">%d</data>\n";
@@ -139,7 +140,6 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
                 index++;
             }
             
-            
             // Hightlight or not
             sprintf(graphNode, xmlGraphNodeHightlight, (hightlightNodes.count(pGraph->GetNode(i)) > 0));
             result += graphNode;
@@ -155,7 +155,7 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
             char* strSourceNodeId[MAX_ID] = {0};
             char* strTargetNodeId[MAX_ID] = {0};
             char* strEdgeId[MAX_ID]       = {0};
-            bool hasEdgeId                = edge.edgeId >= 0;
+            bool hasEdgeId                = edge.edgeId > 0;
 
             if (pGraph->IsEgdeExists(edge.source, edge.target))
             {
@@ -171,13 +171,21 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
             if (hasEdgeId)
             {
                 pGraph->GetEdgeStrId(edge.edgeId, (char *)strEdgeId, MAX_ID);
+                hasEdgeId = strEdgeId[0] != 0;
             }
             
             AlgorithmResult property;
             if (pAlgorithm->GetEdgeProperty(edge, 0, &property) && property.type != ART_UNKNOWN)
             {
                 char graphEdge[MAX_NODE_CHAR]  = {0};
-                sprintf(graphEdge, xmlGraphEdgeStart, strSourceNodeId, strTargetNodeId);
+                if (hasEdgeId)
+                {
+                    sprintf(graphEdge, xmlGraphEdgeStartWithId, strSourceNodeId, strTargetNodeId, strEdgeId);
+                }
+                else
+                {
+                    sprintf(graphEdge, xmlGraphEdgeStart, strSourceNodeId, strTargetNodeId);
+                }
                 result += graphEdge;
                 
                 // Low dist

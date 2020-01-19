@@ -21,7 +21,12 @@ typedef double FloatWeightType;
 enum EdgeWeightType {WT_INT = 0, WT_FLOAT};
 
 // Graph copy type.
-enum GraphCopyType {GCT_COPY = 0, GTC_MAKE_UNDIRECTED, GTC_INVERSE, GTC_REMOVE_SELF_LOOP};
+enum GraphCopyType {GCT_COPY = 0,
+                    GTC_MAKE_UNDIRECTED,
+                    GTC_INVERSE,
+                    GTC_REMOVE_SELF_LOOP,
+                    GTC_MULTI_TO_COMMON_GRAPH_MINIMAL_EDGES,
+                    GTC_MULTI_TO_COMMON_GRAPH_SUM_EDGES};
 
 /**
  * Call back for enum nodes methods (DFS, BSF).
@@ -69,6 +74,8 @@ public:
     virtual ObjectId GetNode(IndexType index) const = 0;
     // Get node by id.
     virtual ObjectId GetNode(const char* nodeId) const = 0;
+    // Return edge Id
+    virtual ObjectId GetEdge(ObjectId source, ObjectId target) const = 0;
     // Get connected graph count.
     virtual IndexType GetConnectedNodes(ObjectId source) const = 0;
     // Get connected graph for this graph.
@@ -139,6 +146,10 @@ public:
     virtual bool GetEdgeStrId(ObjectId edge, char* outBuffer, IndexType bufferSize) const = 0;
     // Remove by id
     virtual void RemoveEdgeByID(ObjectId edgeId) = 0;
+
+protected:
+
+    virtual ObjectId GetEdge(ObjectId source, ObjectId target) const = 0;
 };
 
 class IMultiGraphInt: public virtual IMultiGraph
