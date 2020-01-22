@@ -87,6 +87,15 @@
     <ClCompile Include="report\ReporterFactory.cpp">
       <Filter>Source Files\report</Filter>
     </ClCompile>
+    <ClCompile Include="algorithm\GraphLoadTest.cpp">
+      <Filter>Source Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="graph\Graph.cpp">
+      <Filter>Source Files\graph</Filter>
+    </ClCompile>
+    <ClCompile Include="graph\MultiGraph.cpp">
+      <Filter>Source Files\graph</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CGIProcessor.h">
@@ -164,14 +173,20 @@
     <ClInclude Include="algorithm\DijkstraShortPathImpl.h">
       <Filter>Source Files\algorithm</Filter>
     </ClInclude>
-    <ClInclude Include="graph\GraphImpl.h">
-      <Filter>Source Files\graph</Filter>
-    </ClInclude>
     <ClInclude Include="common\Logger.h">
       <Filter>Header Files\common</Filter>
     </ClInclude>
     <ClInclude Include="report\ReporterFactory.h">
       <Filter>Header Files\report</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\GraphLoadTest.h">
+      <Filter>Source Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="graph\WeightGraph.h">
+      <Filter>Header Files\graph</Filter>
+    </ClInclude>
+    <ClInclude Include="graph\MultiGraph.h">
+      <Filter>Header Files\graph</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

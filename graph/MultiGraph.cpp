@@ -109,7 +109,7 @@ Graph* MultiGraph::MakeCommonMinGraph(const std::function<Graph*()> & createFunc
             auto edge1 = findBestEdge(node1, node2);
             auto edge2 = findBestEdge(node2, node1);
             
-            if (edge1 == nullptr and edge2 == nullptr)
+            if (edge1 == nullptr && edge2 == nullptr)
                 continue;
             
             auto addEdge = [&res](auto & edge)
@@ -137,4 +137,9 @@ Graph* MultiGraph::MakeCommonMinGraph(const std::function<Graph*()> & createFunc
     }
     
     return res;
+}
+
+ObjectId MultiGraph::GetEdge(ObjectId source, ObjectId target) const
+{
+	return GetEdge(source, target, 0);
 }

@@ -32,4 +32,6 @@ public:
     
     // Dont use
     void RemoveEdge(ObjectId source, ObjectId target) final {}
+
+	ObjectId GetEdge(ObjectId source, ObjectId target) const override;
 };

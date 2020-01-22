@@ -7,6 +7,7 @@
 #include <memory>
 #include <algorithm>
 #include <variant>
+#include <functional>
 
 /**
  * Main Graph class.
