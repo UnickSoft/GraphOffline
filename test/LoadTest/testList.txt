@@ -2,4 +2,3 @@
 -loadtest graph1.xml xml
 -loadtest graph3_multigraph.xml xml
 -loadtest graph4_direct.xml xml
--loadtest graph4.xml xml
