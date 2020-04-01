@@ -14,7 +14,7 @@
 #include "Logger.h"
 #include <vector>
 #include <unordered_set>
-#include <assert.h>
+#include <cassert>
 
 static const char* g_indexStr = "index";
 static const char* g_indexCountStr = "indexCount";
