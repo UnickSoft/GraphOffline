@@ -65,6 +65,7 @@ std::ostream& operator<< (std::ostream& stream, const AlgorithmResult& result)
         case ART_FLOAT:     stream << result.fValue; break;
         case ART_STRING:    stream << result.strValue; break;
         case ART_NODES_PATH: stream << "Nodes path"; break;
+        case ART_EDGES_PATH: stream << "Edges path"; break;
         default: assert(!"Wrong value");
     }
     return stream;

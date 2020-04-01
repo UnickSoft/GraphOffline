@@ -45,7 +45,7 @@ struct AlgorithmParam
     } data;
 };
 
-enum AlgorithmResultType {ART_UNKNOWN = 0, ART_INT, ART_FLOAT, ART_STRING, ART_NODES_PATH};
+enum AlgorithmResultType {ART_UNKNOWN = 0, ART_INT, ART_FLOAT, ART_STRING, ART_NODES_PATH, ART_EDGES_PATH};
 
 struct AlgorithmResult
 {

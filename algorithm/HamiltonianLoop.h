@@ -23,6 +23,8 @@ public:
     virtual const char* GetFullName() const override {return (m_path ? "Hamiltonian Path" : "Hamiltonian Loop");};
     // Short name of algorithm: dsp
     virtual const char* GetShortName() const override {return (m_path ? "hampath" : "hamloop"); };
+    // Is support multi graph
+    virtual bool IsSupportMultiGraph() const override { return true; }
     // Calculate algorithm.
     virtual bool Calculate() override;
     // Hightlight nodes count.
@@ -44,6 +46,8 @@ public:
 private:
 
     bool _FindHamiltonianLoopRecursive(int currentNodeNumber, const std::vector<std::vector<bool>> & adjacencyMatrix, std::vector<int> & path, std::vector<int> & step);
+    
+    void FillLoop(const std::vector<int> & path, const IGraph* currentGraph, IndexType nodesCount);
     
     // Search loop.
     const bool m_path;

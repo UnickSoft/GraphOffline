@@ -47,6 +47,10 @@ public:
             {
                 result = result + String (node.strValue) + String(i < pAlgorithm->GetResultCount() - 1 ? "->" : "");
             }
+            else if (node.type == ART_EDGES_PATH)
+            {
+                result = result + "<" + String (node.strValue) + ">" + String(i < pAlgorithm->GetResultCount() - 1 ? "->" : "");
+            }
         }
         
         result = result + String(")");

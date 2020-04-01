@@ -11,3 +11,6 @@
 -hampath graph_disconneted.xml
 -hampath graph12_disconnected.xml
 -hampath one.xml
+-hampath graph_multigraph.xml
+-hampath graph_weight_4_multigraph.xml
+-hampath graph1_multigraph.xml

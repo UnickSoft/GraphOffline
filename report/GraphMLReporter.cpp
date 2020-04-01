@@ -77,7 +77,6 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
         std::string result = xmlStartShort;
         result += xmlGraphHeaderMask;
         
-
         char strBuffer[MAX_NODE_CHAR] = {0};
         sprintf(strBuffer, xmlResultHead, pAlgorithm->GetResultCount());
         result += strBuffer;
@@ -102,6 +101,7 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
                     sprintf(strBuffer, "%s", res.strValue);
                     break;
                 case ART_NODES_PATH:
+                case ART_EDGES_PATH:
                     sprintf(strBuffer, "%s", res.strValue);
                     break;
                 default:

@@ -13,6 +13,7 @@
 #include <algorithm>
 #include "Logger.h"
 #include <vector>
+#include <unordered_set>
 
 static const char* g_indexStr = "index";
 static const char* g_indexCountStr = "indexCount";
@@ -78,7 +79,7 @@ bool HamiltonianLoop::Calculate()
             IntWeightType componentCount = connectedComponent->GetResult(0).nValue;
             
             bCanHasLoop = (componentCount == 1) &&
-              (m_path || m_pGraph->GetNodesCount() != 2); // Fix K2 case https://www.reddit.com/r/math/comments/7404nz/is_the_complete_graph_on_two_vertices_k2/?utm_source=amp&utm_medium=&utm_content=comments_view_all
+              (m_path || m_pGraph->GetNodesCount() != 2 || m_pGraph->IsMultiGraph()); // Fix K2 case https://www.reddit.com/r/math/comments/7404nz/is_the_complete_graph_on_two_vertices_k2/?utm_source=amp&utm_medium=&utm_content=comments_view_all
         }
 
         if (bCanHasLoop)
@@ -113,34 +114,35 @@ bool HamiltonianLoop::Calculate()
                 
                 if (m_path)
                 {
-                    m_HamiltonianLoop.resize(realNodesCount);
+                    m_HamiltonianLoop.resize(realNodesCount + (realNodesCount - 1));
                 
                     int elementNum = 0;
                     bool first = true;
+                    int prevNode = -1;
                     for (int index : path)
                     {
-                        if (first) { first = false; continue; }
+                        if (first)
+                        {
+                            // Add vertex
+                            first = false;
+                            continue;
+                        }
                         
+                        if (prevNode != -1)
+                        {
+                            // Add edge
+                            m_HamiltonianLoop[elementNum++] = currentGraph->GetEdge(currentGraph->GetNode(prevNode), currentGraph->GetNode(index));
+                        }
+                        // Add vertex
                         m_HamiltonianLoop[elementNum++] = currentGraph->GetNode(index);
+                        prevNode = index;
                     }
                     
-                    m_bResult = (elementNum == realNodesCount);
+                    m_bResult = (elementNum == realNodesCount + (realNodesCount - 1));
                 }
                 else // loop
                 {
-                    int realNodesCount = m_pGraph->GetNodesCount();
-                    m_HamiltonianLoop.resize(realNodesCount + (nodesCount > 1 ? 1 : 0));
-                    
-                    int elementNum = 0;
-                    for (int index : path)
-                    {
-                        m_HamiltonianLoop[elementNum++] = currentGraph->GetNode(index);
-                    }
-                    
-                    if (nodesCount > 0)
-                        m_HamiltonianLoop[realNodesCount] = m_HamiltonianLoop[0];
-                    
-                    m_bResult = (elementNum == realNodesCount);
+                    FillLoop(path, currentGraph, nodesCount);
                 }
             }
         }
@@ -152,35 +154,45 @@ bool HamiltonianLoop::Calculate()
 // Hightlight nodes count.
 IndexType HamiltonianLoop::GetHightlightNodesCount() const
 {
-    return (IndexType)m_HamiltonianLoop.size();
+    if (m_HamiltonianLoop.empty())
+    {
+        return 0;
+    }
+    
+    return (IndexType)(m_path ? m_HamiltonianLoop.size() / 2 + 1 : m_HamiltonianLoop.size() / 2);
 }
 
 // Hightlight node.
 ObjectId HamiltonianLoop::GetHightlightNode(IndexType index) const
 {
-    return m_HamiltonianLoop[index];
+    return m_HamiltonianLoop[2 * index];
 }
 
 // Hightlight edges count.
 IndexType HamiltonianLoop::GetHightlightEdgesCount() const
 {
-    return (IndexType)(m_HamiltonianLoop.size() ? m_HamiltonianLoop.size() - 1 : 0);
+    if (m_HamiltonianLoop.empty())
+    {
+        return 0;
+    }
+    
+    return (IndexType)(m_HamiltonianLoop.size() / 2);
 }
 
 // Hightlight edge.
 NodesEdge HamiltonianLoop::GetHightlightEdge(IndexType index) const
 {
-    NodesEdge edge;
-    edge.source = m_HamiltonianLoop[index];
-    edge.target = m_HamiltonianLoop[index + 1];
-    return edge;
+    NodesEdge res;
+    res.source = m_HamiltonianLoop[2 * index];
+    res.target = m_HamiltonianLoop[2 * index + 2];
+    res.edgeId = m_HamiltonianLoop[2 * index + 1];
+    return res;
 }
-
 
 // Get result count.
 IndexType HamiltonianLoop::GetResultCount() const
 {
-    return (IndexType)(1 + m_HamiltonianLoop.size());
+    return (IndexType)(1 + (m_pGraph->IsMultiGraph() ? m_HamiltonianLoop.size() : m_HamiltonianLoop.size() / 2 + 1));
 }
 
 // Get result.
@@ -194,9 +206,28 @@ AlgorithmResult HamiltonianLoop::GetResult(IndexType index) const
     }
     else if (index < m_HamiltonianLoop.size() + 1)
     {
-        result.type = ART_NODES_PATH;
-        m_pGraph->GetNodeStrId(m_HamiltonianLoop[index - 1], result.strValue,
-                               sizeof(result.strValue));
+        if (m_pGraph->IsMultiGraph())
+        {
+            if (index % 2 == 1)
+            {
+                result.type = ART_NODES_PATH;
+                m_pGraph->GetNodeStrId(m_HamiltonianLoop[index - 1], result.strValue,
+                                   sizeof(result.strValue));
+            }
+            else
+            {
+                result.type = ART_EDGES_PATH;
+                m_pGraph->GetEdgeStrId(m_HamiltonianLoop[index - 1], result.strValue,
+                                   sizeof(result.strValue));
+            }
+        }
+        else
+        {
+            result.type = ART_NODES_PATH;
+            m_pGraph->GetNodeStrId(m_HamiltonianLoop[2 * (index - 1)], result.strValue,
+                                   sizeof(result.strValue));
+            
+        }
     }
     
     return result;
@@ -261,4 +292,73 @@ bool HamiltonianLoop::_FindHamiltonianLoopRecursive(int currentNodeNumber, const
     }
     
     return q1;
+}
+
+void HamiltonianLoop::FillLoop(const std::vector<int> & path, const IGraph* currentGraph, IndexType nodesCount)
+{
+    int realNodesCount = m_pGraph->GetNodesCount();
+    m_HamiltonianLoop.resize(realNodesCount + (nodesCount > 1 ? 1 + realNodesCount: 0));
+
+    int elementNum = 0;
+
+    if (m_pGraph->IsMultiGraph())
+    {
+        const IMultiGraph* multiGraph = m_pAlgorithmFactory->CreateMultiGraph(m_pGraph);
+        std::unordered_set<ObjectId> checkCount;
+        
+        for (int index : path)
+        {
+            if (elementNum > 0)
+            {
+                int prevNum   = elementNum - 1;
+                ObjectId edge = multiGraph->GetEdge(m_HamiltonianLoop[prevNum], multiGraph->GetNode(index), 0);
+                if (checkCount.find(edge) != checkCount.end())
+                {
+                    edge = multiGraph->GetEdge(m_HamiltonianLoop[prevNum], multiGraph->GetNode(index), 1);
+                }
+                assert(checkCount.find(edge) == checkCount.end());
+                checkCount.insert(edge);
+                m_HamiltonianLoop[elementNum++] = edge;
+            }
+            
+            m_HamiltonianLoop[elementNum++] = multiGraph->GetNode(index);
+        }
+
+        if (nodesCount > 1)
+        {
+            int prevNum = elementNum - 1;
+            
+            ObjectId edge = multiGraph->GetEdge(m_HamiltonianLoop[prevNum], m_HamiltonianLoop[0], 0);
+            if (checkCount.find(edge) != checkCount.end())
+            {
+                edge = multiGraph->GetEdge(m_HamiltonianLoop[prevNum], m_HamiltonianLoop[0], 1);
+            }
+            assert(checkCount.find(edge) == checkCount.end());
+            checkCount.insert(edge);
+            
+            m_HamiltonianLoop[elementNum++]   = edge;
+            m_HamiltonianLoop[elementNum] = m_HamiltonianLoop[0];
+        }
+    }
+    else
+    {
+        for (int index : path)
+        {
+            if (elementNum > 0)
+            {
+                int prevNum = elementNum - 1;
+                m_HamiltonianLoop[elementNum++] = currentGraph->GetEdge(m_HamiltonianLoop[prevNum], currentGraph->GetNode(index));
+            }
+            m_HamiltonianLoop[elementNum++] = currentGraph->GetNode(index);
+        }
+
+        if (nodesCount > 1)
+        {
+            int prevNum = elementNum - 1;
+            m_HamiltonianLoop[elementNum++] = currentGraph->GetEdge(m_HamiltonianLoop[prevNum], m_HamiltonianLoop[0]);
+            m_HamiltonianLoop[elementNum] = m_HamiltonianLoop[0];
+        }
+    }
+    
+    m_bResult = (elementNum == (realNodesCount + realNodesCount)) || nodesCount == 1;
 }

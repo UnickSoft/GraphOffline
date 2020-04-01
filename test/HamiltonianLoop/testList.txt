@@ -11,3 +11,6 @@
 -hamloop graph12_disconnected.xml
 -hamloop one.xml
 -hamloop graph14.xml
+-hamloop graph_multigraph.xml
+-hamloop graph_weight_4_multigraph.xml
+-hamloop graph1_multigraph.xml
