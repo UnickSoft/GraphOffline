@@ -23,37 +23,42 @@ graphSource - GraphML file name. \
 Use algorithm short name. Current Available algorithms:
 * DijkstraShortPath - shortname is dsp. \
  Parameters: \
-  start \
-  finish
+  start - start vertex name.\
+  finish - finish vertex name.
 
 * Eulerian Loop - shortname is elloop \
- Parameters:
 
 * Connected component - shortname is concomp \
  Parameters: \
-  strong 
+  strong - search weak or strong connected component. [true/false]
 
 * Eulerian Path - shortname is elpath \
- Parameters:
 
 * MaxFlowPushRelable - shortname is mfpr \
  Parameters: \
-  source \
-  drain
+  source - source vertex name\
+  drain - drain vertex name.
 
 * Hamiltonian Loop - shortname is hamloop \
- Parameters:
 
 * Hamiltonian Path - shortname is hampath \
- Parameters:
 
 * Graph Save/Load Test - shortname is loadtest \
- Parameters:
+  Just test save/load functions.
 
 ## Examples:
+
+Search short path from n4 to n7
 ```bash
  Graphoffline -dsp graph_shortPath.xml -start n4 -finish n7
 ```
+
+Search strong connected compomemt
+```bash
+ Graphoffline -concomp graph_shortPath.xml -strong true
+```
+
+Get help:
 ```bash
 Graphoffline -help
 ```
