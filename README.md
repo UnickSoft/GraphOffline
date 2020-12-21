@@ -26,22 +26,22 @@ Use algorithm short name. Current Available algorithms:
   start - start vertex name.\
   finish - finish vertex name.
 
-* Eulerian Loop - shortname is elloop \
+* Eulerian Loop - shortname is elloop
 
 * Connected component - shortname is concomp \
  Parameters: \
   strong - search weak or strong connected component. [true/false]
 
-* Eulerian Path - shortname is elpath \
+* Eulerian Path - shortname is elpath
 
 * MaxFlowPushRelable - shortname is mfpr \
  Parameters: \
   source - source vertex name\
   drain - drain vertex name.
 
-* Hamiltonian Loop - shortname is hamloop \
+* Hamiltonian Loop - shortname is hamloop
 
-* Hamiltonian Path - shortname is hampath \
+* Hamiltonian Path - shortname is hampath
 
 * Graph Save/Load Test - shortname is loadtest \
   Just test save/load functions.
