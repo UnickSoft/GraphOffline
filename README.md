@@ -65,3 +65,11 @@ Graphoffline -help
 
 # UnitTests
 
+In directory test we placed UnitTests for algorithms. Under Windows you should run runTests.bat, under Linux "./runTests.sh -linux" and under Mac OS X runTests.sh.
+
+All tests should be - OK.
+
+In any directory inside test you can find example of tests. Usually one test contains graph file in [graphml](https://en.wikipedia.org/wiki/GraphML) format (graph.xml) and corret report for this case (graph.xml.res). Report can be in xml or text format.
+
+Usually when we create new test, we generate report one by one for each case and check output. We try to not change report format to save compatibility with old tests.
+
