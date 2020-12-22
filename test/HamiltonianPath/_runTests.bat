@@ -14,7 +14,7 @@ FOR /F "tokens=1-2" %%A IN (testList.txt) DO (
 cd ..
 
 @echo OK
-exit
+exit /B
 
 :faild
 cd ..
