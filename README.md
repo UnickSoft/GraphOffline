@@ -73,3 +73,6 @@ In any directory inside test you can find example of tests. Usually one test con
 
 Usually when we create new test, we generate report one by one for each case and check output. We try to not change report format to save compatibility with old tests.
 
+# Developer doc
+
+You may find more developer information on our wiki: https://github.com/UnickSoft/GraphOffline/wiki
