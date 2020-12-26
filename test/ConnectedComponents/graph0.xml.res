@@ -1,1 +1,1 @@
-Result is 1 ()
+Result is 0 ()
