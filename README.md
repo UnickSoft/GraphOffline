@@ -2,6 +2,10 @@
 
 GraphOffline is utility to calculate algorithm on graph (mathematics). This utility used in http://graphonline.ru project.
 
+# License
+
+MIT License.
+
 # How to build
 
 1. Under Windows use VS 2017 or higher. Solution file is GraphOffline.sln.
