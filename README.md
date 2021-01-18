@@ -1,6 +1,6 @@
 # GraphOffline
 
-GraphOffline is utility to calculate algorithm on graph (mathematics). This utility used in http://graphonline.ru project.
+GraphOffline is utility to calculate algorithm on graph (mathematics). This utility is used in http://graphonline.ru project.
 
 # License
 
