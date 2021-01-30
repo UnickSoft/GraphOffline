@@ -11,3 +11,4 @@
 -isocheck graph13_3.xml 0-9,0-8,8-9,9-1 8-9,9-10,8-10,8-7,9-1,10-11 true xml
 -isocheck graph13_direct.xml 1-0,0-9,1-9 8-9,9-10,10-8 false console
 -isocheck graph13_direct_1.xml 1-0,0-9,1-9 8-9,9-10,10-8 true xml
+-isocheck graph10.xml 10-9,10-11 13-12,13-14 false xml

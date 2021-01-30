@@ -271,6 +271,9 @@ protected:
     IndexType GetNextId();
     
     void CopyPropertiesTo(Graph* pGraph) const;
+
+    // Update some state after private creation.
+    void ForceUpdateStates();
     
     // List of graph.
     NodePtrVector m_nodes;

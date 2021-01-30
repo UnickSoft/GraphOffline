@@ -463,6 +463,11 @@ Graph* Graph::MakeGraphCopy(GraphCopyType type, const std::function<Graph*()> & 
         case GTC_INVERSE:          res = MakeGraphInverse(createFunction); break;
         case GTC_REMOVE_SELF_LOOP: res = MakeGraphRemoveSelfLoop(createFunction); break;
     }
+
+    if (res)
+    {
+      res->ForceUpdateStates();
+    }
     
     return res;
 }
@@ -708,6 +713,7 @@ void Graph::RemoveEdge(ObjectId source, ObjectId target)
     if (edge)
     {
         RemoveEdge(edge);
+        ForceUpdateStates();
     }
 }
 
@@ -756,6 +762,61 @@ void Graph::CopyPropertiesTo(Graph* pGraph) const
     pGraph->m_hasDirected   = m_hasDirected;
     pGraph->m_hasUndirected = m_hasUndirected;
     pGraph->m_isMultigraph  = m_isMultigraph;
+}
+
+void Graph::ForceUpdateStates()
+{
+  m_hasDirected   = false;
+  m_hasUndirected = false;
+  m_isMultigraph  = false;
+
+  struct EdgeData
+  {
+    ObjectId node1;
+    ObjectId node2;
+    bool     directed;
+    bool operator==(const EdgeData & data) const
+    {
+      return node1 == data.node1 && node2 == data.node2 && directed == data.directed;
+    }
+  };
+
+  struct Hash {
+    size_t operator() (const EdgeData &edge) const {
+      return std::hash<int>{}(edge.node1 + edge.node2 + (edge.directed ? 1 : 0));
+    }
+  };
+
+  std::unordered_set<EdgeData, Hash> processed;
+
+  for (const auto & edge : m_edges)
+  {
+    m_hasDirected = m_hasDirected || edge->direct;
+    m_hasUndirected = m_hasUndirected || !edge->direct;
+
+    EdgeData data{ edge->source->privateId,  edge->target->privateId, edge->direct };
+    if (processed.count(data) > 0)
+      m_isMultigraph = true;
+
+    if (!data.directed)
+    {
+      EdgeData dataReverse{ edge->target->privateId, edge->source->privateId, edge->direct };
+
+      if (processed.count(dataReverse) > 0)
+        m_isMultigraph = true;
+
+      EdgeData dataDirected1{ edge->target->privateId, edge->source->privateId, true };
+      EdgeData dataDirected2{ edge->source->privateId, edge->target->privateId, true };
+
+      if (processed.count(dataDirected1) > 0)
+        m_isMultigraph = true;
+
+      if (processed.count(dataDirected2) > 0)
+        m_isMultigraph = true;
+    }
+
+    processed.insert(data);
+  }
 }
 
 // Add edge
