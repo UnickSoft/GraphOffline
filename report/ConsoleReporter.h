@@ -39,18 +39,31 @@ public:
         }
         result = String(tempBuffer);
         
+        int pathElementIndex = 0;
         for (int i = 1; i < pAlgorithm->GetResultCount(); i++)
         {
             AlgorithmResult node = pAlgorithm->GetResult(i);
             
+            if (node.type == ART_SPLIT_PATHS)
+            {
+                result = result + " | ";
+                pathElementIndex = 0;
+                continue;
+            }
+
+            if (pathElementIndex > 0)
+              result = result + String("->");
+
             if (node.type == ART_NODES_PATH)
             {
-                result = result + String (node.strValue) + String(i < pAlgorithm->GetResultCount() - 1 ? "->" : "");
+                result = result + String(node.strValue); 
             }
             else if (node.type == ART_EDGES_PATH)
             {
-                result = result + "<" + String (node.strValue) + ">" + String(i < pAlgorithm->GetResultCount() - 1 ? "->" : "");
+              result = result + "<" + String(node.strValue) + ">";
             }
+
+            pathElementIndex++;
         }
         
         result = result + String(")");

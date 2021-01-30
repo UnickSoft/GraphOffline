@@ -1,0 +1,13 @@
+-isocheck graph6.xml n7-n5,n5-n0,n0-n7 n6-n5,n1-n6,n5-n1 false console
+-isocheck graph6_2.xml n7-n5,n5-n0,n0-n7 n6-n5,n1-n6,n5-n1,n7-n5,n5-n0,n0-n7 true console
+-isocheck graph6_3.xml n7-n5,n5-n0,n0-n7 n6-n5,n1-n6,n5-n1,n7-n5,n5-n0,n0-n7 true xml
+-isocheck graph6_direct.xml n7-n5,n5-n0,n0-n7 n6-n5,n6-n1,n1-n5,n7-n5,n5-n0,n0-n7 false console
+-isocheck graph6_direct_1.xml n7-n5,n5-n0,n0-n7 n5-n6,n6-n1,n1-n5,n7-n5,n5-n0,n0-n7 true console
+-isocheck graph6_direct_2.xml n7-n5,n5-n0,n0-n7 n5-n6,n6-n1,n1-n5,n7-n5,n5-n0,n0-n7 true xml
+-isocheck graph6_direct_3.xml n1-n5,n5-n0,n0-n2,n2-n3,n3-n1 n5-n6,n6-n1,n1-n5,n7-n5,n5-n0,n0-n7 true xml
+-isocheck graph13.xml   0-1,0-9,1-9 8-11,8-10,10-11 false xml
+-isocheck graph13_1.xml 0-9,0-8,8-9,9-1 8-9,9-10,8-10,8-7 false console
+-isocheck graph13_2.xml 0-9,0-8,8-9,9-1 8-9,9-10,8-10,8-7,9-1,10-11 true console
+-isocheck graph13_3.xml 0-9,0-8,8-9,9-1 8-9,9-10,8-10,8-7,9-1,10-11 true xml
+-isocheck graph13_direct.xml 1-0,0-9,1-9 8-9,9-10,10-8 false console
+-isocheck graph13_direct_1.xml 1-0,0-9,1-9 8-9,9-10,10-8 true xml

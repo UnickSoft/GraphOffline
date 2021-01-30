@@ -11,7 +11,7 @@
 // Index value
 typedef uint32_t IndexType;
 // Id of any object
-typedef IndexType ObjectId;
+using ObjectId = int32_t;
 // Integer edge weight
 typedef int32_t IntWeightType;
 // Float edge weight
@@ -66,6 +66,13 @@ public:
 class IGraph
 {
 public:
+    // Edge data
+    struct NodePair
+    {
+      ObjectId source;
+      ObjectId target;
+    };
+
     // Get Nodes count.
     virtual IndexType GetNodesCount() const = 0;
     // Get Edges count.
@@ -112,7 +119,15 @@ public:
     virtual bool IsFakeNode(ObjectId source) = 0;
     // Return graph struct
     virtual const char* PrintGraph() = 0;
-    
+    // Remove node and all connected edges.
+    virtual void RemoveNode(ObjectId source) = 0;
+    // Edge id.
+    virtual ObjectId GetEdge(IndexType index) const = 0;
+    // Edge connected nodes
+    virtual NodePair GetEdgeData(IndexType index) const = 0;
+    // Edge connected nodes
+    virtual NodePair GetEdgeData(ObjectId index) const = 0;
+
     virtual ~IGraph() {};
 };
 

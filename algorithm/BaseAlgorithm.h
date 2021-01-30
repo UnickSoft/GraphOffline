@@ -24,7 +24,8 @@ public:
   AlgorithmResult GetResult(IndexType index) const override {return AlgorithmResult();}
   bool GetNodeProperty(ObjectId object, IndexType index, AlgorithmResult* param) const override {return false;}
   const char* GetNodePropertyName(IndexType index) const override {return 0;}
-  bool GetEdgeProperty(const NodesEdge& object, IndexType index, AlgorithmResult* param) const override {return false;}
+  bool GetEdgeProperty(const NodesEdge& object, IndexType properyIndex,
+    IndexType resultEdgeIndex, AlgorithmResult* param) const override {return false;}
   const char* GetEdgePropertyName(IndexType index) const override {return 0;}
   
   bool EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const override {return false;};

@@ -39,7 +39,8 @@ public:
     // Get result of index. Algorithms can have complex result.
     virtual AlgorithmResult GetResult(IndexType index) const override;
     // Get property.
-    virtual bool GetEdgeProperty(const NodesEdge& object, IndexType index, AlgorithmResult* param) const override;
+    virtual bool GetEdgeProperty(const NodesEdge& object, IndexType properyIndex,
+      IndexType resultEdgeIndex, AlgorithmResult* param) const override;
     virtual const char* GetEdgePropertyName(IndexType index) const override;
     
 protected:

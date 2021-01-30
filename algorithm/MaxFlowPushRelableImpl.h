@@ -247,11 +247,12 @@ template<class WeightTypeInterface, typename WeightType> AlgorithmResult MaxFlow
     return result;
 }
 
-template<class WeightTypeInterface, typename WeightType> bool MaxFlowPushRelabel<WeightTypeInterface, WeightType>::GetEdgeProperty(const NodesEdge& object, IndexType index, AlgorithmResult* param) const
+template<class WeightTypeInterface, typename WeightType> bool MaxFlowPushRelabel<WeightTypeInterface, WeightType>::GetEdgeProperty(const NodesEdge& object, IndexType properyIndex,
+  IndexType resultEdgeIndex, AlgorithmResult* param) const
 {
     bool result = false;
     
-    if ((index == 0 || index == 1) && param)
+    if ((properyIndex == 0 || properyIndex == 1) && param)
     {
         auto findRes = std::find_if(_flowValue.begin(), _flowValue.end(), [&object](const EdgeFlowValue& edge)
             {
@@ -260,7 +261,7 @@ template<class WeightTypeInterface, typename WeightType> bool MaxFlowPushRelabel
         
         bool found   = findRes != _flowValue.end();
         
-        if (index == 0)
+        if (properyIndex == 0)
         {
             if (typeid(WeightType) == typeid(FloatWeightType))
             {
@@ -273,7 +274,7 @@ template<class WeightTypeInterface, typename WeightType> bool MaxFlowPushRelabel
                 param->nValue = found ? (IntWeightType) findRes->value : 0;
             }
         }
-        else if (index == 1)
+        else if (properyIndex == 1)
         {
                 param->type   = ART_INT;
                 param->nValue = found ? (IntWeightType) findRes->backToFront : 0;

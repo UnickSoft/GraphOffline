@@ -9,6 +9,7 @@
 
 #include "IGraph.h"
 #include <ostream>
+#include <vector>
 
 class IAlgorithmFactory;
 
@@ -32,7 +33,7 @@ inline bool operator == (const NodesEdge& a, const NodesEdge& b)
     return a.source == b.source && a.target == b.target;
 }
 
-enum AlgorithmParamType {APT_NODE = 0, APT_FLAG};
+enum AlgorithmParamType {APT_NODE = 0, APT_NODE_LIST, APT_EDGE_LIST, APT_FLAG};
 
 struct AlgorithmParam
 {
@@ -42,10 +43,12 @@ struct AlgorithmParam
     {
         ObjectId id;
         bool bFlag;
+        ObjectId* ids; // TODO leak
     } data;
 };
 
-enum AlgorithmResultType {ART_UNKNOWN = 0, ART_INT, ART_FLOAT, ART_STRING, ART_NODES_PATH, ART_EDGES_PATH};
+enum AlgorithmResultType {ART_UNKNOWN = 0, ART_INT, ART_FLOAT, ART_STRING, ART_NODES_PATH, ART_EDGES_PATH, ART_SPLIT_PATHS
+};
 
 struct AlgorithmResult
 {
@@ -104,7 +107,8 @@ public:
   virtual const char* GetNodePropertyName(IndexType index) const = 0;
 
   // Get propery for Edge
-  virtual bool GetEdgeProperty(const NodesEdge& object, IndexType index, AlgorithmResult* param) const = 0;
+  virtual bool GetEdgeProperty(const NodesEdge& object, IndexType properyIndex, 
+    IndexType resultEdgeIndex, AlgorithmResult* param) const = 0;
   virtual const char* GetEdgePropertyName(IndexType index) const = 0;
       
   virtual ~IAlgorithmResult() {}

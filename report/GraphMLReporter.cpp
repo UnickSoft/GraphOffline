@@ -175,7 +175,7 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
             }
             
             AlgorithmResult property;
-            if (pAlgorithm->GetEdgeProperty(edge, 0, &property) && property.type != ART_UNKNOWN)
+            if (pAlgorithm->GetEdgeProperty(edge, 0, i, &property) && property.type != ART_UNKNOWN)
             {
                 char graphEdge[MAX_NODE_CHAR]  = {0};
                 if (hasEdgeId)
@@ -190,7 +190,7 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
                 
                 // Low dist
                 IndexType index = 0;
-                while (pAlgorithm->GetEdgeProperty(edge, index, &property) && property.type != ART_UNKNOWN)
+                while (pAlgorithm->GetEdgeProperty(edge, index, i, &property) && property.type != ART_UNKNOWN)
                 {
                     if (property.type == ART_INT)
                     {

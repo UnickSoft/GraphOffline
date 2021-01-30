@@ -194,6 +194,9 @@ public:
     bool IsMultiGraph() const override;
     
     ObjectId GetEdge(ObjectId source, ObjectId target) const override;
+
+    // Remove node and all connected edges.
+    void RemoveNode(ObjectId source) override;
     
     WeightType* GetEdgeWeight(ObjectId source, ObjectId target, const IndexType & index = 0) const;
 
@@ -207,7 +210,13 @@ public:
     virtual Graph* MakeGraphCopy(GraphCopyType type, const std::function<Graph*()> & createFunction = std::function<Graph*()>()) const;
     
     // Get edge of this graph.
-    virtual ObjectId GetEdge(IndexType index) const;
+    ObjectId GetEdge(IndexType index) const override;
+
+    // Edge connected nodes
+    NodePair GetEdgeData(IndexType index) const override;
+
+    // Edge connected nodes
+    NodePair GetEdgeData(ObjectId objectId) const override;
     
 public:
 

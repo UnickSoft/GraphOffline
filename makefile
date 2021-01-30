@@ -1,6 +1,6 @@
 # Declaration of variables
 CC = g++
-CC_FLAGS = -std=c++17 -Wall -O3 -I ./algorithm -I ./pugixml -I ./report -I ./common -I ./graph -I . -DCGI_MODE
+CC_FLAGS = -std=c++17 -Wall -O3 -I ./algorithm -I ./pugixml -I ./report -I ./common -I ./graph -I ./lib -I . -DCGI_MODE
 
 # File names
 EXEC = ./bin/Linux/Release/GraphOffline

@@ -472,6 +472,31 @@ ObjectId Graph::GetEdge(IndexType index) const
     return m_edges[index].get()->privateId;
 }
 
+Graph::NodePair Graph::GetEdgeData(IndexType index) const
+{
+  NodePair res;
+  auto edge = m_edges[index];
+  res.source = edge->source->privateId;
+  res.target = edge->target->privateId;
+  return res;
+}
+
+// Edge connected nodes
+Graph::NodePair Graph::GetEdgeData(ObjectId objectId) const
+{
+    Graph::NodePair res;
+    for (const auto & edge : m_edges)
+    {
+        if (edge->privateId == objectId)
+        {
+            res.source = edge->source->privateId;
+            res.target = edge->target->privateId;
+            break;
+        }          
+    }
+    return res;
+}
+
 IndexType Graph::GetNextId()
 {
     return ++m_autoIncIndex;
@@ -807,4 +832,24 @@ ObjectId Graph::GetEdge(ObjectId source, ObjectId target) const
     }
     
     return 0;
+}
+
+void Graph::RemoveNode(ObjectId source)
+{
+  NodePtr nodePtr;
+  if (IsValidNodeId(source, nodePtr))
+  {
+    EdgePtrVector edgesForRemove;
+
+    m_edges.erase(std::remove_if(
+      m_edges.begin(),
+      m_edges.end(),
+      [nodePtr](EdgePtr & edge) 
+      {
+        return (edge->source == nodePtr || edge->target == nodePtr); 
+      }
+    ), m_edges.end());
+
+    m_nodes.erase(std::find(m_nodes.begin(), m_nodes.end(), nodePtr));
+  }
 }
