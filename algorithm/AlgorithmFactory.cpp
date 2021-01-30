@@ -128,7 +128,7 @@ std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(const IGraph* pGra
                           }
                       }
 
-                      if (index == edgeList.size())
+                      if (index == nodesList.size())
                         res->SetParameter(&outParamInfo);
 
                       delete[] outParamInfo.data.ids;
