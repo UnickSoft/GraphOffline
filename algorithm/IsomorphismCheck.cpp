@@ -117,7 +117,8 @@ bool IsomorphismCheck::Calculate()
     if ((fullDirected1 || fullUndirected1) && (fullDirected2 || fullUndirected2) &&
         (fullDirected1 == fullDirected1 && fullUndirected1 == fullUndirected2))
     {
-      int res = SubGraphsInscribed(graph2AsPair, graph1AsPair, subGraphs, fullDirected1, 0, 1, m_searchSubgraphs ? graph2->GetNodesCount() : 1);
+      int res = SubGraphsInscribed(graph2AsPair, graph1AsPair, subGraphs, fullDirected1, 0, 1, 
+        m_searchSubgraphs ? std::numeric_limits<unsigned int>::max() : 1);
 
       if (m_searchSubgraphs)
       {
