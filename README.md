@@ -12,6 +12,11 @@ MIT License.
 2. Under Mac OS X use XCode project Graphoffline.xcodeproj.
 3. Under Linux/FreeBSD and so on use make file: makefile/makefile-static. makefile-static is used to build with static linking.
 
+# Third party libraries
+
+1. [pugixml](https://github.com/zeux/pugixml) - is placed in pugixml directory.
+2. [CBioInfCpp](https://github.com/chernouhov/CBioInfCpp-0-) - is placed in lib directory.
+
 # How to use Graphoffline
 
 You may run Graphoofile from command line without args and you see parameters.
