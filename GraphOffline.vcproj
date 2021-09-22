@@ -194,6 +194,10 @@
 					RelativePath=".\algorithm\DijkstraShortPath.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\algorithm\PrintAllPaths.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="report"
@@ -262,6 +266,10 @@
 				</File>
 				<File
 					RelativePath=".\algorithm\IAlgorithm.h"
+					>
+				</File>
+				<File
+					RelativePath=".\algorithm\PrintAllPaths.h"
 					>
 				</File>
 			</Filter>

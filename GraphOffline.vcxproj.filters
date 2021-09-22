@@ -102,6 +102,9 @@
     <ClCompile Include="algorithm\IsomorphismCheck.cpp">
       <Filter>Source Files\algorithm</Filter>
     </ClCompile>
+    <ClCompile Include="algorithm\PrintAllPaths.cpp">
+      <Filter>Source Files\algorithm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CGIProcessor.h">
@@ -198,6 +201,9 @@
       <Filter>Header Files\lib</Filter>
     </ClInclude>
     <ClInclude Include="algorithm\IsomorphismCheck.h">
+      <Filter>Header Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\PrintAllPaths.h">
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>
   </ItemGroup>

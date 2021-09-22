@@ -16,6 +16,7 @@
 #include "Logger.h"
 #include "WeightMultiGraph.h"
 #include "IsomorphismCheck.h"
+#include "PrintAllPaths.h"
 
 static std::vector<std::string> ParseNodeList(const std::string & packData)
 {
@@ -300,7 +301,13 @@ IAlgorithm* AlgorithmFactory::_CreateAlgorithm(IndexType index, bool bFloat) con
         {
           res = new IsomorphismCheck();
           break;
-        }        
+        }     
+
+        case 9:
+        {
+            res = new PrintAllPaths();
+            break;
+        }
     }
  
     return res;
