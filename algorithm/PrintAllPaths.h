@@ -16,7 +16,7 @@ protected:
 	ObjectId m_target;		// OBJECT ID STORING DESTINATION
 	std::vector<std::vector<ObjectId>> m_path;	//	VECTOR THAT STORES FINAL RESULT
 
-	void pushResult(std::vector<ObjectId> path);	// UTITLITY FUNCTION TO PUSH RESULTS ON m_path
+	void pushResult(std::vector<ObjectId> &path);	// UTITLITY FUNCTION TO PUSH RESULTS ON m_path
 	IndexType GetResultCountUtility() const;		// UTITLITY FUNCTION THAT COUNTS NUMBER OF ELEMENTS IN RESULT
 
 public:

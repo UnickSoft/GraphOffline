@@ -4,10 +4,7 @@
 #include <unordered_map>
 #include <iostream>
 
-
-
 //	UTILITY FUNCTIONS DEFINITIONS
-
 
 //	FUNCTION TO CHECK IF THE NODE IS NOT VISITED
 
@@ -20,11 +17,9 @@ int isNotVisited(ObjectId x, std::vector<ObjectId>& path)
 	return 1;
 }
 
-
-
 //	FUNCTION TO PUSH RESULTS ONTO VECTOR
 
-void PrintAllPaths::pushResult(std::vector<ObjectId> path)
+void PrintAllPaths::pushResult(std::vector<ObjectId> &path)
 {
 	char buff[10];
 	std::vector<ObjectId> temp_path;
@@ -49,7 +44,6 @@ IndexType PrintAllPaths::GetResultCountUtility() const
 	{
 		for (const auto& subgraph : m_path)
 			res += subgraph.size() + 1;
-
 		if (res > 1)
 		{
 			// Remove last split
@@ -62,17 +56,12 @@ IndexType PrintAllPaths::GetResultCountUtility() const
 
 //	UTITLITY FUNCTION DEFINITION ENDS HERE
 
-
-
-
 PrintAllPaths::PrintAllPaths()
 {
 	m_source = 0;
 	m_target = 0;
 	m_pGraph = NULL;
 }
-
-
 
 bool PrintAllPaths::EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const
 {
@@ -97,9 +86,6 @@ bool PrintAllPaths::EnumParameter(IndexType index, AlgorithmParam* outParamInfo)
 	return res;
 }
 
-
-
-
 void PrintAllPaths::SetParameter(const AlgorithmParam* param)
 {
 	if (param)
@@ -115,28 +101,19 @@ void PrintAllPaths::SetParameter(const AlgorithmParam* param)
 	}
 }
 
-
-
-
 //	CALCULATING PATH FROM SOURCE TO DESTINATION
 
 bool PrintAllPaths::Calculate()
 {
 	std::queue<std::vector<ObjectId>> q;
 	std::vector<ObjectId> path;
-
 	path.push_back(m_source);
-
 	q.push(path);
-
-
 	while (!q.empty())
 	{
 		path = q.front();
 		q.pop();
-
 		ObjectId last = path[path.size() - 1];
-
 		if (last == m_target)		// IF WE REACH DESTINATION THEN WE PUSH THE RESULT
 		{
 			pushResult(path);
@@ -152,22 +129,14 @@ bool PrintAllPaths::Calculate()
 			}
 		}
 	}
-
 	return true;
 }
-
-
-
-
 
 IndexType PrintAllPaths::GetResultCount() const
 {
 	int res = GetResultCountUtility();
 	return res;
 }
-
-
-
 
 AlgorithmResult PrintAllPaths::GetResult(IndexType index) const
 {
@@ -199,15 +168,10 @@ AlgorithmResult PrintAllPaths::GetResult(IndexType index) const
 	return AlgorithmResult();
 }
 
-
-
 IndexType PrintAllPaths::GetHightlightNodesCount() const
 {
 	return GetResultCountUtility() - 1;
 }
-
-
-
 
 ObjectId PrintAllPaths::GetHightlightNode(IndexType index) const
 {
@@ -221,15 +185,10 @@ ObjectId PrintAllPaths::GetHightlightNode(IndexType index) const
 	}
 }
 
-
-
-
 IndexType PrintAllPaths::GetHightlightEdgesCount() const
 {
 	return IndexType(GetResultCountUtility() ? GetResultCountUtility() - 2 : 0);
 }
-
-
 
 NodesEdge PrintAllPaths::GetHightlightEdge(IndexType index) const
 {
