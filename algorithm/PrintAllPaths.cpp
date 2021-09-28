@@ -6,10 +6,9 @@
 #include <cstring>
 
 //	UTILITY FUNCTIONS DEFINITIONS
-
 //	FUNCTION TO CHECK IF THE NODE IS NOT VISITED
 
-int isNotVisited(ObjectId x, std::vector<ObjectId>& path)
+int isNotVisited(ObjectId x, const std::vector<ObjectId> & path)
 {
 	int size = path.size();
 	for (int i = 0; i < size; i++)
@@ -19,8 +18,7 @@ int isNotVisited(ObjectId x, std::vector<ObjectId>& path)
 }
 
 //	FUNCTION TO PUSH RESULTS ONTO VECTOR
-
-void PrintAllPaths::pushResult(std::vector<ObjectId> &path)
+void PrintAllPaths::pushResult(const std::vector<ObjectId> &path)
 {
 	char buff[10];
 	std::vector<ObjectId> temp_path;
@@ -33,7 +31,6 @@ void PrintAllPaths::pushResult(std::vector<ObjectId> &path)
 }
 
 //	FUNCTION GETTING NUMBER OF RESULT AVAILABLE IN m_path VECTOR
-
 IndexType PrintAllPaths::GetResultCountUtility() const
 {
 	int res = 1;
@@ -142,10 +139,6 @@ IndexType PrintAllPaths::GetResultCount() const
 AlgorithmResult PrintAllPaths::GetResult(IndexType index) const
 {
 	AlgorithmResult result;
-	if (m_pGraph->GetEdgeWeightType() == WT_FLOAT && index == 0)
-	{
-		return AlgorithmResult((FloatWeightType)((float)m_path.size()));
-	}
 	if (index == 0)
 	{
 		return AlgorithmResult((IntWeightType)m_path.size());
@@ -184,6 +177,8 @@ ObjectId PrintAllPaths::GetHightlightNode(IndexType index) const
 		}
 		index -= subgraph.size();
 	}
+
+	return -1;
 }
 
 IndexType PrintAllPaths::GetHightlightEdgesCount() const
@@ -196,7 +191,7 @@ NodesEdge PrintAllPaths::GetHightlightEdge(IndexType index) const
 	NodesEdge edge;
 	for (auto& subgraph : m_path)
 	{
-		if (index < subgraph.size())
+		if (index < subgraph.size() - 1)
 		{
 			edge.source = subgraph[index];
 			edge.target = subgraph[index + 1];

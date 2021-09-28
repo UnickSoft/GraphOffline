@@ -29,11 +29,12 @@ public:
         String result;
         
         char tempBuffer[MAX_REPORT] = {0};
-        if (pGraph->GetEdgeWeightType() == WT_INT)
+        auto res0 = pAlgorithm->GetResult(0);
+        if (res0.type == ART_INT)
         {
             sprintf(tempBuffer, "Result is %d (", pAlgorithm->GetResult(0).nValue);
         }
-        else
+        else if (res0.type == ART_FLOAT)
         {
             sprintf(tempBuffer, "Result is %f (", pAlgorithm->GetResult(0).fValue);
         }

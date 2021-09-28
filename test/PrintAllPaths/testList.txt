@@ -9,3 +9,4 @@
 -prnpaths graph_weight_5.xml 0 1 console
 -prnpaths graph_float_weight.xml 0 1 console
 -prnpaths graph_float_weight2.xml 0 2 console
+-prnpaths graph_float_weight2_xmlreport.xml 0 2 xml
