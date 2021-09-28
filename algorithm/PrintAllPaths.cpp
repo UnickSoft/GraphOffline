@@ -164,7 +164,11 @@ AlgorithmResult PrintAllPaths::GetResult(IndexType index) const
 
 IndexType PrintAllPaths::GetHightlightNodesCount() const
 {
-	return GetResultCountUtility() - 1;
+	IndexType res = 0;
+	for (auto& path : m_path)
+		res += path.size();
+
+	return res;
 }
 
 ObjectId PrintAllPaths::GetHightlightNode(IndexType index) const
@@ -183,7 +187,11 @@ ObjectId PrintAllPaths::GetHightlightNode(IndexType index) const
 
 IndexType PrintAllPaths::GetHightlightEdgesCount() const
 {
-	return IndexType(GetResultCountUtility() ? GetResultCountUtility() - 2 : 0);
+	IndexType res = 0;
+	for (auto& path : m_path)
+		res += path.size() - 1;
+
+	return res;
 }
 
 NodesEdge PrintAllPaths::GetHightlightEdge(IndexType index) const

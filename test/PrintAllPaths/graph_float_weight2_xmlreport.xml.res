@@ -27,8 +27,6 @@
 <edge source="1" target="2"/>
 <edge source="0" target="3"/>
 <edge source="3" target="2"/>
-<edge source="3" target="2"/>
-<edge source="3" target="2"/>
 </graph>
 </graphml>
 
