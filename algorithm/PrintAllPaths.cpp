@@ -8,7 +8,7 @@
 
 //	FUNCTION TO CHECK IF THE NODE IS NOT VISITED
 
-int isNotVisited(ObjectId x, std::vector<ObjectId>& path)
+int PrintAllPaths::isNotVisited(ObjectId x, std::vector<ObjectId>& path)
 {
 	int size = path.size();
 	for (int i = 0; i < size; i++)
@@ -21,14 +21,7 @@ int isNotVisited(ObjectId x, std::vector<ObjectId>& path)
 
 void PrintAllPaths::pushResult(std::vector<ObjectId> &path)
 {
-	char buff[10];
-	std::vector<ObjectId> temp_path;
-	for (ObjectId x : path)
-	{
-		m_pGraph->GetNodeStrId(x, buff, 10);
-		temp_path.push_back(x);
-	}
-	m_path.push_back(temp_path);
+	m_path.push_back(path);
 }
 
 //	FUNCTION GETTING NUMBER OF RESULT AVAILABLE IN m_path VECTOR

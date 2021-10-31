@@ -182,6 +182,9 @@
     <ClInclude Include="algorithm\DijkstraShortPathImpl.h">
       <Filter>Source Files\algorithm</Filter>
     </ClInclude>
+    <ClInclude Include="algorithm\BellmanFordImpl.h">
+      <Filter>Source Files\algorithm</Filter>
+    </ClInclude>
     <ClInclude Include="common\Logger.h">
       <Filter>Header Files\common</Filter>
     </ClInclude>
@@ -204,6 +207,9 @@
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="algorithm\PrintAllPaths.h">
+      <Filter>Header Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\BellmanFord.h">
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>
   </ItemGroup>

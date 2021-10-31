@@ -17,6 +17,7 @@
 #include "WeightMultiGraph.h"
 #include "IsomorphismCheck.h"
 #include "PrintAllPaths.h"
+#include "BellmanFord.h"
 
 static std::vector<std::string> ParseNodeList(const std::string & packData)
 {
@@ -306,6 +307,22 @@ IAlgorithm* AlgorithmFactory::_CreateAlgorithm(IndexType index, bool bFloat) con
         case 9:
         {
             res = new PrintAllPaths();
+            break;
+        }
+
+        case 10:
+        {
+            IAlgorithm* pAlgorithm = nullptr;
+            if (bFloat)
+            {
+                pAlgorithm = new BellmanFord<IGraphFloat, FloatWeightType>();
+            }
+            else
+            {
+                pAlgorithm = new BellmanFord<IGraphInt, IntWeightType>();
+            }
+            
+            res = pAlgorithm;
             break;
         }
     }

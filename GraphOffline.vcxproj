@@ -123,7 +123,8 @@
     <ClInclude Include="algorithm\IsomorphismCheck.h" />
     <ClInclude Include="algorithm\MaxFlowPushRelabel.h" />
     <ClInclude Include="algorithm\MaxFlowPushRelableImpl.h" />
-    <ClInclude Include="algorithm\PrintAllPaths.h"/>
+    <ClInclude Include="algorithm\BellmanFordImpl.h" />
+    <ClInclude Include="algorithm\PrintAllPaths.h" />
     <ClInclude Include="CGIProcessor.h" />
     <ClInclude Include="common\Logger.h" />
     <ClInclude Include="graph\MultiGraph.h" />
@@ -133,6 +134,7 @@
     <ClInclude Include="pugixml\pugiconfig.hpp" />
     <ClInclude Include="pugixml\pugixml.hpp" />
     <ClInclude Include="algorithm\DijkstraShortPath.h" />
+    <ClInclude Include="algorithm\BellmanFord.h" />
     <ClInclude Include="algorithm\IAlgorithm.h" />
     <ClInclude Include="report\ConsoleReporter.h" />
     <ClInclude Include="report\GraphMLReporter.h" />
