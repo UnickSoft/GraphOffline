@@ -18,7 +18,6 @@ protected:
 
 	void pushResult(std::vector<ObjectId> &path);	// UTITLITY FUNCTION TO PUSH RESULTS ON m_path
 	IndexType GetResultCountUtility() const;		// UTITLITY FUNCTION THAT COUNTS NUMBER OF ELEMENTS IN RESULT
-	int isNotVisited(ObjectId x, std::vector<ObjectId>& path);
 
 public:
 	PrintAllPaths();	

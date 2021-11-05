@@ -9,7 +9,7 @@
 
 //	FUNCTION TO CHECK IF THE NODE IS NOT VISITED
 
-int PrintAllPaths::isNotVisited(ObjectId x, std::vector<ObjectId>& path)
+int isNotVisited(ObjectId x, std::vector<ObjectId>& path)
 {
 	int size = path.size();
 	for (int i = 0; i < size; i++)
