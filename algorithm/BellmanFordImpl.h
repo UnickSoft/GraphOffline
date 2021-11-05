@@ -222,6 +222,7 @@ template<class WeightTypeInterface, class WeightType> ObjectId BellmanFord<Weigh
 		}
 		index -= subgraph.size();
 	}
+	return 0;
 }
 
 template<class WeightTypeInterface, class WeightType> IndexType BellmanFord<WeightTypeInterface, WeightType>::GetHightlightEdgesCount() const
