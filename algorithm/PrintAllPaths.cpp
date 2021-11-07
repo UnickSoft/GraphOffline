@@ -16,18 +16,13 @@ int isNotVisited(ObjectId x, const std::vector<ObjectId> & path)
 			return 0;
 	return 1;
 }
+// Change
+
 
 //	FUNCTION TO PUSH RESULTS ONTO VECTOR
 void PrintAllPaths::pushResult(const std::vector<ObjectId> &path)
 {
-	char buff[10];
-	std::vector<ObjectId> temp_path;
-	for (ObjectId x : path)
-	{
-		m_pGraph->GetNodeStrId(x, buff, 10);
-		temp_path.push_back(x);
-	}
-	m_path.push_back(temp_path);
+	m_path.push_back(path);
 }
 
 //	FUNCTION GETTING NUMBER OF RESULT AVAILABLE IN m_path VECTOR

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml>
+<key id="d0" for="node" attr.name="weight" attr.type="double">
+<default>1</default>
+</key>
+
+<graph id="Graph" edgedefault="directed">
+<node id="0"/>
+<node id="1"/>
+<node id="2"/>
+<node id="3"/>
+
+<edge source="0" target="2" ><data key="d0">2</data></edge>
+<edge source="2" target="1" directed="false"><data key="d0">4</data></edge>
+<edge source="0" target="1" />
+<edge source="1" target="3" directed="false"><data key="d0">6</data></edge>
+</graph>
+
+</graphml>

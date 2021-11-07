@@ -1,6 +1,4 @@
-#ifndef PRINT_ALL_PATHS_CPP
-#define PRINT_ALL_PATHS_CPP
-
+#pragma once
 
 #include "BaseAlgorithm.h"
 #include "IGraph.h"
@@ -9,28 +7,32 @@
 #include <unordered_map>
 #include <stdio.h>
 
-class PrintAllPaths : public BaseAlgorithm
+template<class WeightTypeInterface, class WeightType> class BellmanFord : public BaseAlgorithm
 {
 protected:
 	ObjectId m_source;		// OBJECT ID STORING SOURCE
-	ObjectId m_target;		// OBJECT ID STORING DESTINATION
 	std::vector<std::vector<ObjectId>> m_path;	//	VECTOR THAT STORES FINAL RESULT
+	std::unordered_map<ObjectId, ObjectId> previous_vertex;	//	VARIABLE USED TO STORE THE PREVIOUS ELEMENT OF SHORTEST PATH
+	const WeightTypeInterface*  m_pGraph;
 
-	void pushResult(const std::vector<ObjectId> & path);	// UTITLITY FUNCTION TO PUSH RESULTS ON m_path
+	void pushResult();	// UTITLITY FUNCTION TO PUSH RESULTS ON m_path
 	IndexType GetResultCountUtility() const;		// UTITLITY FUNCTION THAT COUNTS NUMBER OF ELEMENTS IN RESULT
 
 public:
-	PrintAllPaths();	
+	BellmanFord();
 
-	virtual ~PrintAllPaths() = default;
+	virtual ~BellmanFord() = default;
 
 	// OVERRIDEN FUNCTION FROM BASE ALGORITHM
 
 	//	RETURNS FULL NAME OF THE ALGORITHM
-	virtual const char* GetFullName() const override { return "PrintAllPaths"; }
+	virtual const char* GetFullName() const override { return "BellmanFord"; }
 
 	//	RETURNS SHORT NAME OF THE ALGORITHM
-	virtual const char* GetShortName() const override { return "prnpaths"; }
+	virtual const char* GetShortName() const override { return "blf"; }
+
+	//	SUPPORTS MULTI GRAPH
+	virtual bool IsSupportMultiGraph() const override { return true; }
 
 	//	GET ALL THE PARAMETERS 
 	virtual bool EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const override;
@@ -48,15 +50,18 @@ public:
 
 	//	GETS THE NUMBER OF NODES TO BE HIGHLIGHTED
 	virtual IndexType GetHightlightNodesCount() const override;
-	
+
 	//	RETURNS THE OBJECTID OF NODE TO BE HIGHLIGHTED
 	virtual ObjectId GetHightlightNode(IndexType index) const override;
-	
+
 	//	GETS THE NUMBER OF EDGES TO BE HIGHLIGHTED
 	virtual IndexType GetHightlightEdgesCount() const override;
-	
+
 	//	RETURNS THE EDGE TO BE HIGHLIGHTED
 	virtual NodesEdge GetHightlightEdge(IndexType index) const override;
+
+	//	SET GRAPH
+	virtual void SetGraph(const IGraph* pGraph) override;
 };
 
-#endif
+#include "BellmanFordImpl.h"
