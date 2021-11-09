@@ -8,16 +8,14 @@
 /* BELLMAN FORD ALGORITHM*/
 
 //	UTILITY FUNCTIONS DEFINITIONS
-
 //	FUNCTION TO PUSH RESULTS ONTO VECTOR
-
 template<class WeightTypeInterface, class WeightType> void BellmanFord<WeightTypeInterface, WeightType>::pushResult()
 {
-	for(auto vertex : previous_vertex)
+	for(auto order_vertex : previous_vertex_order)
 	{
 		std::vector<ObjectId> temp;
-		ObjectId prev = vertex.second;
-		ObjectId destination = vertex.first;
+		ObjectId prev        = previous_vertex[order_vertex];
+		ObjectId destination = order_vertex;
 
 		temp.push_back(destination);
 		temp.push_back(prev);
@@ -90,16 +88,17 @@ template<class WeightTypeInterface, class WeightType> void BellmanFord<WeightTyp
 	}
 }
 
-
 template<class WeightTypeInterface, class WeightType> void BellmanFord<WeightTypeInterface, WeightType>::SetGraph(const IGraph* pGraph)
 {
-	if (pGraph->IsMultiGraph())
-    {
-        std::shared_ptr<IMultiGraph> multiGraph = std::shared_ptr<IMultiGraph>(m_pAlgorithmFactory->CreateMultiGraph(pGraph));
-        m_pGraph = dynamic_cast<const WeightTypeInterface*>(multiGraph->MakeBaseCopy(GTC_MULTI_TO_COMMON_GRAPH_MINIMAL_EDGES));
-    }
-    else
-        m_pGraph = dynamic_cast<const WeightTypeInterface*>(pGraph);
+  if (pGraph->IsMultiGraph())
+  {
+    std::shared_ptr<IMultiGraph> multiGraph = std::shared_ptr<IMultiGraph>(m_pAlgorithmFactory->CreateMultiGraph(pGraph));
+    m_pGraph = dynamic_cast<const WeightTypeInterface*>(multiGraph->MakeBaseCopy(GTC_MULTI_TO_COMMON_GRAPH_MINIMAL_EDGES));
+  }
+  else
+  {
+    m_pGraph = dynamic_cast<const WeightTypeInterface*>(pGraph);
+  }
 }
 
 //	CALCULATING PATH FROM SOURCE TO DESTINATION
@@ -117,7 +116,7 @@ template<class WeightTypeInterface, class WeightType> bool BellmanFord<WeightTyp
 	for(int i = 0; i < m_pGraph->GetNodesCount(); i++)
 	{
 		ObjectId u = m_pGraph->GetNode((IndexType)i);
-		dist[u] = (WeightType)INT_MAX;
+		dist[u] = (WeightType)std::numeric_limits<WeightType>::max();
 		vis[u] = false;
 	}
 	ObjectId u = m_pGraph->GetNode((IndexType)0);
@@ -141,6 +140,7 @@ template<class WeightTypeInterface, class WeightType> bool BellmanFord<WeightTyp
 				WeightType alt = m_pGraph->GetEdgeWeight(u, v);
 				if(alt + dist[u] < dist[v])
 				{
+					previous_vertex_order.insert(v);
 					previous_vertex[v] = u;
 					dist[v] = alt + dist[u];
 					change = true;
@@ -163,18 +163,11 @@ template<class WeightTypeInterface, class WeightType> bool BellmanFord<WeightTyp
 	return res;
 }
 
-
-
-
-
 template<class WeightTypeInterface, class WeightType> IndexType BellmanFord<WeightTypeInterface, WeightType>::GetResultCount() const
 {
 	int res = GetResultCountUtility();
 	return res;
 }
-
-
-
 
 //	FUNCTIONS IMPLEMENTING RESULT
 
@@ -228,7 +221,11 @@ template<class WeightTypeInterface, class WeightType> ObjectId BellmanFord<Weigh
 
 template<class WeightTypeInterface, class WeightType> IndexType BellmanFord<WeightTypeInterface, WeightType>::GetHightlightEdgesCount() const
 {
-	return IndexType(GetResultCountUtility() ? GetResultCountUtility() - 2 : 0);
+	IndexType res = 0;
+	for (auto& path : m_path)
+		res += path.size() - 1;
+
+	return res;
 }
 
 template<class WeightTypeInterface, class WeightType> NodesEdge BellmanFord<WeightTypeInterface, WeightType>::GetHightlightEdge(IndexType index) const
@@ -236,7 +233,7 @@ template<class WeightTypeInterface, class WeightType> NodesEdge BellmanFord<Weig
 	NodesEdge edge;
 	for (auto& subgraph : m_path)
 	{
-		if (index < subgraph.size())
+		if (index < subgraph.size() - 1)
 		{
 			edge.source = subgraph[index];
 			edge.target = subgraph[index + 1];

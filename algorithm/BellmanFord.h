@@ -6,6 +6,7 @@
 #include <map>
 #include <unordered_map>
 #include <stdio.h>
+#include <set>
 
 template<class WeightTypeInterface, class WeightType> class BellmanFord : public BaseAlgorithm
 {
@@ -13,6 +14,7 @@ protected:
 	ObjectId m_source;		// OBJECT ID STORING SOURCE
 	std::vector<std::vector<ObjectId>> m_path;	//	VECTOR THAT STORES FINAL RESULT
 	std::unordered_map<ObjectId, ObjectId> previous_vertex;	//	VARIABLE USED TO STORE THE PREVIOUS ELEMENT OF SHORTEST PATH
+	std::set<ObjectId> previous_vertex_order;
 	const WeightTypeInterface*  m_pGraph;
 
 	void pushResult();	// UTITLITY FUNCTION TO PUSH RESULTS ON m_path
