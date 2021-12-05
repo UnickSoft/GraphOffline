@@ -85,3 +85,7 @@ Usually when we create new test, we generate report one by one for each case and
 # Developer doc
 
 You may find more developer information on our wiki: https://github.com/UnickSoft/GraphOffline/wiki
+
+# Emscripten build 
+
+Use object Graphoffline.Emscripten.vcxproj. Change path to emscripten in project.

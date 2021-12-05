@@ -139,6 +139,11 @@ template <class GraphType> bool ConsoleParams::LoadGraph(const String& sourceNam
     FileReader file;
     
     bool res = false;
+
+#ifdef EMSCRIPT
+    auto buffer = sourceName.UTF8();
+    return graph.LoadFromGraphML((const char *)buffer.Data(), uint32_t(buffer.Size()));
+#endif
     
     if (file.openFile(sourceName) && file.getFileSize() > 0)
     {

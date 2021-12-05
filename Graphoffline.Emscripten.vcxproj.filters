@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="algorithm">
+      <UniqueIdentifier>{871d0de4-846d-4d94-833a-07e4c4111c28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{4915cd79-7948-4dc0-9f92-164bae8b8007}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graph">
+      <UniqueIdentifier>{61e04b6f-637a-4d38-b01e-d783a33caeea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib">
+      <UniqueIdentifier>{ea97fff4-1720-4aab-8277-bc4e35d2669d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pugixml">
+      <UniqueIdentifier>{c0289ca0-391c-4679-8395-bf2004af2133}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="report">
+      <UniqueIdentifier>{ba455d66-293f-4487-82b3-1663795ac783}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="algorithm\AlgorithmFactory.cpp">
+      <Filter>algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="algorithm\BaseAlgorithm.cpp">
+      <Filter>algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="algorithm\ConnectedComponent.cpp">
+      <Filter>algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="algorithm\EulerianPath.cpp">
+      <Filter>algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="algorithm\GraphLoadTest.cpp">
+      <Filter>algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="algorithm\HamiltonianLoop.cpp">
+      <Filter>algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="algorithm\IsomorphismCheck.cpp">
+      <Filter>algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="algorithm\PrintAllPaths.cpp">
+      <Filter>algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="common\CaseFunctions.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\ConsoleParams.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Logger.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\YString.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="graph\Graph.cpp">
+      <Filter>graph</Filter>
+    </ClCompile>
+    <ClCompile Include="graph\MultiGraph.cpp">
+      <Filter>graph</Filter>
+    </ClCompile>
+    <ClCompile Include="report\GraphMLReporter.cpp">
+      <Filter>report</Filter>
+    </ClCompile>
+    <ClCompile Include="report\ReporterFactory.cpp">
+      <Filter>report</Filter>
+    </ClCompile>
+    <ClCompile Include="pugixml\pugixml.cpp">
+      <Filter>pugixml</Filter>
+    </ClCompile>
+    <ClCompile Include="CGIProcessor.cpp" />
+    <ClCompile Include="GraphOffline.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="algorithm\AlgorithmFactory.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\BaseAlgorithm.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\BellmanFord.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\BellmanFordImpl.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\ConnectedComponent.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\DijkstraShortPath.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\DijkstraShortPathImpl.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\EulerianPath.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\GraphLoadTest.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\HamiltonianLoop.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\IAlgorithm.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\IsomorphismCheck.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\MaxFlowPushRelabel.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\MaxFlowPushRelableImpl.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\PrintAllPaths.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\ShortestPath.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Buffer.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\CaseFunctions.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\ConsoleParams.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\FileReader.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Logger.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\RefCounter.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\YString.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="graph\Graph.h">
+      <Filter>graph</Filter>
+    </ClInclude>
+    <ClInclude Include="graph\IGraph.h">
+      <Filter>graph</Filter>
+    </ClInclude>
+    <ClInclude Include="graph\MultiGraph.h">
+      <Filter>graph</Filter>
+    </ClInclude>
+    <ClInclude Include="graph\WeightGraph.h">
+      <Filter>graph</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\CBioInfCpp.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="report\ConsoleReporter.h">
+      <Filter>report</Filter>
+    </ClInclude>
+    <ClInclude Include="report\GraphMLReporter.h">
+      <Filter>report</Filter>
+    </ClInclude>
+    <ClInclude Include="report\IReporter.h">
+      <Filter>report</Filter>
+    </ClInclude>
+    <ClInclude Include="report\ReporterFactory.h">
+      <Filter>report</Filter>
+    </ClInclude>
+    <ClInclude Include="pugixml\foreach.hpp">
+      <Filter>pugixml</Filter>
+    </ClInclude>
+    <ClInclude Include="pugixml\pugiconfig.hpp">
+      <Filter>pugixml</Filter>
+    </ClInclude>
+    <ClInclude Include="pugixml\pugixml.hpp">
+      <Filter>pugixml</Filter>
+    </ClInclude>
+    <ClInclude Include="CGIProcessor.h" />
+    <ClInclude Include="IAlgorithmFactory.h" />
+    <ClInclude Include="WeightMultiGraph.h" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31515.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Graphoffline.Emscripten", "Graphoffline.Emscripten.vcxproj", "{6BAE94E3-DC5B-4A3F-B113-CD96C87F32F9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Emscripten = Debug|Emscripten
+		Release|Emscripten = Release|Emscripten
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6BAE94E3-DC5B-4A3F-B113-CD96C87F32F9}.Debug|Emscripten.ActiveCfg = Debug|Emscripten
+		{6BAE94E3-DC5B-4A3F-B113-CD96C87F32F9}.Debug|Emscripten.Build.0 = Debug|Emscripten
+		{6BAE94E3-DC5B-4A3F-B113-CD96C87F32F9}.Release|Emscripten.ActiveCfg = Release|Emscripten
+		{6BAE94E3-DC5B-4A3F-B113-CD96C87F32F9}.Release|Emscripten.Build.0 = Release|Emscripten
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2C714733-0313-45C4-9DFB-6906BDCF1C30}
+	EndGlobalSection
+EndGlobal

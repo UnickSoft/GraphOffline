@@ -70,6 +70,10 @@ UserInterfaceState.xcuserstate
 bin/Linux/Release/GraphOffline
 /.vs/
 /bin/Windows/obj/
+/bin/Windows/
+/bin/emscripten/Debug
+/bin/emscripten/intermediate
+/bin/emscripten/Release
 /_UpgradeReport_Files/
 /bin/Windows/Release/GraphOffline.iobj
 /bin/Windows/Release/GraphOffline.ipdb

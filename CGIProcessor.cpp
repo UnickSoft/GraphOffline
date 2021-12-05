@@ -82,12 +82,14 @@ std::vector<String> CGIProcessor::SplitString(const String& inputString, const s
     while (!input.IsEmpty())
     {
         int nMinPosition = int(input.Count());
+        int delimiterLength = 0;
         for (const String& delemiter : delemiters)
         {
             int pos = input.Find(delemiter);
             if (pos >= 0)
             {
                 nMinPosition = std::min(pos, nMinPosition);
+                delimiterLength = delemiter.Count();
             }
         }
         
@@ -95,7 +97,7 @@ std::vector<String> CGIProcessor::SplitString(const String& inputString, const s
         {
             String param = String(input).SubStr(0, nMinPosition);
             res.push_back(param);
-            input = input.SubStr(nMinPosition + 1);
+            input = input.SubStr(nMinPosition + delimiterLength);
         }
         else
         {

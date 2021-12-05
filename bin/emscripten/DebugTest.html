@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Debug graphonline</title>
+    <style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 50%;
+    }
+
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+  </style>
+  </head>
+  <body>
+    <table id="testTable">
+    <th>Test name</th>
+    <th>Result</th>
+    </table>
+    <div><span>Total tests:</span> <span id="TestCount"></span></div>
+
+    <script type="text/javascript" src="Debug/Graphoffline.Emscripten.js"></script>
+    <script type='text/javascript'>
+
+	function addRow(name, result, isCorrect) {
+	  let tableRef = document.getElementById("testTable");
+	  let newRow = tableRef.insertRow(-1);
+
+	  let nameCell   = newRow.insertCell(0);
+	  let resultCell = newRow.insertCell(1);
+
+          newRow.style.backgroundColor = isCorrect ? 'LightGreen' : 'LightPink';
+
+	  let nameStr = document.createTextNode(name);
+	  let resultStr   = document.createTextNode(result);
+
+	  nameCell.appendChild(nameStr);
+	  resultCell.appendChild(resultStr);
+	}  
+
+        Module['onRuntimeInitialized'] = onRuntimeInitialized;
+	var process = Module.cwrap('ProcessAlgorithm', 'string', ['string']);
+	var delimiter = "<s\\emscript_split\\s>";
+
+	function onRuntimeInitialized() {
+                var test = [
+                  {name: "Test pass param", 
+                   test: delimiter, 
+                   res : "test"},
+
+                  {name: "Test short path", 
+                   test: "dsp" + delimiter  + graph_direct + delimiter + "start" + delimiter + "0" + delimiter + "finish" + delimiter + "2" + delimiter + "report" + delimiter + "console", 
+                   res : "Result is 2 (0->1->2)"},
+
+                  {name: "Test xml report", 
+                   test: "mfpr" + delimiter + graph_direct + delimiter + "source" + delimiter + "0" + delimiter + "drain" + delimiter + "2" + delimiter + "report" + delimiter + "xml", 
+                   res : graph_direct_xml_report},
+
+                  {name: "Test not found", 
+                   test: "elpath" + delimiter + graph_3, 
+                   res : "Result is 0 ()"},
+                ];   
+
+                let totalTests = document.getElementById("TestCount");
+                totalTests.innerHTML = test.length;
+                
+                test.forEach (test => {
+                        var r = process(test.test);              
+                        var res = r == test.res;
+                        if (!res) {
+  	  		  console.error("Expect: " + test.res);
+  	  		  console.error("Actual: " + r);
+                        }
+                        addRow(test.name, res ? "Correct" : "Incorrect", res);
+		});
+	}
+
+	// Test files
+
+        var graph_direct = ` 
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml>
+	<graph id="Graph" edgedefault="directed">
+		<node id="0"/>
+		<node id="1"/>
+		<node id="2"/>
+                <edge source="0" target="1" />
+		<edge source="2" target="1" directed="false"/>
+		<edge source="1" target="0" />
+	</graph>
+</graphml>
+
+<!--
+  0<->1-2
+-->`;
+
+        var graph_direct_xml_report = `<?xml version="1.0" encoding="UTF-8"?>
+     <graphml>
+<graph id="G" edgedefault="undirected">
+<result count="1">
+  <value type="1">1</value>
+</result>
+<node id="0">
+<data key="hightlightNode">0</data>
+</node>
+<node id="1">
+<data key="hightlightNode">0</data>
+</node>
+<node id="2">
+<data key="hightlightNode">0</data>
+</node>
+<edge source="0" target="1">
+<data key="flowValue">1</data>
+<data key="backToFront">0</data>
+</edge>
+<edge source="2" target="1">
+<data key="flowValue">1</data>
+<data key="backToFront">1</data>
+</edge>
+</graph>
+</graphml>
+`;
+
+        var graph_3 = ` 
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
+     http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <graph id="G" edgedefault="undirected">
+    <node id="n0"/>
+    <node id="n1"/>
+    <node id="n2"/>
+  </graph>
+</graphml>
+
+<!--
+n0-n1-n2
+-->`;
+
+    </script>
+  </body>
+</html>
+
+

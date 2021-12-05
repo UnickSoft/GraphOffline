@@ -11,11 +11,11 @@ public:
     // Return buffer of graph.
     String GetGraphBuffer();
 
-    
+    // Split string using delemiters.
+    static std::vector<String> SplitString(const String& inputString, const std::vector<String>& delemiters);
+
 private:
     
     String m_graphBuffer;
     std::vector<String> m_parameters;
-    
-    static std::vector<String> SplitString(const String& inputString, const std::vector<String>& delemiters);
 };

@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Emscripten">
+      <Configuration>Debug</Configuration>
+      <Platform>Emscripten</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Emscripten">
+      <Configuration>Release</Configuration>
+      <Platform>Emscripten</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)\pugixml\;./;.\algorithm;.\report;.\common;.\Graph;.\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>EMSCRIPT</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>-s EXPORTED_FUNCTIONS='_ProcessAlgorithm' -s EXPORTED_RUNTIME_METHODS=ccall,cwrap %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <PreBuildEvent>
+      <Command>IF NOT EXIST Emscripten\$(Configuration) MKDIR Emscripten\$(Configuration)
+</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">
+    <ClCompile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)\pugixml\;./;.\algorithm;.\report;.\common;.\Graph;.\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>EMSCRIPT</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>-s EXPORTED_FUNCTIONS='_ProcessAlgorithm' -s EXPORTED_RUNTIME_METHODS=ccall,cwrap %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <PreBuildEvent>
+      <Command>IF NOT EXIST Emscripten\$(Configuration) MKDIR Emscripten\$(Configuration)
+</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="algorithm\AlgorithmFactory.cpp" />
+    <ClCompile Include="algorithm\BaseAlgorithm.cpp" />
+    <ClCompile Include="algorithm\ConnectedComponent.cpp" />
+    <ClCompile Include="algorithm\EulerianPath.cpp" />
+    <ClCompile Include="algorithm\GraphLoadTest.cpp" />
+    <ClCompile Include="algorithm\HamiltonianLoop.cpp" />
+    <ClCompile Include="algorithm\IsomorphismCheck.cpp" />
+    <ClCompile Include="algorithm\PrintAllPaths.cpp" />
+    <ClCompile Include="CGIProcessor.cpp" />
+    <ClCompile Include="common\CaseFunctions.cpp" />
+    <ClCompile Include="common\ConsoleParams.cpp" />
+    <ClCompile Include="common\Logger.cpp" />
+    <ClCompile Include="common\YString.cpp" />
+    <ClCompile Include="GraphOffline.cpp" />
+    <ClCompile Include="graph\Graph.cpp" />
+    <ClCompile Include="graph\MultiGraph.cpp" />
+    <ClCompile Include="pugixml\pugixml.cpp" />
+    <ClCompile Include="report\GraphMLReporter.cpp" />
+    <ClCompile Include="report\ReporterFactory.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="algorithm\AlgorithmFactory.h" />
+    <ClInclude Include="algorithm\BaseAlgorithm.h" />
+    <ClInclude Include="algorithm\BellmanFord.h" />
+    <ClInclude Include="algorithm\BellmanFordImpl.h" />
+    <ClInclude Include="algorithm\ConnectedComponent.h" />
+    <ClInclude Include="algorithm\DijkstraShortPath.h" />
+    <ClInclude Include="algorithm\DijkstraShortPathImpl.h" />
+    <ClInclude Include="algorithm\EulerianPath.h" />
+    <ClInclude Include="algorithm\GraphLoadTest.h" />
+    <ClInclude Include="algorithm\HamiltonianLoop.h" />
+    <ClInclude Include="algorithm\IAlgorithm.h" />
+    <ClInclude Include="algorithm\IsomorphismCheck.h" />
+    <ClInclude Include="algorithm\MaxFlowPushRelabel.h" />
+    <ClInclude Include="algorithm\MaxFlowPushRelableImpl.h" />
+    <ClInclude Include="algorithm\PrintAllPaths.h" />
+    <ClInclude Include="algorithm\ShortestPath.h" />
+    <ClInclude Include="CGIProcessor.h" />
+    <ClInclude Include="common\Buffer.h" />
+    <ClInclude Include="common\CaseFunctions.h" />
+    <ClInclude Include="common\ConsoleParams.h" />
+    <ClInclude Include="common\FileReader.h" />
+    <ClInclude Include="common\Logger.h" />
+    <ClInclude Include="common\RefCounter.h" />
+    <ClInclude Include="common\YString.h" />
+    <ClInclude Include="graph\Graph.h" />
+    <ClInclude Include="graph\IGraph.h" />
+    <ClInclude Include="graph\MultiGraph.h" />
+    <ClInclude Include="graph\WeightGraph.h" />
+    <ClInclude Include="IAlgorithmFactory.h" />
+    <ClInclude Include="lib\CBioInfCpp.h" />
+    <ClInclude Include="pugixml\foreach.hpp" />
+    <ClInclude Include="pugixml\pugiconfig.hpp" />
+    <ClInclude Include="pugixml\pugixml.hpp" />
+    <ClInclude Include="report\ConsoleReporter.h" />
+    <ClInclude Include="report\GraphMLReporter.h" />
+    <ClInclude Include="report\IReporter.h" />
+    <ClInclude Include="report\ReporterFactory.h" />
+    <ClInclude Include="WeightMultiGraph.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{6bae94e3-dc5b-4a3f-b113-cd96c87f32f9}</ProjectGuid>
+    <RootNamespace>Emscripten_ProjectTemplate1</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">
+    <ConfigurationType>JSApplication</ConfigurationType>
+    <PlatformToolset>emcc</PlatformToolset>
+    <EmscriptenDir>D:\projects\emsdk\upstream\emscripten\</EmscriptenDir>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">
+    <ConfigurationType>JSApplication</ConfigurationType>
+    <PlatformToolset>emcc</PlatformToolset>
+    <EmscriptenDir>D:\projects\emsdk\upstream\emscripten\</EmscriptenDir>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">
+    <OutDir>bin/emscripten\$(Configuration)\</OutDir>
+    <IntDir>bin\emscripten\intermediate\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">
+    <OutDir>bin\emscripten\$(Configuration)\</OutDir>
+    <IntDir>bin\emscripten\intermediate\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

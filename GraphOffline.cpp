@@ -12,6 +12,10 @@
 #include "CGIProcessor.h"
 #include "Logger.h"
 
+#define EMSCRIPT_DELEMITER "<s\\emscript_split\\s>"
+
+#ifndef EMSCRIPT
+
 int main(int argc, char *argv[])
 {
     int res = 0;
@@ -71,3 +75,26 @@ int main(int argc, char *argv[])
     
     return res;
 }
+
+#else
+
+extern "C" {
+  const char* ProcessAlgorithm(const char* emscriptParams);
+}
+
+const char* ProcessAlgorithm(const char* emscriptParams)
+{
+  static std::string res;
+  if (strcmp(emscriptParams, EMSCRIPT_DELEMITER) == 0)
+  {
+    res = "test";
+    return res.c_str();
+  }
+
+  ConsoleParams consoleParams;
+  consoleParams.ProcessConsoleParams(CGIProcessor::SplitString(emscriptParams, { EMSCRIPT_DELEMITER }));
+  res = (const char*)consoleParams.GetReport().UTF8().Data();
+  return res.c_str();
+}
+
+#endif
