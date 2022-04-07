@@ -8,6 +8,7 @@
 #pragma once
 
 #include "IAlgorithm.h"
+#include <limits>
 #include <ostream>
 #include <vector>
 
@@ -27,17 +28,17 @@ public:
   bool GetEdgeProperty(const NodesEdge& object, IndexType properyIndex,
     IndexType resultEdgeIndex, AlgorithmResult* param) const override {return false;}
   const char* GetEdgePropertyName(IndexType index) const override {return 0;}
-  
+
   bool EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const override {return false;};
   void SetParameter(const AlgorithmParam* param) override {};
   void SetGraph(const IGraph* pGraph) override {m_pGraph = pGraph;}
   void SetAlgorithmFactory(const IAlgorithmFactory* pAlgorithmFactory) override {m_pAlgorithmFactory = pAlgorithmFactory;}
-  
+
   virtual bool IsSupportMultiGraph() const override
   {
     return false;
   }
-  
+
   template<class WeightType, class GraphType> static std::vector<std::vector<WeightType>> GetAdjacencyMatrix(const GraphType& graph);
 
   static std::vector<std::vector<bool>> GetAdjacencyMatrixBool(const IGraph& graph);
@@ -52,15 +53,15 @@ protected:
 template<class WeightType, class GraphType> std::vector<std::vector<WeightType>> BaseAlgorithm::GetAdjacencyMatrix(const GraphType& graph)
 {
     std::vector<std::vector<WeightType>> res;
-    
+
     res.resize(graph.GetNodesCount());
-    
+
     auto nodesCount = graph.GetNodesCount();
-    
+
     for (IndexType i = 0; i < nodesCount; i++)
     {
         res[i].resize(nodesCount);
-        
+
         for (IndexType j = 0; j < nodesCount; j++)
         {
             auto s = graph.GetNode(i);
@@ -75,6 +76,6 @@ template<class WeightType, class GraphType> std::vector<std::vector<WeightType>>
             }
         }
     }
-    
+
     return res;
 }

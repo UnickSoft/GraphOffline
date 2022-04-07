@@ -11,7 +11,6 @@
 
 #include "IAlgorithm.h"
 
-
 class IAlgorithmFactory
 {
 public:

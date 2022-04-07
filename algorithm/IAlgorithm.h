@@ -8,6 +8,8 @@
 #pragma once
 
 #include "IGraph.h"
+#include <cstring>
+
 #include <ostream>
 #include <vector>
 
@@ -33,32 +35,62 @@ inline bool operator == (const NodesEdge& a, const NodesEdge& b)
     return a.source == b.source && a.target == b.target;
 }
 
-enum AlgorithmParamType {APT_NODE = 0, APT_NODE_LIST, APT_EDGE_LIST, APT_FLAG};
+enum AlgorithmParamType
+{
+    APT_NODE = 0,
+    APT_NODE_LIST,
+    APT_EDGE_LIST,
+    APT_FLAG,
+    APT_NUMBER,
+    APT_STRING
+};
 
+#define ALGO_PARAM_STRING_SIZE 16
 struct AlgorithmParam
 {
     AlgorithmParamType type;
-    char paramName[16];
+    char paramName[ALGO_PARAM_STRING_SIZE + 1];
     union
     {
+        char str[ALGO_PARAM_STRING_SIZE + 1];
+        IndexType val;
         ObjectId id;
         bool bFlag;
         ObjectId* ids; // TODO leak
     } data;
 };
 
-enum AlgorithmResultType {ART_UNKNOWN = 0, ART_INT, ART_FLOAT, ART_STRING, ART_NODES_PATH, ART_EDGES_PATH, ART_SPLIT_PATHS
+enum AlgorithmResultType
+{
+    ART_UNKNOWN = 0,
+    ART_INT,
+    ART_FLOAT,
+    ART_STRING,
+    ART_NODES_PATH,
+    ART_EDGES_PATH,
+    ART_SPLIT_PATHS,
+    ART_CLIQUE,
+    ART_NODE_ID
 };
+
 
 struct AlgorithmResult
 {
+#define ALGO_RESULT_STRING_SIZE 64
     AlgorithmResult () : type(ART_UNKNOWN) {}
-    explicit AlgorithmResult(IntWeightType nValue) : type(ART_INT), nValue(nValue) {};
-    explicit AlgorithmResult(FloatWeightType fValue) : type(ART_FLOAT), fValue(fValue) {};
+    explicit AlgorithmResult(IntWeightType nValue) : type(ART_INT), nValue(nValue) {}
+    explicit AlgorithmResult(FloatWeightType fValue) : type(ART_FLOAT), fValue(fValue) {}
+    explicit AlgorithmResult(const char *str) : type(ART_STRING)
+    {
+        assert(str != nullptr);
+        std::strncpy(strValue, str, ALGO_RESULT_STRING_SIZE);
+    }
+
     AlgorithmResultType type;
     IntWeightType nValue;
     FloatWeightType fValue;
-    char strValue[64];
+    ObjectId nodeId;
+    char strValue[ALGO_RESULT_STRING_SIZE + 1];
 };
 
 // If path is not avalible, it may have result.
@@ -83,7 +115,7 @@ public:
     virtual void SetAlgorithmFactory(const IAlgorithmFactory* pAlgorithmFactory) = 0;
     // Is support multi graph
     virtual bool IsSupportMultiGraph() const = 0;
-    
+
     virtual ~IAlgorithmEngine() {}
 };
 
@@ -107,14 +139,14 @@ public:
   virtual const char* GetNodePropertyName(IndexType index) const = 0;
 
   // Get propery for Edge
-  virtual bool GetEdgeProperty(const NodesEdge& object, IndexType properyIndex, 
+  virtual bool GetEdgeProperty(const NodesEdge& object, IndexType properyIndex,
     IndexType resultEdgeIndex, AlgorithmResult* param) const = 0;
   virtual const char* GetEdgePropertyName(IndexType index) const = 0;
-      
+
   virtual ~IAlgorithmResult() {}
 };
 
-class IAlgorithm : public IAlgorithmEngine, public IAlgorithmResult 
+class IAlgorithm : public IAlgorithmEngine, public IAlgorithmResult
 {
 };
 

@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <cassert>
 
 // Index value
 typedef uint32_t IndexType;
@@ -35,13 +36,13 @@ enum GraphCopyType {GCT_COPY = 0,
 class IEnumStrategy
 {
 public:
-    
+
     // Default enum strategy.
     // DES_NONE - has no default enum strategy.
     // DES_NODE - will enum nodes only one time.
     // DES_EDGE - will enum edge only one time.
     enum DefaultEnumStrategy {DES_NONE = 0, DES_NODE, DES_EDGE};
-    
+
     // We started process this node.
     virtual void StartProcessNode(ObjectId nodeId) = 0;
     // @return true if we need to process this child node.
@@ -50,12 +51,12 @@ public:
     virtual void FinishProcessNode(ObjectId nodeId) = 0;
     // Default Strategy.
     virtual DefaultEnumStrategy GetDefaultStrategy() = 0;
-    
+
     // We started process this edge.
     virtual void StartProcessEdge(ObjectId edgeId) = 0;
     // We finish process this edge.
     virtual void FinishProcessEdge(ObjectId edgeId) = 0;
-    
+
     virtual ~IEnumStrategy() {}
 };
 
@@ -145,7 +146,7 @@ class IGraphFloat: public virtual IGraph
 public:
     // Get Egde weight of int graph.
     virtual FloatWeightType GetEdgeWeight(ObjectId source, ObjectId target) const = 0;
-    
+
     // Create copy of graph.
     virtual IGraphFloat* MakeCopy(GraphCopyType type) const = 0;
 };
@@ -181,7 +182,7 @@ class IMultiGraphFloat: public virtual IMultiGraph
 public:
     // Get Egde weight of int graph.
     virtual FloatWeightType GetEdgeWeight(ObjectId edgeId) const = 0;
-    
+
     // Create copy of graph.
     virtual IMultiGraphFloat* MakeCopy(GraphCopyType type) const = 0;
 };
