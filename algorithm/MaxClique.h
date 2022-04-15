@@ -25,11 +25,19 @@ public:
 
     virtual const char* GetFullName() const override { return "Max Clique"; };
     virtual const char* GetShortName() const override { return "mc"; };
+
     virtual bool EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const override;
     virtual void SetParameter(const AlgorithmParam* outParamInfo) override;
+
     virtual bool Calculate() override;
+
     virtual IndexType GetResultCount() const override;
     virtual AlgorithmResult GetResult(IndexType index) const override;
+
+    virtual IndexType GetHightlightNodesCount() const override;
+    virtual ObjectId GetHightlightNode(IndexType index) const override;
+    virtual IndexType GetHightlightEdgesCount() const override;
+    virtual NodesEdge GetHightlightEdge(IndexType index) const override;
 
 protected:
     enum struct Algorithm { Heuristic, Hybrid, Exact };
@@ -53,6 +61,7 @@ private:
     std::vector<ColourType> SortByGreedyColours(std::vector<ObjectId> &vertices);
 
     std::vector<ObjectId> m_vertices;
+    mutable std::vector<NodesEdge> m_max_clique_edges;
 
     std::shared_mutex m_max_clique_mtx;
     std::vector<ObjectId> m_max_clique;

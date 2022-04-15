@@ -112,6 +112,19 @@ bool MaxClique::Calculate()
 {
     LogState();
 
+    if (m_param_upper_bound < 1 || m_pGraph->GetNodesCount() == 0)
+    {
+        if (m_param_upper_bound == 0 || m_pGraph->GetNodesCount() == 0)
+        {
+            return false;
+        }
+        else
+        {
+            m_max_clique.emplace_back(m_pGraph->GetNode((IndexType)0));
+            return true;
+        }
+    }
+
     std::unordered_map<ObjectId, IndexType> neighbours_degs;
 
     neighbours_degs.max_load_factor(0.5);
@@ -182,6 +195,48 @@ AlgorithmResult MaxClique::GetResult(IndexType index) const
     }
 
     return res;
+}
+
+IndexType MaxClique::GetHightlightNodesCount() const
+{
+    return m_max_clique.size();
+}
+
+ObjectId MaxClique::GetHightlightNode(IndexType index) const
+{
+    return m_max_clique[index];
+}
+
+IndexType MaxClique::GetHightlightEdgesCount() const
+{
+    if (m_max_clique_edges.empty())
+    {
+        m_max_clique_edges.reserve(m_max_clique.size() * (m_max_clique.size() - 1));
+
+        for (ObjectId v : m_max_clique)
+        {
+            for (ObjectId u : m_max_clique)
+            {
+                if (u != v)
+                {
+                    NodesEdge edge;
+
+                    edge.source = u;
+                    edge.target = v;
+                    edge.edgeId = m_pGraph->GetEdge(u, v);
+
+                    m_max_clique_edges.emplace_back(std::move(edge));
+                }
+            }
+        }
+    }
+
+    return m_max_clique_edges.size();
+}
+
+NodesEdge MaxClique::GetHightlightEdge(IndexType index) const
+{
+    return m_max_clique_edges[index];
 }
 
 void MaxClique::FindMaxClique(Algorithm algorithm_type)
