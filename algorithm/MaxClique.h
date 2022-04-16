@@ -39,13 +39,18 @@ public:
     virtual IndexType GetHightlightEdgesCount() const override;
     virtual NodesEdge GetHightlightEdge(IndexType index) const override;
 
+    virtual void UnitTest() const override;
+
 protected:
     enum struct Algorithm { Heuristic, Hybrid, Exact };
     std::vector<std::pair<Algorithm, std::string>> m_algo_types;
 
     void FindMaxClique(Algorithm algorithm_type);
 
-    IndexType m_param_lower_bound = 0, m_param_upper_bound = -1u;
+    static const IndexType m_index_type_no_value = -1u;
+
+    IndexType m_param_expected_size = m_index_type_no_value;
+    IndexType m_param_lower_bound = 0, m_param_upper_bound = m_index_type_no_value;
     Algorithm m_param_algorithm_type = Algorithm::Heuristic;
 
 private:

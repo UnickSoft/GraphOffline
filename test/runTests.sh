@@ -10,11 +10,12 @@ totalResult=0
 
 while read d; do
     cd "$d"
+
     if [[ $2 != "-debug" ]]
     then
         ./_runTests.sh $1 $2 > /dev/null
     else
-        ./_runTests.sh $1 $2
+        ./_runTests.sh $1 $2 > $d.stdout 2> $d.stderr
     fi
     rc=$?
 
@@ -22,11 +23,14 @@ while read d; do
     if [[ $rc != 0 ]]
     then
         echo " Failed"
+        echo $d.stderr
+        tail $d.stderr
+        echo $d.stdout
+        tail $d.stdout
         totalResult=$rc
     else
         echo " Ok"
     fi
-
     cd ..
 done <<< "$(find . -maxdepth 1 -mindepth 1 -type d)"
 

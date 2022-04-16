@@ -213,7 +213,7 @@ std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(const IGraph* pGra
         }
         catch (const std::invalid_argument &e)
         {
-            std::cerr << e.what() << "\n";
+            LOG_ERROR(e.what());
             return nullptr;
         }
     }

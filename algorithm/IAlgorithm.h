@@ -148,6 +148,8 @@ public:
 
 class IAlgorithm : public IAlgorithmEngine, public IAlgorithmResult
 {
+public:
+    virtual void UnitTest() const = 0;
 };
 
 

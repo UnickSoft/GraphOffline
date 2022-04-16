@@ -13295,3 +13295,5 @@ http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
 <edge source="n3" target="n1"/>
 </graph>
 </graphml>
+
+<!-- MaxClique=17 -->

@@ -8,8 +8,7 @@
 
 #include "MaxClique.h"
 #include "Utils.h"
-
-#include <iostream>
+#include "Logger.h"
 
 #include <algorithm>
 #include <execution>
@@ -48,6 +47,13 @@ bool MaxClique::EnumParameter(IndexType index, AlgorithmParam* outParamInfo) con
             return true;
         }
 
+        case 3:
+        {
+            std::strncpy(outParamInfo->paramName, "expected", ALGO_PARAM_STRING_SIZE); // expected max clique size
+            outParamInfo->type = APT_NUMBER;
+            return true;
+        }
+
         default:
         {
             return false;
@@ -57,7 +63,11 @@ bool MaxClique::EnumParameter(IndexType index, AlgorithmParam* outParamInfo) con
 
 void MaxClique::SetParameter(const AlgorithmParam* outParamInfo)
 {
-    if (std::strncmp(outParamInfo->paramName, "ub", ALGO_PARAM_STRING_SIZE) == 0)
+    if (std::strncmp(outParamInfo->paramName, "expected", ALGO_PARAM_STRING_SIZE) == 0)
+    {
+        m_param_expected_size = std::abs((int)outParamInfo->data.val);
+    }
+    else if (std::strncmp(outParamInfo->paramName, "ub", ALGO_PARAM_STRING_SIZE) == 0)
     {
         m_param_upper_bound = std::abs((int)outParamInfo->data.val);
     }
@@ -93,36 +103,31 @@ void MaxClique::SetParameter(const AlgorithmParam* outParamInfo)
 
 void MaxClique::LogState() const
 {
-    std::cerr << "Find a max clique in the range [" << m_param_lower_bound << ", " << m_param_upper_bound << "]"
-              << " using Algorithm ";
-
+    std::string algo_s;
     for (const auto &algo : m_algo_types)
     {
         if (m_param_algorithm_type == algo.first)
         {
-            std::cerr << algo.second << "\n";
+            algo_s = algo.second;
             break;
         }
     }
 
-    std::cerr << std::endl;
+    LOG_INFO("Find a max clique in the range [" << m_param_lower_bound << ", " << m_param_upper_bound << "]"
+             << " using Algorithm " << algo_s);
 }
 
 bool MaxClique::Calculate()
 {
     LogState();
 
-    if (m_param_upper_bound < 1 || m_pGraph->GetNodesCount() == 0)
+    if (m_param_upper_bound < 2 || m_pGraph->GetNodesCount() == 0)
     {
-        if (m_param_upper_bound == 0 || m_pGraph->GetNodesCount() == 0)
-        {
-            return false;
-        }
-        else
+        if (m_param_upper_bound != 0 && m_pGraph->GetNodesCount() != 0)
         {
             m_max_clique.emplace_back(m_pGraph->GetNode((IndexType)0));
-            return true;
         }
+        return true;
     }
 
     std::unordered_map<ObjectId, IndexType> neighbours_degs;
@@ -159,7 +164,7 @@ bool MaxClique::Calculate()
         if (m_overall_max_clique_size != m_param_upper_bound)
         {
             m_upper_bound_reached = false;
-            m_max_clique_owner_thread_id = -1u;
+            m_max_clique_owner_thread_id = m_index_type_no_value;
             m_vertices = std::move(vertices_copy);
             FindMaxClique(Algorithm::Exact);
         }
@@ -169,7 +174,18 @@ bool MaxClique::Calculate()
         FindMaxClique(m_param_algorithm_type);
     }
 
-    return m_max_clique.size() >= m_param_lower_bound && m_max_clique.size() <= m_param_upper_bound;
+    if (m_max_clique.size() != m_param_expected_size && m_param_expected_size != m_index_type_no_value)
+    {
+        LOG_WARNING("Max Clique size " << m_max_clique.size() << " is "
+                    << (m_max_clique.size() < m_param_expected_size ? "less" : "greater")
+                    << " than expected " << m_param_expected_size);
+    }
+    else if (m_max_clique.size() < m_param_lower_bound)
+    {
+        LOG_INFO("No Max Clique found for a lower bound of " << m_param_lower_bound);
+    }
+
+    return not m_max_clique.empty();
 }
 
 IndexType MaxClique::GetResultCount() const
@@ -237,6 +253,32 @@ IndexType MaxClique::GetHightlightEdgesCount() const
 NodesEdge MaxClique::GetHightlightEdge(IndexType index) const
 {
     return m_max_clique_edges[index];
+}
+
+void MaxClique::UnitTest() const
+{
+    std::ostringstream oss;
+
+    for (ObjectId v : m_max_clique)
+    {
+        for (ObjectId u : m_max_clique)
+        {
+            if (u != v)
+            {
+                if (not m_pGraph->AreNodesConnected(v, u))
+                {
+                    oss << "Invalid Clique! No edge between " << v << " and " << u;
+                    throw std::runtime_error(oss.str().c_str());
+                }
+            }
+        }
+    }
+
+    if (m_max_clique.size() < m_param_expected_size && m_param_expected_size != m_index_type_no_value)
+    {
+        oss << "Max Clique size " << m_max_clique.size() << " is less than expected " << m_param_expected_size;
+        throw std::runtime_error(oss.str().c_str());
+    }
 }
 
 void MaxClique::FindMaxClique(Algorithm algorithm_type)

@@ -12,6 +12,9 @@
 #include "CGIProcessor.h"
 #include "Logger.h"
 
+// Hardcode debug flag.
+bool bDebug = false;
+
 #define EMSCRIPT_DELEMITER "<s\\emscript_split\\s>"
 
 #ifndef EMSCRIPT
@@ -20,8 +23,6 @@ int main(int argc, char *argv[])
 {
     int res = 0;
 
-    // Hardcode debug flag.
-    bool bDebug = false;
     for (int i = 1; i < argc; i++)
     {
         if (strcmp(argv[i], "-debug") == 0)

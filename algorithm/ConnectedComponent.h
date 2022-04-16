@@ -20,7 +20,7 @@ class ConnectedComponent : public BaseAlgorithm
 public:
     ConnectedComponent ();
     virtual ~ConnectedComponent ();
-    
+
     // Long name of algoright: DijkstraShortPath.
     virtual const char* GetFullName() const  override {return "Connected component";};
     // Short name of algorithm: dsp
@@ -35,12 +35,14 @@ public:
     virtual IndexType GetResultCount() const override;
     // Get result of index. Algorithms can have complex result.
     virtual AlgorithmResult GetResult(IndexType index) const override;
-    
+
+    virtual void UnitTest() const override {}
+
 protected:
-    
+
     bool FindWeakComponent();
     bool FindStrongComponent();
-    
+
     IntWeightType m_nConnectedCompCount;
     bool m_bStrongComponent;
 };

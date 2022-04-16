@@ -17,7 +17,7 @@ template<class WeightTypeInterface, typename WeightType> class MaxFlowPushRelabe
 public:
     MaxFlowPushRelabel ();
     virtual ~MaxFlowPushRelabel () = default;
-    
+
     // Long name of algoright: DijkstraShortPath.
     virtual const char* GetFullName() const override {return "MaxFlowPushRelable";};
     // Short name of algorithm: dsp
@@ -42,7 +42,9 @@ public:
     virtual bool GetEdgeProperty(const NodesEdge& object, IndexType properyIndex,
       IndexType resultEdgeIndex, AlgorithmResult* param) const override;
     virtual const char* GetEdgePropertyName(IndexType index) const override;
-    
+
+    virtual void UnitTest() const override {}
+
 protected:
 
     void findFlowValues(IndexType drainIndex, IndexType sourceIndex, std::vector<std::vector<WeightType>>& origin_adjacencyMatrix, std::vector<std::vector<WeightType>>& adjacencyMatrix);
@@ -51,16 +53,16 @@ protected:
     ObjectId _source;
     ObjectId _drain;
     const WeightTypeInterface*  _pGraph;
-    
+
     struct EdgeFlowValue
     {
         NodesEdge edge;
         bool backToFront = false;
         WeightType value = (WeightType)0;
     };
-    
+
     std::vector<EdgeFlowValue> _flowValue;
-    
+
     WeightType m_result;
 };
 

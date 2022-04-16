@@ -4,28 +4,24 @@ isFaild=0;
 
 rm *.test &>/dev/null
 
-while IFS=$' ' read -r command xmlFile report; do
+while IFS=$' ' read -r xmlFile lb ub algo expected report; do
+    if [ "$2" == "-debug" ]; then
+        echo "$exePath -mc ${xmlFile} -lb ${lb} -ub ${ub} -algo ${algo} -expected ${expected} -report ${report}"
+    fi
 
-  if [ "$2" == "-debug" ]; then
-    echo "$exePath ${command} ./${xmlFile} -report ${report} > ${xmlFile}.test"
-  fi
+    $exePath -debug -mc ${xmlFile} -lb ${lb} -ub ${ub} -algo ${algo} -expected ${expected} -report ${report}
 
-  $exePath -debug ${command} ./${xmlFile} -report ${report} > ${xmlFile}.test
-
-  if diff --ignore-all-space ${xmlFile}.res ${xmlFile}.test >/dev/null ; then
-    continue;
-  else
-    isFaild=1;
-    echo "${xmlFile} failed."
-    break;
-  fi
+    if [ $? -eq 1 ]; then
+        echo "${xmlFile} OK"
+    else
+        isFaild=1;
+        echo "${xmlFile} KO"
+    fi
 done < "testList.txt"
 
 if [ $isFaild -eq 1 ]; then
-  echo "Failed";
-  exit 1;
+    echo "Test Failed";
+    exit 1;
 else
-  echo "OK"
-  rm *.test &>/dev/null
+    echo "Test Passed"
 fi
-

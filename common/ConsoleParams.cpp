@@ -79,6 +79,7 @@ bool ConsoleParams::ProcessConsoleParams(const std::vector<String>& params)
                     if (algorithm)
                     {
                         res = algorithm->Calculate();
+
                         ReporterPtr reporter = CreateReporter(commands.count("report") > 0 ? commands["report"] : "");
 
                         if (reporter)
@@ -92,6 +93,20 @@ bool ConsoleParams::ProcessConsoleParams(const std::vector<String>& params)
                                 reporter->GetReport(algorithm.get(), pGraph, pBuffer, neededSize);
                                 report = pBuffer;
                                 delete[] pBuffer;
+
+                                if (bDebug && res)
+                                {
+                                    try
+                                    {
+                                        algorithm->UnitTest();
+                                        return true;
+                                    }
+                                    catch (const std::exception &e)
+                                    {
+                                        LOG_ERROR("Unit testing of " << algorithm->GetFullName() << " failed: " << e.what());
+                                        return false;
+                                    }
+                                }
                             }
                             else
                             {

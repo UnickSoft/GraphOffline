@@ -36,7 +36,7 @@ public:
 	//	SUPPORTS MULTI GRAPH
 	virtual bool IsSupportMultiGraph() const override { return true; }
 
-	//	GET ALL THE PARAMETERS 
+	//	GET ALL THE PARAMETERS
 	virtual bool EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const override;
 
 	virtual void SetParameter(const AlgorithmParam* param) override;
@@ -64,6 +64,8 @@ public:
 
 	//	SET GRAPH
 	virtual void SetGraph(const IGraph* pGraph) override;
+
+    virtual void UnitTest() const override {}
 };
 
 #include "BellmanFordImpl.h"

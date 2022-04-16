@@ -19,7 +19,7 @@ template<class WeightTypeInterface, class WeightType> void BellmanFord<WeightTyp
 
 		temp.push_back(destination);
 		temp.push_back(prev);
-		
+
 		while(prev != m_source)
 		{
 			prev = previous_vertex[prev];
