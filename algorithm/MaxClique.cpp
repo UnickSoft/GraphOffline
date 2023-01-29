@@ -54,6 +54,13 @@ bool MaxClique::EnumParameter(IndexType index, AlgorithmParam* outParamInfo) con
             return true;
         }
 
+        case 4:
+        {
+          std::strncpy(outParamInfo->paramName, "threads", ALGO_PARAM_STRING_SIZE); // expected max clique size
+          outParamInfo->type = APT_NUMBER;
+          return true;
+        }
+
         default:
         {
             return false;
@@ -92,6 +99,10 @@ void MaxClique::SetParameter(const AlgorithmParam* outParamInfo)
             std::string str_err = std::string(outParamInfo->data.str) + " no such algorithm";
             throw std::invalid_argument(str_err.c_str());
         }
+    } 
+    else if (std::strncmp(outParamInfo->paramName, "threads", ALGO_PARAM_STRING_SIZE) == 0)
+    {
+      m_num_threads = std::abs((int)outParamInfo->data.val);
     }
 
     if (m_param_lower_bound > m_param_upper_bound) {
@@ -114,7 +125,8 @@ void MaxClique::LogState() const
     }
 
     LOG_INFO("Find a max clique in the range [" << m_param_lower_bound << ", " << m_param_upper_bound << "]"
-             << " using Algorithm " << algo_s);
+             << " using Algorithm " << algo_s << " using " << m_num_threads
+             << " Threads");
 }
 
 bool MaxClique::Calculate()
@@ -283,12 +295,10 @@ void MaxClique::UnitTest() const
 
 void MaxClique::FindMaxClique(Algorithm algorithm_type)
 {
-    const std::uint32_t num_threads = std::thread::hardware_concurrency() * THREADS_PER_CORE;
-
     std::shared_mutex thread_mtx;
     std::condition_variable_any thread_pool;
-    std::vector<std::thread> threads(num_threads);
-    std::vector<bool> available(num_threads, true);
+    std::vector<std::thread> threads(m_num_threads);
+    std::vector<bool> available(m_num_threads, true);
 
     std::unordered_set<ObjectId> pruned;
     pruned.max_load_factor(0.5);
@@ -318,7 +328,7 @@ void MaxClique::FindMaxClique(Algorithm algorithm_type)
             current_max_clique_size = m_overall_max_clique_size;
         }
 
-        for (std::uint32_t thread_id = 0; thread_id < num_threads
+        for (std::uint32_t thread_id = 0; thread_id < m_num_threads
                  && not m_vertices.empty() && not m_upper_bound_reached; ++thread_id)
         {
             if (available[thread_id])

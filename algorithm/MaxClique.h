@@ -74,6 +74,8 @@ private:
     IndexType m_overall_max_clique_size = 0;
     std::uint32_t m_max_clique_owner_thread_id = -1u;
     std::atomic_bool m_upper_bound_reached = false;
+
+    std::uint32_t m_num_threads = std::thread::hardware_concurrency() * THREADS_PER_CORE;
 };
 
 #endif /* MAX_CLIQUE_HPP */
