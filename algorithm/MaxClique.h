@@ -14,6 +14,7 @@
 #include "BaseAlgorithm.h"
 #include "IGraph.h"
 
+#include <ciso646>
 #include <atomic>
 #include <shared_mutex>
 

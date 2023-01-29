@@ -182,10 +182,20 @@ std::shared_ptr<IAlgorithm> AlgorithmFactory::CreateAlgorithm(const IGraph* pGra
                     }
                     case APT_NUMBER:
                     {
-                        const char *str_num = map.at(outParamInfo.paramName).Locale().Data();
+                        // const char *str_num =
+                        //      map.at(outParamInfo.paramName).Locale().Data();
 
+#define LOCAL_BUFF_SIZE 11
+                        char str_num[LOCAL_BUFF_SIZE + 1];
+                        String param = map.at(outParamInfo.paramName);
                         int i = 0;
-                        while (str_num[i] != '\0' && i < 11)
+                        while (i < param.Count() && i < LOCAL_BUFF_SIZE) {
+                          str_num[i] = param.GetAt(i);
+                          ++i;
+                        }
+                        str_num[i] = '\0';
+                        i = 0;
+                        while (str_num[i] != '\0' && i < LOCAL_BUFF_SIZE)
                         {
                             assert(std::isdigit(str_num[i]));
                             i++;
