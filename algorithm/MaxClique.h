@@ -53,7 +53,7 @@ protected:
 
     IndexType m_param_expected_size = m_index_type_no_value;
     IndexType m_param_lower_bound = 0, m_param_upper_bound = m_index_type_no_value;
-    Algorithm m_param_algorithm_type = Algorithm::Heuristic;
+    Algorithm m_param_algorithm_type = Algorithm::Exact;
 
 private:
     using ColourType = IndexType;
@@ -76,7 +76,7 @@ private:
     std::uint32_t m_max_clique_owner_thread_id = -1u;
     std::atomic_bool m_upper_bound_reached = false;
 
-    std::uint32_t m_num_threads = std::thread::hardware_concurrency() * THREADS_PER_CORE;
+    std::uint32_t m_num_threads = 1;
 };
 
 #endif /* MAX_CLIQUE_HPP */

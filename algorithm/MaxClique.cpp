@@ -241,21 +241,28 @@ IndexType MaxClique::GetHightlightEdgesCount() const
     if (m_max_clique_edges.empty())
     {
         m_max_clique_edges.reserve(m_max_clique.size() * (m_max_clique.size() - 1));
+        std::unordered_set<ObjectId> processed;
 
         for (ObjectId v : m_max_clique)
         {
             for (ObjectId u : m_max_clique)
             {
-                if (u != v)
+                if (!m_pGraph->IsEgdeExists(u, v))
                 {
-                    NodesEdge edge;
-
-                    edge.source = u;
-                    edge.target = v;
-                    edge.edgeId = m_pGraph->GetEdge(u, v);
-
-                    m_max_clique_edges.emplace_back(std::move(edge));
+                  continue;
                 }
+
+                auto edgeId = m_pGraph->GetEdge(u, v);
+                if (processed.find(edgeId) != processed.end()) {
+                  continue;
+                }
+                NodesEdge edge;
+
+                edge.source = u;
+                edge.target = v;
+                edge.edgeId = edgeId;
+
+                m_max_clique_edges.emplace_back(std::move(edge));
             }
         }
     }
