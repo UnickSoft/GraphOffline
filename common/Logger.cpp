@@ -24,7 +24,7 @@ Logger::~Logger()
     {
         fprintf(stderr, "%s", m_outputStream.str().c_str());
         fflush(stderr);
-        
+
         if (!m_logFilename.empty())
         {
             std::ofstream logFile (m_logFilename);
@@ -60,15 +60,14 @@ std::ostream& operator<< (std::ostream& stream, const AlgorithmResult& result)
 {
     switch (result.type)
     {
-        case ART_UNKNOWN:   stream << "Unknown"; break;
-        case ART_INT:       stream << result.nValue; break;
-        case ART_FLOAT:     stream << result.fValue; break;
-        case ART_STRING:    stream << result.strValue; break;
+        case ART_UNKNOWN:    stream << "Unknown"; break;
+        case ART_INT:        stream << result.nValue; break;
+        case ART_FLOAT:      stream << result.fValue; break;
+        case ART_STRING:     stream << result.strValue; break;
+        case ART_NODE_ID:    stream << "Node(" << result.nodeId << ")"; break;
         case ART_NODES_PATH: stream << "Nodes path"; break;
         case ART_EDGES_PATH: stream << "Edges path"; break;
         default: assert(!"Wrong value");
     }
     return stream;
 }
-
-

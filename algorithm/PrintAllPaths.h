@@ -20,7 +20,7 @@ protected:
 	IndexType GetResultCountUtility() const;		// UTITLITY FUNCTION THAT COUNTS NUMBER OF ELEMENTS IN RESULT
 
 public:
-	PrintAllPaths();	
+	PrintAllPaths();
 
 	virtual ~PrintAllPaths() = default;
 
@@ -32,7 +32,7 @@ public:
 	//	RETURNS SHORT NAME OF THE ALGORITHM
 	virtual const char* GetShortName() const override { return "prnpaths"; }
 
-	//	GET ALL THE PARAMETERS 
+	//	GET ALL THE PARAMETERS
 	virtual bool EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const override;
 
 	virtual void SetParameter(const AlgorithmParam* param) override;
@@ -48,15 +48,18 @@ public:
 
 	//	GETS THE NUMBER OF NODES TO BE HIGHLIGHTED
 	virtual IndexType GetHightlightNodesCount() const override;
-	
+
 	//	RETURNS THE OBJECTID OF NODE TO BE HIGHLIGHTED
 	virtual ObjectId GetHightlightNode(IndexType index) const override;
-	
+
 	//	GETS THE NUMBER OF EDGES TO BE HIGHLIGHTED
 	virtual IndexType GetHightlightEdgesCount() const override;
-	
+
 	//	RETURNS THE EDGE TO BE HIGHLIGHTED
 	virtual NodesEdge GetHightlightEdge(IndexType index) const override;
+
+    virtual void UnitTest() const override {}
+
 };
 
 #endif

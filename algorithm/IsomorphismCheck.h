@@ -21,7 +21,7 @@ class IsomorphismCheck : public BaseAlgorithm
 public:
     IsomorphismCheck();
     virtual ~IsomorphismCheck();
-    
+
     // Long name of algoright: DijkstraShortPath.
     virtual const char* GetFullName() const  override {return "Isomorphism Check";};
     // Short name of algorithm: dsp
@@ -45,7 +45,9 @@ public:
     IndexType GetHightlightEdgesCount() const override;
     // Hightlight edge.
     NodesEdge GetHightlightEdge(IndexType index) const override;
-    
+
+    virtual void UnitTest() const override {}
+
 protected:
 
     GraphPtr GetSubGraph(const std::unordered_set<ObjectId> & nodesSet);

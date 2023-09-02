@@ -17,7 +17,7 @@ class GraphLoadTest : public BaseAlgorithm
 public:
     GraphLoadTest ();
     virtual ~GraphLoadTest ();
-    
+
     // Long name of algoright: DijkstraShortPath.
     virtual const char* GetFullName() const  override {return "Graph Save/Load Test";};
     // Short name of algorithm: dsp
@@ -40,7 +40,9 @@ public:
     bool IsSupportMultiGraph() const override;
     // Set graph
     void SetGraph(const IGraph* pGraph) override;
-    
+
+    virtual void UnitTest() const override {}
+
 protected:
 
     std::shared_ptr<IMultiGraph> CreateMultiGraph(const IGraph* pGraph);

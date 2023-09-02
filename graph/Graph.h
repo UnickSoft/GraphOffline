@@ -9,47 +9,49 @@
 #include <variant>
 #include <functional>
 
+extern bool bDebug;
+
 /**
  * Main Graph class.
  */
 class Graph: public virtual IGraph
 {
 public:
-    
+
     struct Node;
     struct Edge;
-    
+
     using EdgePtr    = std::shared_ptr<Edge>;
     using WeightType = std::variant<IntWeightType, FloatWeightType>;
-    
+
     // Node sturct
     struct Node
     {
         String id;
         ObjectId privateId;
         bool fake;
-        
+
         Node(const String& id, IndexType privateId, bool fake)
         {
             this->id = id;
             this->privateId = privateId;
             this->fake = fake;
         }
-        
+
         const std::vector<Node*>& GetTargets() const
         {
             return targets;
         }
-        
+
         ObjectId GetEdge(IndexType index) const
         {
             return edges[index];
         }
-        
+
         void RemoveEdge(ObjectId edgeId)
         {
             auto removeEdgesPosition = std::find(edges.begin(), edges.end(), edgeId);
-            
+
             if (removeEdgesPosition != edges.end())
             {
                 IndexType index = IndexType(removeEdgesPosition - edges.begin());
@@ -57,7 +59,7 @@ public:
                 targets.erase(targets.begin() + index);
             }
         }
-        
+
         void AddToTargets(Node* node, ObjectId edgeId)
         {
             auto findNode = std::find(targets.begin(), targets.end(), node);
@@ -67,12 +69,12 @@ public:
                 edges.push_back(edgeId);
             }
         }
-        
+
     protected:
         std::vector<Node*> targets;
         std::vector<ObjectId> edges;
     };
-    
+
     class NodePtr : public std::shared_ptr<Node>
     {
     public:
@@ -84,7 +86,7 @@ public:
             return this->get() == node2;
         }
     };
-    
+
     // Edge struct
     struct Edge
     {
@@ -94,7 +96,7 @@ public:
         bool  direct;
         WeightType weight;
         ObjectId privateId;
-        
+
         Edge(const String& id, NodePtr source, NodePtr target, bool direct, const WeightType& weight, ObjectId privateId)
         {
             this->id = id;
@@ -104,7 +106,7 @@ public:
             this->weight = weight;
             this->privateId = privateId;
         }
-        
+
         template<typename WeightTypeTmpl> WeightTypeTmpl GetWeight() const
         {
             if (std::holds_alternative<WeightTypeTmpl>(weight))
@@ -113,7 +115,7 @@ public:
                 if (pointer)
                   return *pointer;
             }
-            
+
             if (std::is_same<WeightTypeTmpl, IntWeightType>::value)
             {
                 auto* pointer = std::get_if<FloatWeightType>(&weight);
@@ -126,20 +128,20 @@ public:
                 if (pointer)
                   return *pointer;
             }
-            
+
             return WeightTypeTmpl();
         }
     };
-    
+
     Graph(void);
     virtual ~Graph(void);
-    
+
     // Load from GraphML format.
     bool LoadFromGraphML(const char * pBuffer, uint32_t bufferSize);
-    
+
     // Clear Graph.
     void Clear();
-    
+
     // IGraph
     // Get Nodes count.
     virtual IndexType GetNodesCount() const override;
@@ -174,30 +176,30 @@ public:
     virtual void RemoveEdge(ObjectId source, ObjectId target) override;
     // How many nodes are source for this node.
     virtual IndexType GetSourceNodesNumber(ObjectId source) override;
-    
+
     // Add edge
     virtual bool AddEdge(ObjectId source, ObjectId target, bool direct, const FloatWeightType& weight) override;
-    
+
     // Add node
     virtual ObjectId AddNode(bool fake) override;
-    
+
     // Return graph struct
     virtual const char* PrintGraph() override;
 
     // Find Node by Id
     NodePtr FindNode(const String& id) const;
-    
+
     // Fake node
     bool IsFakeNode(ObjectId source) override;
-    
+
     // Has multi graph
     bool IsMultiGraph() const override;
-    
+
     ObjectId GetEdge(ObjectId source, ObjectId target) const override;
 
     // Remove node and all connected edges.
     void RemoveNode(ObjectId source) override;
-    
+
     WeightType* GetEdgeWeight(ObjectId source, ObjectId target, const IndexType & index = 0) const;
 
     template<typename WeightTypeTmpl> WeightTypeTmpl GetEdgeWeight(ObjectId source, ObjectId target, const IndexType & index = 0) const
@@ -205,10 +207,10 @@ public:
         auto edge = FindEdge(source, target, index);
         return edge ? edge->GetWeight<WeightTypeTmpl>() : WeightTypeTmpl();
     }
-    
+
     // Create copy of graph.
     virtual Graph* MakeGraphCopy(GraphCopyType type, const std::function<Graph*()> & createFunction = std::function<Graph*()>()) const;
-    
+
     // Get edge of this graph.
     ObjectId GetEdge(IndexType index) const override;
 
@@ -217,33 +219,33 @@ public:
 
     // Edge connected nodes
     NodePair GetEdgeData(ObjectId objectId) const override;
-    
+
 public:
 
     ObjectId AddNode(const String& idNode, IndexType privateId, bool fake);
     EdgePtr AddEdge(const String& id, IndexType sourceId, IndexType targetId, bool direct, const WeightType& weight, IndexType privateId);
-    
+
 protected:
 
     // Create own instance
     virtual Graph* CreateGraph() const;
-    
+
     // Find Node by id in vector.
     template <typename T> T FindObject(const String& id, const std::vector<T>& nodes)  const;
     template <typename T> T FindObject(ObjectId objectId, const std::vector<T>& nodes) const;
-    
+
     // Find element in vector.
     template <typename T> bool Has(const std::vector<T>& vector, const T& value) const;
     template <typename T1, typename T2> bool Has(const std::vector<T1>& vector, const T2& value) const;
-    
+
     // Is valid Object id.
     bool IsValidNodeId(ObjectId id, NodePtr& ptr) const;
-    
+
     bool IsValidEdgeId(ObjectId id, EdgePtr& ptr) const;
-    
+
     // Is edge exists.
     EdgePtr FindEdge(ObjectId source, ObjectId target, const IndexType & index = 0) const;
-    
+
     // Simple make copy.
     Graph* MakeGraphCopy(const std::function<Graph*()> & createFunction) const;
     // Make current graph undirected.
@@ -252,40 +254,38 @@ protected:
     Graph* MakeGraphInverse(const std::function<Graph*()> & createFunction) const;
     // Remove self loop.
     Graph* MakeGraphRemoveSelfLoop(const std::function<Graph*()> & createFunction) const;
-    
+
     bool IsDouble(double value);
-    
+
     // Run DFS and call callbacks.
     void _ProcessDFS(IEnumStrategy* pEnumStrategy, Node* node) const;
-    
+
     // Remove edge from Graph.
     void RemoveEdge(EdgePtr edge);
-    
+
     EdgePtr GetEdgeById(ObjectId edgeId);
-    
+
     const EdgePtr GetEdgeById(ObjectId edgeId) const;
-    
+
     typedef std::vector<NodePtr> NodePtrVector;
     typedef std::vector<EdgePtr> EdgePtrVector;
-    
+
     IndexType GetNextId();
-    
+
     void CopyPropertiesTo(Graph* pGraph) const;
 
     // Update some state after private creation.
     void ForceUpdateStates();
-    
+
     // List of graph.
     NodePtrVector m_nodes;
     EdgePtrVector m_edges;
-    
+
     // ATTANTION: If you add new fields please update CopyProperties.
     EdgeWeightType m_weightType;
     static IndexType m_autoIncIndex;
-    
+
     bool m_hasDirected;
     bool m_hasUndirected;
     bool m_isMultigraph;
 };
-
-

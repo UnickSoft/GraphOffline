@@ -17,7 +17,7 @@ template<class WeightTypeInterface, typename WeightType> class DijkstraShortPath
 public:
     DijkstraShortPath ();
     virtual ~DijkstraShortPath ();
-    
+
     // Long name of algoright: DijkstraShortPath.
     virtual const char* GetFullName() const override {return "DijkstraShortPath";}
     // Short name of algorithm: dsp
@@ -47,14 +47,16 @@ public:
     // Get property.
     virtual bool GetNodeProperty(ObjectId object, IndexType index, AlgorithmResult* param) const override;
     virtual const char* GetNodePropertyName(IndexType index) const override;
-    
+
+    virtual void UnitTest() const override {}
+
 protected:
     ObjectId m_source;
     ObjectId m_target;
     const WeightTypeInterface*  m_pGraph;
     std::vector<ObjectId> m_path;
     std::unordered_map<ObjectId, WeightType> m_lowestDistance;
-    
+
     WeightType m_result;
 };
 

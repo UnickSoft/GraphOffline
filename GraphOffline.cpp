@@ -1,9 +1,9 @@
 // GraphOffline.cpp : Defines the entry point for the console application.
 //
 
-#include <stdio.h> 
-#include <stdlib.h> 
-#include <memory.h> 
+#include <stdio.h>
+#include <stdlib.h>
+#include <memory.h>
 
 #include "Graph.h"
 #include "FileReader.h"
@@ -12,6 +12,9 @@
 #include "CGIProcessor.h"
 #include "Logger.h"
 
+// Hardcode debug flag.
+bool bDebug = false;
+
 #define EMSCRIPT_DELEMITER "<s\\emscript_split\\s>"
 
 #ifndef EMSCRIPT
@@ -19,9 +22,7 @@
 int main(int argc, char *argv[])
 {
     int res = 0;
-    
-    // Hardcode debug flag.
-    bool bDebug = false;
+
     for (int i = 1; i < argc; i++)
     {
         if (strcmp(argv[i], "-debug") == 0)
@@ -38,12 +39,12 @@ int main(int argc, char *argv[])
     {
         Logger::SetEnableLog(Logger::LE_ERROR);
     }
-    
+
     char * requestMethod = getenv("REQUEST_METHOD");
-    
+
     std::vector<String> params;
     ConsoleParams consoleParams;
-    
+
     if (requestMethod == NULL)
     {
         for (int i = 1 + (bDebug ? 1 : 0); i < argc; i++)
@@ -51,17 +52,17 @@ int main(int argc, char *argv[])
             params.push_back(argv[i]);
         }
     }
-    
+
     if (requestMethod)
     {
         printf("Content-Type: text/html\n\n");
-        
+
         if (strstr(requestMethod, "POST"))
         {
             params = CGIProcessor().GetRequestParams();
         }
     }
-    
+
     {
         LOG_INFO("Input parameters");
         for (String& str : params)
@@ -69,10 +70,10 @@ int main(int argc, char *argv[])
             LOG_INFO(str.Locale().Data());
         }
     }
-    
+
     res = consoleParams.ProcessConsoleParams(params);
     printf("%s\n", consoleParams.GetReport().UTF8().Data());
-    
+
     return res;
 }
 

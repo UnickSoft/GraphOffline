@@ -18,7 +18,7 @@ class HamiltonianLoop : public BaseAlgorithm
 public:
     HamiltonianLoop (bool loop);
     virtual ~HamiltonianLoop ();
-    
+
     // Long name of algoright: DijkstraShortPath.
     virtual const char* GetFullName() const override {return (m_path ? "Hamiltonian Path" : "Hamiltonian Loop");};
     // Short name of algorithm: dsp
@@ -42,20 +42,21 @@ public:
     // Get propery
     virtual bool GetNodeProperty(ObjectId object, IndexType index, AlgorithmResult* param) const override;
     virtual const char* GetNodePropertyName(IndexType index) const override;
-    
+
+    virtual void UnitTest() const override {}
+
 private:
 
     bool _FindHamiltonianLoopRecursive(int currentNodeNumber, const std::vector<std::vector<bool>> & adjacencyMatrix, std::vector<int> & path, std::vector<int> & step);
-    
+
     void FillLoop(const std::vector<int> & path, const IGraph* currentGraph, IndexType nodesCount);
-    
+
     // Search loop.
     const bool m_path;
-    
+
     // Has or not EulerLoop.
     bool m_bResult;
     std::vector<ObjectId> m_HamiltonianLoop;
-    
+
     int m_startNode = 0;
 };
-

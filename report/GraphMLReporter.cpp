@@ -72,61 +72,76 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
             return xmlGraphNodePropertyFloat;
         }
         };
-        
+
 
         std::string result = xmlStartShort;
         result += xmlGraphHeaderMask;
-        
+
         char strBuffer[MAX_NODE_CHAR] = {0};
         sprintf(strBuffer, xmlResultHead, pAlgorithm->GetResultCount());
         result += strBuffer;
-        
+
         // Add result.
         for (IndexType i = 0; i < pAlgorithm->GetResultCount(); i++)
         {
             AlgorithmResult res = pAlgorithm->GetResult(i);
-            
+
             sprintf(strBuffer, xmlResultValueHead, res.type);
-            
+
             result += strBuffer;
-            
+
             switch (res.type) {
                 case ART_INT:
+                {
                     sprintf(strBuffer, "%d", res.nValue);
                     break;
+                }
                 case ART_FLOAT:
+                {
                     sprintf(strBuffer, "%f", res.fValue);
                     break;
+                }
                 case ART_STRING:
+                {
                     sprintf(strBuffer, "%s", res.strValue);
                     break;
+                }
                 case ART_NODES_PATH:
                 case ART_EDGES_PATH:
+                {
                     sprintf(strBuffer, "%s", res.strValue);
                     break;
-                default:
-                    strBuffer[0] = 0;
+                }
+                case ART_NODE_ID:
+                {
+                    pGraph->GetNodeStrId(res.nodeId, res.strValue, ALGO_RESULT_STRING_SIZE);
+                    sprintf(strBuffer, "%s", res.strValue);
                     break;
+                }
+                default:
+                {
+                    strBuffer[0] = 0;
+                }
             }
             result += strBuffer;
-            
+
             result += xmlResultValueFooter;
         }
-        
+
         result += xmlResultFooter;
-        
+
         // Add nodes. <node>
         std::map<ObjectId, bool> hightlightNodes;
         for (int i = 0; i < pAlgorithm->GetHightlightNodesCount(); i++)
         {
             hightlightNodes[pAlgorithm->GetHightlightNode(i)] = true;
         }
-    
+
         for (int i = 0; i < pGraph->GetNodesCount(); i++)
         {
             char* strNodeStrId[MAX_ID] = {0};
             pGraph->GetNodeStrId(pGraph->GetNode(i), (char *)strNodeStrId, MAX_ID);
-            
+
             char graphNode[MAX_NODE_CHAR]  = {0};
             sprintf(graphNode, xmlGraphNodeStart, strNodeStrId);
             result += graphNode;
@@ -139,15 +154,15 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
                 result += graphNode;
                 index++;
             }
-            
+
             // Hightlight or not
             sprintf(graphNode, xmlGraphNodeHightlight, (hightlightNodes.count(pGraph->GetNode(i)) > 0));
             result += graphNode;
-            
+
             result += xmlGraphNodeEnd;
         }
-        
-        
+
+
         // Add edges. <edge>
         for (int i = 0; i < pAlgorithm->GetHightlightEdgesCount(); i++)
         {
@@ -167,13 +182,13 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
                 pGraph->GetNodeStrId(edge.target, (char *)strSourceNodeId, MAX_ID);
                 pGraph->GetNodeStrId(edge.source, (char *)strTargetNodeId, MAX_ID);
             }
-            
+
             if (hasEdgeId)
             {
                 pGraph->GetEdgeStrId(edge.edgeId, (char *)strEdgeId, MAX_ID);
                 hasEdgeId = strEdgeId[0] != 0;
             }
-            
+
             AlgorithmResult property;
             if (pAlgorithm->GetEdgeProperty(edge, 0, i, &property) && property.type != ART_UNKNOWN)
             {
@@ -187,7 +202,7 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
                     sprintf(graphEdge, xmlGraphEdgeStart, strSourceNodeId, strTargetNodeId);
                 }
                 result += graphEdge;
-                
+
                 // Low dist
                 IndexType index = 0;
                 while (pAlgorithm->GetEdgeProperty(edge, index, i, &property) && property.type != ART_UNKNOWN)
@@ -203,7 +218,7 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
                     result += graphEdge;
                     index++;
                 }
-                
+
                 result += xmlGraphEdgeEnd;
             }
             else
@@ -220,19 +235,18 @@ template <typename WeightType> IndexType GraphMLReporter::GetReport(const IAlgor
                 result += graphEdge;
             }
         }
-        
+
         result += xmlGraphFooter;
         result += xmlEnd;
-        
+
         res = (IndexType)(result.length() + 1);
-        
+
         if (bufferSize >= res)
         {
             strncpy(buffer, result.c_str(), result.length());
             buffer[result.length()] = '\0';
         }
     }
-    
+
     return res;
 }
-

@@ -7,7 +7,7 @@
     #include <malloc.h>
 #endif
 #include <string.h>
-   
+
 #if defined(WIN32) || defined(WIN64)
   #define NOMINMAX
   #include <Windows.h>
@@ -29,11 +29,11 @@
 
     String();
     String(const char    * line, size_t len = 0);
-    String(const wchar_t * line, size_t len = 0);    
+    String(const wchar_t * line, size_t len = 0);
     ~String();
 
     String(const String & copy);
-    void operator=(const String & copy);                                        
+    void operator=(const String & copy);
 
     // Oleg fix: 2010-05-24
     bool IsSet() const;
@@ -49,7 +49,7 @@
     String & FromUCS4  (const Char32  * str, size_t len = 0);
     String & FromLocale(const char    * str, size_t len = 0);
     String & FromWChar (const wchar_t * str, size_t len = 0);
-                                  
+
     //
     const Buffer8  Latin() const;
     const Buffer8  UTF8()  const;
@@ -83,17 +83,17 @@
     String & Trim();
     String & LTrim();
     String & RTrim();
-    
+
     String & ToUpper();
     String & ToLower();
-    
+
     String & ConvertChars(Char32(*pFunc)(Char32));
 
     String & Append(const String & line);
     String & Insert(size_t pos, const String & line);
 
     String   operator+ (const String & str) const;
-    inline String & operator+=(const String & str);
+    String & operator+=(const String & str);
 
     bool operator==(const String & str) const;
     bool operator!=(const String & str) const;
@@ -104,7 +104,7 @@
 
   private:
     static void * Malloc(size_t size);
-    static void   Free(void * pMem);                     
+    static void   Free(void * pMem);
     static void * MemCpy(Char8 * pDest, const Char8 * pSrc, size_t count)
     {
       return memcpy((void *)pDest, (void *)pSrc, count);
@@ -119,7 +119,7 @@
     };
     StrData * pData;
 
-    void ReplaceData(StrData * pNewData);                                     
+    void ReplaceData(StrData * pNewData);
     static StrData * CreateData(size_t size);
 
     static size_t  Step(const Char8 * line);
