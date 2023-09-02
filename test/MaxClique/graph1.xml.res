@@ -1,1 +1,1 @@
-Result is 3 (n1 n0 n2)
+Result is 3 (n0 n1 n2)

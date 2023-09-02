@@ -198,6 +198,9 @@ bool MaxClique::Calculate()
         LOG_INFO("No Max Clique found for a lower bound of " << m_param_lower_bound);
     }
 
+
+    std::sort(m_max_clique.begin(), m_max_clique.end());
+
     return not m_max_clique.empty();
 }
 
