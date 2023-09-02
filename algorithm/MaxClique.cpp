@@ -16,6 +16,7 @@
 #include <thread>
 #include <unordered_map>
 #include <unordered_set>
+#include <condition_variable>
 
 MaxClique::MaxClique()
 {

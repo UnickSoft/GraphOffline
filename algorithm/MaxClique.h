@@ -17,6 +17,7 @@
 #include <ciso646>
 #include <atomic>
 #include <shared_mutex>
+#include <thread>
 
 class MaxClique : public BaseAlgorithm
 {
