@@ -160,14 +160,22 @@ bool MaxClique::Calculate()
             neighbours_degs[v] += m_pGraph->GetConnectedNodes(m_pGraph->GetConnectedNode(v, j));
         }
     }
-
+    
+#ifdef EMSCRIPT
+    std::sort(m_vertices.begin(), m_vertices.end(),
+      [&neighbours_degs, this](ObjectId u, ObjectId v) {
+        IndexType u_deg = m_pGraph->GetConnectedNodes(u);
+        IndexType v_deg = m_pGraph->GetConnectedNodes(v);
+        return u_deg > v_deg || (u_deg == v_deg && neighbours_degs[u] > neighbours_degs[v]);
+      });
+#else
     std::sort(std::execution::par_unseq, m_vertices.begin(), m_vertices.end(),
               [&neighbours_degs, this](ObjectId u, ObjectId v) {
                   IndexType u_deg = m_pGraph->GetConnectedNodes(u);
                   IndexType v_deg = m_pGraph->GetConnectedNodes(v);
                   return u_deg > v_deg || (u_deg == v_deg && neighbours_degs[u] > neighbours_degs[v]);
               });
-
+#endif
     m_overall_max_clique_size = m_param_lower_bound > 0 ? m_param_lower_bound - 1 : 0;
     if (m_param_algorithm_type == Algorithm::Hybrid)
     {
@@ -306,6 +314,11 @@ void MaxClique::UnitTest() const
 
 void MaxClique::FindMaxClique(Algorithm algorithm_type)
 {
+    if (m_num_threads == 1) {
+      FindMaxCliqueOneThread(algorithm_type);
+      return;
+    }
+
     std::shared_mutex thread_mtx;
     std::condition_variable_any thread_pool;
     std::vector<std::thread> threads(m_num_threads);
@@ -442,7 +455,102 @@ void MaxClique::FindMaxClique(Algorithm algorithm_type)
             th.join();
         }
     }
+}
 
+void MaxClique::FindMaxCliqueOneThread(Algorithm algorithm_type)
+{
+  std::unordered_set<ObjectId> pruned;
+  pruned.max_load_factor(0.5);
+  pruned.reserve(m_pGraph->GetNodesCount());
+
+  bool abort_search = false;
+  while (not m_vertices.empty() && not abort_search && not m_upper_bound_reached)
+  {
+    std::vector<ColourType> colours = SortByGreedyColours(m_vertices);
+
+    if (m_upper_bound_reached)
+    {
+      break;
+    }
+
+    IndexType current_max_clique_size;
+    {
+      std::shared_lock clique_lock(m_max_clique_mtx);
+      current_max_clique_size = m_overall_max_clique_size;
+    }
+
+
+      ColourType current_colour = colours.back();
+      colours.pop_back();
+
+      if (current_colour < current_max_clique_size)
+      {
+        abort_search = true;
+        break;
+      }
+
+      ObjectId v = m_vertices.back();
+      m_vertices.pop_back();
+
+      std::mutex read_mtx;
+      bool read_flag = false;
+      std::condition_variable reading;
+      auto calculate = [&, this](ObjectId v, IndexType local_max_clique_size) {
+        auto thread_id = 0;
+
+          std::vector<ObjectId> local_neighbours;
+          local_neighbours.reserve(m_pGraph->GetConnectedNodes(v));
+
+          for (int i = 0; i < m_pGraph->GetConnectedNodes(v); ++i)
+          {
+            ObjectId u = m_pGraph->GetConnectedNode(v, i);
+            if (pruned.count(u) == 0)
+            {
+              local_neighbours.emplace_back(u);
+            }
+          }
+          pruned.emplace(v);
+
+          {
+            std::unique_lock read_lock(read_mtx);
+            read_flag = true;
+          }
+          reading.notify_one();
+
+          if (local_neighbours.empty())
+          {
+            abort_search = true;
+            return;
+          }
+
+          std::vector<ColourType> local_colours = SortByGreedyColours(local_neighbours);
+          if (local_colours.back() < local_max_clique_size)
+          {
+            abort_search = true;
+            return;
+          }
+
+          std::vector<ObjectId> local_clique;
+          if (m_param_algorithm_type == Algorithm::Heuristic)
+          {
+            BranchHeuristic(thread_id, v, local_neighbours, local_clique, local_max_clique_size);
+          }
+          else
+          {
+            BranchExact(thread_id, v, local_neighbours, local_colours, local_clique, local_max_clique_size);
+          }
+
+          {
+            std::unique_lock clique_lock(m_max_clique_mtx);
+            if (local_clique.size() > m_max_clique.size() && thread_id == m_max_clique_owner_thread_id)
+            {
+              m_max_clique = std::move(local_clique);
+            }
+          }
+      };
+
+      calculate(v, current_max_clique_size);
+  }
 }
 
 void MaxClique::BranchHeuristic(std::uint32_t thread_id, ObjectId v, std::vector<ObjectId> &neighbours,

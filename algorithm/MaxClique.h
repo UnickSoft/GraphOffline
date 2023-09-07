@@ -48,6 +48,7 @@ protected:
     std::vector<std::pair<Algorithm, std::string>> m_algo_types;
 
     void FindMaxClique(Algorithm algorithm_type);
+    void FindMaxCliqueOneThread(Algorithm algorithm_type);
 
     static const IndexType m_index_type_no_value = -1u;
 

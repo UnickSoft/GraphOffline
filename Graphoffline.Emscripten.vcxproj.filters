@@ -74,6 +74,9 @@
     </ClCompile>
     <ClCompile Include="CGIProcessor.cpp" />
     <ClCompile Include="GraphOffline.cpp" />
+    <ClCompile Include="algorithm\MaxClique.cpp">
+      <Filter>algorithm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="algorithm\AlgorithmFactory.h">
@@ -184,5 +187,8 @@
     <ClInclude Include="CGIProcessor.h" />
     <ClInclude Include="IAlgorithmFactory.h" />
     <ClInclude Include="WeightMultiGraph.h" />
+    <ClInclude Include="algorithm\MaxClique.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
