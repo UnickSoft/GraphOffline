@@ -11,7 +11,9 @@
 #include "Logger.h"
 
 #include <algorithm>
-#include <execution>
+#if not (defined(EMSCRIPT) || defined(CGI_MODE))
+	#include <execution>
+#endif
 #include <mutex>
 #include <thread>
 #include <unordered_map>
@@ -160,8 +162,8 @@ bool MaxClique::Calculate()
             neighbours_degs[v] += m_pGraph->GetConnectedNodes(m_pGraph->GetConnectedNode(v, j));
         }
     }
-    
-#ifdef EMSCRIPT
+
+#if defined(EMSCRIPT) || defined(CGI_MODE)
     std::sort(m_vertices.begin(), m_vertices.end(),
       [&neighbours_degs, this](ObjectId u, ObjectId v) {
         IndexType u_deg = m_pGraph->GetConnectedNodes(u);
