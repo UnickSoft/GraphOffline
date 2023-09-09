@@ -17,7 +17,7 @@ OBJECTS = $(patsubst %.cpp,$(OBJ_DIR)%.o, $(SOURCES))
 
 # Main target
 $(EXEC): $(OBJ_DIR)$(GRAPH_DIR) $(OBJ_DIR)$(COMMON_DIR) $(OBJ_DIR)$(REPORT_DIR) $(OBJ_DIR)$(ALGORITHM_DIR) $(OBJ_DIR)$(PUGIXML_DIR) $(OBJECTS)
-	$(CC) $(OBJECTS) -lm /usr/lib/gcc/x86_64-linux-gnu/7.5.0/libstdc++.a -o $(EXEC)
+	$(CC) $(OBJECTS) -lpthread -lm /usr/lib/gcc/x86_64-linux-gnu/7.5.0/libstdc++.a -o $(EXEC)
 
 # To obtain object files
 $(OBJ_DIR)$(ALGORITHM_DIR)%.o: $(ALGORITHM_DIR)%.cpp
