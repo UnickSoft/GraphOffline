@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml>
+<key id="d0" for="node" attr.name="weight" attr.type="double">
+<default>1</default>
+</key>
+<graph id="Graph" edgedefault="undirected">
+
+<node id="0"/>
+<node id="1"/>
+<node id="2"/>
+<node id="3"/>
+<node id="4"/>
+<node id="5"/>
+<node id="6"/>
+<node id="7"/>
+<node id="8"/>
+<node id="9"/>
+<node id="10"/>
+<node id="11"/>
+<node id="12"/>
+<node id="13"/>
+<node id="14"/>
+<node id="15"/>
+<node id="16"/>
+<node id="17"/>
+<node id="18"/>
+<node id="19"/>
+
+<edge source="1" target="0"  id="10120"/>
+<edge source="2" target="1"  id="10121"/>
+<edge source="3" target="2"  id="10122"/>
+<edge source="4" target="0"  id="10123"/>
+<edge source="4" target="3"  id="10124"/>
+<edge source="5" target="0"  id="10125"/>
+<edge source="6" target="1"  id="10126"/>
+<edge source="6" target="5"  id="10127"/>
+<edge source="7" target="2"  id="10128"/>
+<edge source="7" target="6"  id="10129"/>
+<edge source="8" target="4"  id="10130"/>
+<edge source="8" target="5"  id="10131"/>
+<edge source="9" target="3"  id="10132"/>
+<edge source="9" target="7"  id="10133"/>
+<edge source="9" target="8"  id="10134"/>
+
+<edge source="11" target="10"  id="10135"/>
+<edge source="12" target="11"  id="10136"/>
+<edge source="13" target="12"  id="10137"/>
+<edge source="14" target="10"  id="10138"/>
+<edge source="14" target="13"  id="10139"/>
+<edge source="15" target="10"  id="10140"/>
+<edge source="16" target="12"  id="10141"/>
+<edge source="16" target="15"  id="10142"/>
+<edge source="17" target="14"  id="10143"/>
+<edge source="17" target="16"  id="10144"/>
+<edge source="18" target="11"  id="10145"/>
+<edge source="18" target="17"  id="10146"/>
+<edge source="19" target="13"  id="10147"/>
+<edge source="19" target="15"  id="10148"/>
+<edge source="19" target="18"  id="10149"/>
+
+</graph></graphml>
