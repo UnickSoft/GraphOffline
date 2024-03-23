@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <variant>
 #include <functional>
+#include <unordered_map>
 
 extern bool bDebug;
 
@@ -30,12 +31,14 @@ public:
         String id;
         ObjectId privateId;
         bool fake;
+        IndexType index;
 
-        Node(const String& id, IndexType privateId, bool fake)
+        Node(const String& id, IndexType privateId, bool fake, IndexType index)
         {
             this->id = id;
             this->privateId = privateId;
             this->fake = fake;
+            this->index = index;
         }
 
         const std::vector<Node*>& GetTargets() const
@@ -86,6 +89,8 @@ public:
             return this->get() == node2;
         }
     };
+    
+    using IdToNode = std::unordered_map<ObjectId, NodePtr>;
 
     // Edge struct
     struct Edge
@@ -155,6 +160,8 @@ public:
     virtual IndexType GetConnectedNodes(ObjectId source) const override;
     // Get connected graph for this graph.
     virtual ObjectId GetConnectedNode(ObjectId source, IndexType index) const override;
+    // Get connected vertex index.
+    virtual IndexType GetConnectedNodeIndex(ObjectId source, IndexType index) const override;
     // Is edge exists.
     virtual bool AreNodesConnected(ObjectId source, ObjectId target) const override;
     // Return graph string Id.
@@ -233,6 +240,7 @@ protected:
     // Find Node by id in vector.
     template <typename T> T FindObject(const String& id, const std::vector<T>& nodes)  const;
     template <typename T> T FindObject(ObjectId objectId, const std::vector<T>& nodes) const;
+    template <typename T> T FindObject(ObjectId objectId, const std::unordered_map<ObjectId, T>& search) const;
 
     // Find element in vector.
     template <typename T> bool Has(const std::vector<T>& vector, const T& value) const;
@@ -280,6 +288,7 @@ protected:
     // List of graph.
     NodePtrVector m_nodes;
     EdgePtrVector m_edges;
+    IdToNode m_idToNode;
 
     // ATTANTION: If you add new fields please update CopyProperties.
     EdgeWeightType m_weightType;

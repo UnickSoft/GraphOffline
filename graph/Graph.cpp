@@ -224,6 +224,7 @@ void Graph::Clear()
 {
   m_nodes.clear();
   m_edges.clear();
+  m_idToNode.clear();
 }
 
 Graph::NodePtr Graph::FindNode(const String& id) const
@@ -265,6 +266,13 @@ template <typename T> T Graph::FindObject(ObjectId objectId, const std::vector<T
     }
     
     return node;
+}
+
+template <typename T> T Graph::FindObject(ObjectId objectId, const std::unordered_map<ObjectId, T>& searchMap) const
+{
+    auto objectItr = searchMap.find(objectId);
+
+    return objectItr != searchMap.end() ? objectItr->second : T(nullptr);
 }
 
 // Get Nodes count.
@@ -314,6 +322,18 @@ ObjectId Graph::GetConnectedNode(ObjectId source, IndexType index) const
     {
         res = sourcePtr->GetTargets().at(index)->privateId;
     }
+    return res;
+}
+
+IndexType Graph::GetConnectedNodeIndex(ObjectId source, IndexType index) const
+{
+    IndexType res = -1;
+    NodePtr sourcePtr;
+    if (IsValidNodeId(source, sourcePtr))
+    {
+        res = sourcePtr->GetTargets().at(index)->index;
+    }
+    assert(res != -1);
     return res;
 }
 
@@ -394,7 +414,7 @@ bool Graph::GetEdgeStrId(ObjectId edge, char* outBuffer, IndexType bufferSize) c
 
 bool Graph::IsValidNodeId(ObjectId id, NodePtr& ptr) const
 {
-    ptr = FindObject(id, m_nodes);
+    ptr = FindObject(id, m_idToNode);
     return ptr != nullptr;
 }
 
@@ -519,7 +539,8 @@ Graph* Graph::MakeGraphCopy(const std::function<Graph*()> & createFunction) cons
     // Create all nodes.
     for (NodePtr node : m_nodes)
     {
-        res->m_nodes.push_back(NodePtr(new Node(node->id, node->privateId, node->fake)));
+        res->m_nodes.push_back(NodePtr(new Node(node->id, node->privateId, node->fake, node->index)));
+        res->m_idToNode[node->privateId] = res->m_nodes.back();
     }
     
     // Add edges.
@@ -567,8 +588,8 @@ Graph::EdgePtr Graph::AddEdge(const String& id, IndexType sourceId, IndexType ta
       m_isMultigraph = true;
     }
 
-    NodePtr sourceNode = FindObject(sourceId, m_nodes);
-    NodePtr targetNode = FindObject(targetId, m_nodes);
+    NodePtr sourceNode = FindObject(sourceId, m_idToNode);
+    NodePtr targetNode = FindObject(targetId, m_idToNode);
     
     EdgePtr res = EdgePtr(new Edge(id, sourceNode, targetNode, direct,
                    weight, privateId));
@@ -614,7 +635,8 @@ Graph* Graph::MakeGraphInverse(const std::function<Graph*()> & createFunction) c
     // Create all nodes.
     for (NodePtr node : m_nodes)
     {
-        res->m_nodes.push_back(NodePtr(new Node(node->id, node->privateId, node->fake)));
+        res->m_nodes.push_back(NodePtr(new Node(node->id, node->privateId, node->fake, node->index)));
+        res->m_idToNode[node->privateId] = res->m_nodes.back();
     }
     
     // Add edges.
@@ -647,7 +669,7 @@ void Graph::ProcessDFS(IEnumStrategy* pEnumStrategy, ObjectId startedNode) const
     }
     
     LOG_INFO("DFS start");
-    _ProcessDFS(pStrategy, FindObject(startedNode, m_nodes).get());
+    _ProcessDFS(pStrategy, FindObject(startedNode, m_idToNode).get());
     LOG_INFO("DFS finish");
 }
 
@@ -685,7 +707,8 @@ Graph* Graph::MakeGraphRemoveSelfLoop(const std::function<Graph*()> & createFunc
     // Create all nodes.
     for (NodePtr node : m_nodes)
     {
-        res->m_nodes.push_back(NodePtr(new Node(node->id, node->privateId, node->fake)));
+        res->m_nodes.push_back(NodePtr(new Node(node->id, node->privateId, node->fake, node->index)));
+        res->m_idToNode[node->privateId] = res->m_nodes.back();
     }
     
     // Add edges.
@@ -838,7 +861,9 @@ ObjectId Graph::AddNode(bool fake)
 
 ObjectId Graph::AddNode(const String& idNode, IndexType privateId, bool fake)
 {
-    m_nodes.push_back(NodePtr(new Node(idNode, privateId, fake)));
+    m_nodes.push_back(NodePtr(new Node(idNode, privateId, fake, m_nodes.size())));
+    m_idToNode[m_nodes.back()->privateId] = m_nodes.back();
+    
     return m_nodes.back()->privateId;
 }
 
@@ -912,5 +937,6 @@ void Graph::RemoveNode(ObjectId source)
     ), m_edges.end());
 
     m_nodes.erase(std::find(m_nodes.begin(), m_nodes.end(), nodePtr));
+    m_idToNode.erase(nodePtr->privateId);
   }
 }

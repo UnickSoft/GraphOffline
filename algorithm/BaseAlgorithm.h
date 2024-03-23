@@ -42,6 +42,8 @@ public:
   template<class WeightType, class GraphType> static std::vector<std::vector<WeightType>> GetAdjacencyMatrix(const GraphType& graph);
 
   static std::vector<std::vector<bool>> GetAdjacencyMatrixBool(const IGraph& graph);
+  
+  static std::vector<std::vector<IndexType>> GetReachabilityMatrix(const IGraph& graph);
 
 protected:
 

@@ -88,6 +88,8 @@ public:
     virtual IndexType GetConnectedNodes(ObjectId source) const = 0;
     // Get connected graph for this graph.
     virtual ObjectId GetConnectedNode(ObjectId source, IndexType index) const = 0;
+    // Get connected vertex index.
+    virtual IndexType GetConnectedNodeIndex(ObjectId source, IndexType index) const = 0;
     // Is edge exists.
     virtual bool AreNodesConnected(ObjectId source, ObjectId target) const = 0;
     // Return graph string Id.
