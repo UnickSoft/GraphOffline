@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml>
+	<key id="d0" for="node" attr.name="weight" attr.type="double">
+		<default>1</default>
+	</key>
+	<graph id="Graph" edgedefault="undirected">
+		<node id="0"/>
+		<node id="1"/>
+		<node id="2"/>
+		<node id="3"/>
+		<node id="4"/>
+		<node id="5"/>
+		<node id="6"/>
+		<node id="7"/>
+		<node id="8"/>
+		<node id="9"/>
+		<node id="10"/>
+		<node id="11"/>
+		<node id="12"/>
+		<node id="13"/>
+		<node id="14"/>
+		<node id="15"/>
+		<node id="16"/>
+		<node id="17"/>
+		<node id="18"/>
+		<node id="19"/>
+		<node id="20"/>
+		<node id="21"/>
+		<node id="22"/>
+		<node id="23"/>
+		<node id="24"/>
+		<node id="25"/>
+		<node id="26"/>
+		<node id="27"/>
+		<node id="28"/>
+		<node id="29"/>
+		<node id="30"/>
+		<node id="31"/>
+		<node id="32"/>
+		<node id="33"/>
+		<node id="34"/>
+		<node id="35"/>
+		<node id="36"/>
+		<node id="37"/>
+		<node id="39"/>
+		<node id="40"/>
+		<node id="41"/>
+		<node id="42"/>
+		<node id="43"/>
+		<node id="44"/>
+		<edge source="0" target="9"  id="10172"/>
+		<edge source="0" target="10"  id="10173"/>
+		<edge source="10" target="1"  id="10174"/>
+		<edge source="1" target="0"  id="10175"/>
+		<edge source="1" target="2"  id="10176"/>
+		<edge source="1" target="11"  id="10177"/>
+		<edge source="1" target="12"  id="10178"/>
+		<edge source="1" target="14"  id="10179"/>
+		<edge source="1" target="3"  id="10180"/>
+		<edge source="3" target="2"  id="10181"/>
+		<edge source="3" target="4"  id="10182"/>
+		<edge source="4" target="14"  id="10183"/>
+		<edge source="5" target="14"  id="10184"/>
+		<edge source="14" target="3"  id="10185"/>
+		<edge source="14" target="13"  id="10186"/>
+		<edge source="6" target="7"  id="10187"/>
+		<edge source="6" target="8"  id="10188"/>
+		<edge source="8" target="26"  id="10189"/>
+		<edge source="15" target="16"  id="10190"/>
+		<edge source="16" target="17"  id="10191"/>
+		<edge source="26" target="7"  id="10192"/>
+		<edge source="25" target="16"  id="10193"/>
+		<edge source="15" target="25"  id="10194"/>
+		<edge source="15" target="23"  id="10195"/>
+		<edge source="23" target="24"  id="10196"/>
+		<edge source="24" target="25"  id="10197"/>
+		<edge source="23" target="25"  id="10198"/>
+		<edge source="14" target="23"  id="10199"/>
+		<edge source="13" target="23"  id="10200"/>
+		<edge source="22" target="23"  id="10201"/>
+		<edge source="22" target="13"  id="10202"/>
+		<edge source="12" target="14"  id="10203"/>
+		<edge source="19" target="20"  id="10204"/>
+		<edge source="20" target="21"  id="10205"/>
+		<edge source="21" target="22"  id="10206"/>
+		<edge source="18" target="27"  id="10207"/>
+		<edge source="18" target="36"  id="10208"/>
+		<edge source="18" target="1"  id="10209"/>
+		<edge source="18" target="12"  id="10210"/>
+		<edge source="19" target="12"  id="10211"/>
+		<edge source="20" target="12"  id="10212"/>
+		<edge source="20" target="13"  id="10213"/>
+		<edge source="20" target="14"  id="10214"/>
+		<edge source="18" target="20"  id="10215"/>
+		<edge source="18" target="28"  id="10216"/>
+		<edge source="18" target="37"  id="10217"/>
+		<edge source="37" target="28"  id="10218"/>
+		<edge source="28" target="29"  id="10219"/>
+		<edge source="29" target="30"  id="10220"/>
+		<edge source="29" target="31"  id="10221"/>
+		<edge source="30" target="31"  id="10222"/>
+		<edge source="30" target="39"  id="10223"/>
+		<edge source="39" target="40"  id="10224"/>
+		<edge source="40" target="31"  id="10225"/>
+		<edge source="39" target="31"  id="10226"/>
+		<edge source="31" target="32"  id="10227"/>
+		<edge source="41" target="32"  id="10228"/>
+		<edge source="41" target="40"  id="10229"/>
+		<edge source="41" target="31"  id="10230"/>
+		<edge source="32" target="33"  id="10231"/>
+		<edge source="41" target="42"  id="10232"/>
+		<edge source="42" target="43"  id="10233"/>
+		<edge source="43" target="44"  id="10234"/>
+		<edge source="44" target="35"  id="10235"/>
+		<edge source="34" target="43"  id="10236"/>
+		<edge source="34" target="35"  id="10237"/>
+		<edge source="44" target="34"  id="10238"/>
+		<edge source="26" target="35"  id="10239"/>
+		<edge source="34" target="26"  id="10240"/>
+		<edge source="26" target="24"  id="10241"/>
+	</graph>
+</graphml>

@@ -47,7 +47,7 @@ public:
 
 private:
 
-    bool _FindHamiltonianLoopRecursive(int currentNodeNumber, const std::vector<std::vector<bool>> & adjacencyMatrix, std::vector<int> & path, std::vector<int> & step);
+    bool _FindHamiltonianLoopRecursive(int currentNodeNumber, const std::vector<std::vector<IndexType>> & reachabilityMatrix, std::vector<int> & path, std::vector<int> & step);
 
     void FillLoop(const std::vector<int> & path, const IGraph* currentGraph, IndexType nodesCount);
 

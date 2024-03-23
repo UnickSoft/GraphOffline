@@ -85,24 +85,22 @@ bool HamiltonianLoop::Calculate()
 
         if (bCanHasLoop)
         {
-            std::vector<std::vector<bool>> adjacencyMatrix = GetAdjacencyMatrixBool(*currentGraph);
+            std::vector<std::vector<IndexType>> reachabilityMatrix = GetReachabilityMatrix(*currentGraph);
     
             int nodesCount = currentGraph->GetNodesCount();
 
             std::vector<int> path;
-            path.resize(nodesCount);
-            std::fill(path.begin(), path.end(), -1);
+            path.resize(nodesCount, -1);
 
             std::vector<int> step;
-            step.resize(nodesCount);
-            std::fill(step.begin(), step.end(), -1);
+            step.resize(nodesCount, -1);
             
             m_startNode = m_path ? nodesCount - 1 : 0;
             
             path[0] = m_startNode;
             step[m_startNode] = m_startNode;
             
-            m_bResult = _FindHamiltonianLoopRecursive(1, adjacencyMatrix, path, step);
+            m_bResult = _FindHamiltonianLoopRecursive(1, reachabilityMatrix, path, step);
             
             if (nodesCount == 1)
             {
@@ -266,29 +264,31 @@ const char* HamiltonianLoop::GetNodePropertyName(IndexType index) const
     return nullptr;
 }
 
-bool HamiltonianLoop::_FindHamiltonianLoopRecursive(int currentNodeNumber, const std::vector<std::vector<bool>> & adjacencyMatrix, std::vector<int> & path, std::vector<int> & step)
+bool HamiltonianLoop::_FindHamiltonianLoopRecursive(int currentNodeNumber, const std::vector<std::vector<IndexType>> & reachabilityMatrix, std::vector<int> & path, std::vector<int> & step)
 {
-    int v  = 0;
+    IndexType v  = 0;
     bool q1 = false;
-    int nodesCount = adjacencyMatrix.size();
+    int nodesCount = reachabilityMatrix.size();
+    ObjectId currentNodeIndex = path[currentNodeNumber - 1];
+    const auto & targets = reachabilityMatrix.at(currentNodeIndex);
     
-    for(v = 0; v < nodesCount && !q1; v++)
+    for(v = 0; v < targets.size() && !q1; v++)
     {
-        if (adjacencyMatrix[path[currentNodeNumber - 1]][v])
+        auto nodeIndex = targets.at(v);
+        if (currentNodeNumber == nodesCount && nodeIndex == m_startNode)
+            q1 = true;
+        else if (step[nodeIndex] == -1)
         {
-            if (currentNodeNumber == nodesCount && v == m_startNode )
-                q1 = true;
-            else if (step[v] == -1)
-            {
-                step[v] = currentNodeNumber;
-                path[currentNodeNumber] = v;
-                
-                q1 = _FindHamiltonianLoopRecursive (currentNodeNumber + 1, adjacencyMatrix, path, step);
-                if (!q1)
-                    step[v] = -1;
-            }
-            else
-                continue;
+            step[nodeIndex] = currentNodeNumber;
+            path[currentNodeNumber] = nodeIndex;
+
+            q1 = _FindHamiltonianLoopRecursive (currentNodeNumber + 1, reachabilityMatrix, path, step);
+            if (!q1)
+                step[nodeIndex] = -1;
+        }
+        else
+        {
+            continue;
         }
     }
     

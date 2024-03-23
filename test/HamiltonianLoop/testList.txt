@@ -14,3 +14,4 @@
 -hamloop graph_multigraph.xml
 -hamloop graph_weight_4_multigraph.xml
 -hamloop graph1_multigraph.xml
+-hamloop hangs_test_small.xml
