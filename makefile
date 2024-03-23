@@ -2,6 +2,7 @@ DEBUG ?= 0
 
 # File names
 EXEC = ./bin/Linux/Release/GraphOffline
+EXEC_TEST = ./bin/Linux/Release/GraphOfflineTest
 
 LIB_DIR = ./lib
 ALGORITHM_DIR = algorithm
@@ -32,6 +33,11 @@ OBJECTS = $(patsubst %.cpp,$(OBJ_DIR)/%.o, $(SOURCES))
 $(EXEC): $(OBJ_DIR)/$(GRAPH_DIR) $(OBJ_DIR)/$(COMMON_DIR) $(OBJ_DIR)/$(REPORT_DIR) $(OBJ_DIR)/$(ALGORITHM_DIR) $(OBJ_DIR)/$(PUGIXML_DIR) $(OBJECTS)
 	$(CXX) $(CPPFLAGS) $(OBJECTS) -o $(EXEC)
 
+$(EXEC_TEST): $(OBJ_DIR)/$(GRAPH_DIR) $(OBJ_DIR)/$(COMMON_DIR) $(OBJ_DIR)/$(REPORT_DIR) $(OBJ_DIR)/$(ALGORITHM_DIR) $(OBJ_DIR)/$(PUGIXML_DIR) $(OBJECTS)
+	$(CXX) $(CPPFLAGS) $(OBJECTS) -o $(EXEC_TEST)
+    
+BUILD_TEST: $(EXEC_TEST)
+    
 # To obtain object files
 $(OBJ_DIR)/$(ALGORITHM_DIR)/%.o: $(ALGORITHM_DIR)/%.cpp $(HEADERS)
 	$(CXX) -c $(CPPFLAGS) $< -o $@
