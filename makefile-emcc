@@ -14,7 +14,8 @@ OBJ_DIR = bin/emscripten/obj
 
 # Declaration of variables
 CXX ?= emcc
-CPPFLAGS += -std=c++17 -Wall -I. -I $(ALGORITHM_DIR) -I $(PUGIXML_DIR) -I $(REPORT_DIR) -I $(COMMON_DIR) -I $(GRAPH_DIR) -I $(LIB_DIR) -DEMSCRIPT -s EXPORTED_FUNCTIONS='_ProcessAlgorithm' -s EXPORTED_RUNTIME_METHODS=ccall,cwrap
+CPPFLAGS += -std=c++17 -Wall -I. -I $(ALGORITHM_DIR) -I $(PUGIXML_DIR) -I $(REPORT_DIR) -I $(COMMON_DIR) -I $(GRAPH_DIR) -I $(LIB_DIR) -DEMSCRIPT
+LINKFLAGS += -s EXPORTED_FUNCTIONS='_ProcessAlgorithm' -s EXPORTED_RUNTIME_METHODS=ccall,cwrap
 
 ifeq ($(DEBUG),1)
 	CPPFLAGS += -g
@@ -30,7 +31,7 @@ OBJECTS = $(patsubst %.cpp,$(OBJ_DIR)/%.o, $(SOURCES))
 
 # Main target
 $(EXEC): $(OBJ_DIR)/$(GRAPH_DIR) $(OBJ_DIR)/$(COMMON_DIR) $(OBJ_DIR)/$(REPORT_DIR) $(OBJ_DIR)/$(ALGORITHM_DIR) $(OBJ_DIR)/$(PUGIXML_DIR) $(OBJECTS)
-	$(CXX) $(CPPFLAGS) $(OBJECTS) -o $(EXEC)
+	$(CXX) $(CPPFLAGS) $(OBJECTS) $(LINKFLAGS) -o $(EXEC)
     
 # To obtain object files
 $(OBJ_DIR)/$(ALGORITHM_DIR)/%.o: $(ALGORITHM_DIR)/%.cpp $(HEADERS)
