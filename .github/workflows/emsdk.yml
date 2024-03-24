@@ -1,0 +1,17 @@
+name: emsdk
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: mymindstorm/setup-emsdk@v14
+    - name: Verify
+      run: emcc -v
