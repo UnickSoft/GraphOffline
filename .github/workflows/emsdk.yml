@@ -15,3 +15,5 @@ jobs:
     - uses: mymindstorm/setup-emsdk@v14
     - name: Verify
       run: emcc -v
+    - name: make
+      run: make -f makefile-emcc
