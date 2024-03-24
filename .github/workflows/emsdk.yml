@@ -1,4 +1,4 @@
-name: emsdk
+name: Emsdk
 on:
   push:
     branches: [ "master" ]
