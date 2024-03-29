@@ -102,8 +102,7 @@ template<class WeightTypeInterface, typename WeightType> bool DijkstraShortPath<
         std::unordered_map<ObjectId, ObjectId> previous;
         std::list<ObjectId> q;
         // Save processed nodes to fix negative loop problem.
-        using TwoVertex = std::pair<ObjectId, ObjectId>;
-        std::unordered_set<TwoVertex> processedVertex;
+        std::unordered_set<ObjectId> processedVertex;
         
         for (IndexType i = 0; i < m_pGraph->GetNodesCount(); i ++)
         {
@@ -137,13 +136,13 @@ template<class WeightTypeInterface, typename WeightType> bool DijkstraShortPath<
             {
                 ObjectId v = m_pGraph->GetConnectedNode(u, i);
                 WeightType alt = dist[u] + m_pGraph->GetEdgeWeight(u, v);
-                if (alt < dist[v] && processedVertex.find(TwoVertex(v, v)) == processedVertex.end())
+                if (alt < dist[v] && processedVertex.find(v) == processedVertex.end())
                 {
                     dist[v]     = alt;
                     previous[v] = u;
                 }
             }
-            processedVertex.insert(TwoVertex(u, u));
+            processedVertex.insert(u);
         }
                 
         ObjectId u = m_target;

@@ -107,7 +107,10 @@ template<class WeightTypeInterface, class WeightType> bool BellmanFord<WeightTyp
 {
 	std::unordered_map<ObjectId, WeightType> dist;
 	std::unordered_map<ObjectId, bool> vis;
-
+    // Fix negative loops, save vertex in current distance.
+    using ObjectsSet = std::unordered_set<ObjectId>;
+	std::unordered_map<ObjectId, ObjectsSet> inDist;
+    
 	bool check_vis = false;		//	VARIABLE USED FOR CHECKING VISITED NODE IN EACH ITERATION
 	bool res = false;	//	VARIABLE CHECKING IF CALCULATION IS POSSIBLE, RETURN VALUE
 	bool change = false;	//	VARIABLE USED FOR CHECKING ANY CHANGE IN ITERATION
@@ -121,6 +124,7 @@ template<class WeightTypeInterface, class WeightType> bool BellmanFord<WeightTyp
 	}
 	ObjectId u = m_pGraph->GetNode((IndexType)0);
 	dist[m_source] = 0;
+    inDist[m_source].insert(m_source);
 
 	for(IndexType i = 0; i < m_pGraph->GetNodesCount() - 1; i++)
 	{
@@ -138,11 +142,14 @@ template<class WeightTypeInterface, class WeightType> bool BellmanFord<WeightTyp
 					vis[v] = !check_vis;
 				}
 				WeightType alt = m_pGraph->GetEdgeWeight(u, v);
-				if(alt + dist[u] < dist[v])
+				if (alt + dist[u] < dist[v] && inDist[u].find(v) == inDist[u].end())
 				{
 					previous_vertex_order.insert(v);
 					previous_vertex[v] = u;
 					dist[v] = alt + dist[u];
+                    auto inPrevDistance = inDist[u];
+                    inPrevDistance.insert(v);
+                    inDist[v] = inPrevDistance;
 					change = true;
 					res = true;
 				}
