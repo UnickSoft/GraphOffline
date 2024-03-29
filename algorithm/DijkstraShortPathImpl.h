@@ -9,7 +9,24 @@
 #include <algorithm>    // std::reverse
 #include <string.h>
 #include <list>
+#include <unordered_set>
 #include "IAlgorithmFactory.h"
+
+namespace std
+{
+
+template<class A,class B>
+struct hash<pair<A,B>>{
+    static std::uint32_t rotl(std::uint32_t v, std::int32_t shift) {
+        std::int32_t s =  shift>=0? shift%32 : -((-shift)%32);
+        return (v<<s) | (v>>(32-s));
+    }
+	size_t operator() (const pair<A,B>& p) const {
+		return rotl(hash<A>{}(p.first),1) ^
+			   hash<B>{}(p.second);
+	}
+};
+}
 
 static const char* g_lowestDistanceStr = "lowestDistance";
 static const char* g_indexStr = "index";
@@ -84,6 +101,9 @@ template<class WeightTypeInterface, typename WeightType> bool DijkstraShortPath<
         std::unordered_map<ObjectId, WeightType> dist;
         std::unordered_map<ObjectId, ObjectId> previous;
         std::list<ObjectId> q;
+        // Save processed nodes to fix negative loop problem.
+        using TwoVertex = std::pair<ObjectId, ObjectId>;
+        std::unordered_set<TwoVertex> processedVertex;
         
         for (IndexType i = 0; i < m_pGraph->GetNodesCount(); i ++)
         {
@@ -94,7 +114,7 @@ template<class WeightTypeInterface, typename WeightType> bool DijkstraShortPath<
         }
         
         dist[m_source] = 0;
-        
+                
         while (q.size() > 0)
         {
             //int index = -1;
@@ -117,14 +137,15 @@ template<class WeightTypeInterface, typename WeightType> bool DijkstraShortPath<
             {
                 ObjectId v = m_pGraph->GetConnectedNode(u, i);
                 WeightType alt = dist[u] + m_pGraph->GetEdgeWeight(u, v);
-                if (alt < dist[v])
+                if (alt < dist[v] && processedVertex.find(TwoVertex(v, v)) == processedVertex.end())
                 {
                     dist[v]     = alt;
                     previous[v] = u;
                 }
             }
+            processedVertex.insert(TwoVertex(u, u));
         }
-        
+                
         ObjectId u = m_target;
         m_path.clear();
         

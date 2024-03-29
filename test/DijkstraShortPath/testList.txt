@@ -13,3 +13,6 @@
 -dsp graph_weight_4_multigraph.xml  0 4 xml
 -dsp graph_weight_4_multigraph2.xml 0 4 xml
 -dsp graph_weight_4_multigraph3.xml 1 0 xml
+-dsp graph_weight_negative.xml 0 2
+-dsp graph_weight_4_multigraph2_negative.xml 2 0
+-dsp graph_weight_4_multigraph_zero_and_negative.xml 0 5
