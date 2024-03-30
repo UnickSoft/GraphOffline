@@ -7,3 +7,5 @@
 -mfpr graph_weight_4.xml 0 5 xml
 -mfpr graph_direct_2.xml 0 2 xml
 -mfpr graph_direct_3.xml 0 3 xml
+-mfpr graph_weight_4_negative_2.xml 0 5
+-mfpr graph_weight_4_negative.xml 0 5

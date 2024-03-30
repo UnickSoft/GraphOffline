@@ -482,6 +482,7 @@ Graph* Graph::MakeGraphCopy(GraphCopyType type, const std::function<Graph*()> & 
         case GTC_MAKE_UNDIRECTED:  res = MakeGraphUndirected(createFunction); break;
         case GTC_INVERSE:          res = MakeGraphInverse(createFunction); break;
         case GTC_REMOVE_SELF_LOOP: res = MakeGraphRemoveSelfLoop(createFunction); break;
+        case GTC_REMOVE_NEGATIVE:  res = MakeGraphRemoveNegative(createFunction); break;
     }
 
     if (res)
@@ -727,6 +728,14 @@ Graph* Graph::MakeGraphRemoveSelfLoop(const std::function<Graph*()> & createFunc
     
     return res;
 }
+
+Graph* Graph::MakeGraphRemoveNegative(const std::function<Graph*()> & createFunction) const
+{
+    LOG_ERROR("Cannot remove negative edges. Weight type is unknown");
+    
+    return nullptr;
+}
+
 
 void Graph::RemoveEdge(ObjectId source, ObjectId target)
 {

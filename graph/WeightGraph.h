@@ -31,6 +31,36 @@ public:
     {
         return new WeightGraph<WeightInterface, WeightTmplType>();
     }
+    
+    virtual Graph* MakeGraphRemoveNegative(const std::function<Graph*()> & createFunction) const override
+    {
+        WeightGraph<WeightInterface, WeightTmplType>* res = new WeightGraph<WeightInterface, WeightTmplType>();
+
+        CopyPropertiesTo(res);
+
+        // Create all nodes.
+        for (NodePtr node : m_nodes)
+        {
+            res->m_nodes.push_back(NodePtr(new Node(node->id, node->privateId, node->fake, node->index)));
+            res->m_idToNode[node->privateId] = res->m_nodes.back();
+        }
+
+        // Add edges.
+        for (EdgePtr edge : m_edges)
+        {
+            if (edge->GetWeight<WeightTmplType>() >= (WeightTmplType)0)
+            {
+                res->AddEdge(edge->id,
+                         edge->source->privateId,
+                         edge->target->privateId,
+                         edge->direct,
+                         edge->weight,
+                         edge->privateId);
+            }
+        }
+
+        return res;
+    }
 };
 
 using IntGraph   = WeightGraph<IGraphInt,   IntWeightType>;

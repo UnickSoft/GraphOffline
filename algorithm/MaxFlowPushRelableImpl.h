@@ -18,7 +18,6 @@ template<class WeightTypeInterface, typename WeightType> MaxFlowPushRelabel<Weig
 {
     _source = 0;
     _drain = 0;
-    _pGraph = NULL;
     m_result = 0;
     
 #if __GNUC__ > 4
@@ -83,7 +82,7 @@ template<class WeightTypeInterface, typename WeightType> bool MaxFlowPushRelabel
     {
         auto n = _pGraph->GetNodesCount();
         std::vector<WeightType> excessFlow;
-        std::vector<std::vector<WeightType>> adjacencyMatrix = this->GetAdjacencyMatrix<WeightType, WeightTypeInterface>(*_pGraph);
+        std::vector<std::vector<WeightType>> adjacencyMatrix = this->GetAdjacencyMatrix<WeightType, WeightTypeInterface>(*(_pGraph.get()));
         std::vector<std::vector<WeightType>> origin_adjacencyMatrix;
         std::vector<WeightType> height;
         
@@ -290,8 +289,7 @@ template<class WeightTypeInterface, typename WeightType> bool MaxFlowPushRelabel
 // Set graph
 template<class WeightTypeInterface, typename WeightType> void MaxFlowPushRelabel<WeightTypeInterface, WeightType>::SetGraph(const IGraph* pGraph)
 {
-    //(TODO)
-    _pGraph = dynamic_cast<const WeightTypeInterface*>(pGraph);
+    _pGraph = GraphPtrType(dynamic_cast<const WeightTypeInterface*>(pGraph->MakeBaseCopy(GTC_REMOVE_NEGATIVE)));
 }
 
 template<class WeightTypeInterface, typename WeightType> const char* MaxFlowPushRelabel<WeightTypeInterface, WeightType>::GetEdgePropertyName(IndexType index) const

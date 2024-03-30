@@ -52,7 +52,8 @@ protected:
 
     ObjectId _source;
     ObjectId _drain;
-    const WeightTypeInterface*  _pGraph;
+    using GraphPtrType = std::shared_ptr<const WeightTypeInterface>;
+    GraphPtrType _pGraph;
 
     struct EdgeFlowValue
     {

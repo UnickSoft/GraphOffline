@@ -262,6 +262,8 @@ protected:
     Graph* MakeGraphInverse(const std::function<Graph*()> & createFunction) const;
     // Remove self loop.
     Graph* MakeGraphRemoveSelfLoop(const std::function<Graph*()> & createFunction) const;
+    // Remove negative edges
+    virtual Graph* MakeGraphRemoveNegative(const std::function<Graph*()> & createFunction) const;
 
     bool IsDouble(double value);
 
