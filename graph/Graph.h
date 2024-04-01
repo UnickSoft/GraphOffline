@@ -191,7 +191,7 @@ public:
     virtual ObjectId AddNode(bool fake) override;
 
     // Return graph struct
-    virtual const char* PrintGraph() override;
+    virtual const char* PrintGraph() const override;
 
     // Find Node by Id
     NodePtr FindNode(const String& id) const;

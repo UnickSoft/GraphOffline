@@ -11,22 +11,12 @@
 //	FUNCTION TO PUSH RESULTS ONTO VECTOR
 template<class WeightTypeInterface, class WeightType> void BellmanFord<WeightTypeInterface, WeightType>::pushResult()
 {
-	for(auto order_vertex : previous_vertex_order)
+	for (auto order_vertex : visited)
 	{
-		std::vector<ObjectId> temp;
-		ObjectId prev        = previous_vertex[order_vertex];
-		ObjectId destination = order_vertex;
-
-		temp.push_back(destination);
-		temp.push_back(prev);
-
-		while(prev != m_source)
-		{
-			prev = previous_vertex[prev];
-			temp.push_back(prev);
-		}
-		std::reverse(temp.begin(), temp.end());
-		m_path.push_back(temp);
+        if (m_source == order_vertex) {
+            continue;
+        }
+		m_path.push_back(paths[order_vertex]);
 	}
 }
 
@@ -105,66 +95,88 @@ template<class WeightTypeInterface, class WeightType> void BellmanFord<WeightTyp
 
 template<class WeightTypeInterface, class WeightType> bool BellmanFord<WeightTypeInterface, WeightType>::Calculate()
 {
-	std::unordered_map<ObjectId, WeightType> dist;
-	std::unordered_map<ObjectId, bool> vis;
-    // Fix negative loops, save vertex in current distance.
     using ObjectsSet = std::unordered_set<ObjectId>;
-	std::unordered_map<ObjectId, ObjectsSet> inDist;
+
+    // Use this for algorithm steps.
+    // Swap steps.
+    struct StepData 
+    {
+        // Current distance to vertex
+        std::unordered_map<ObjectId, WeightType> dist;
+        // Fix negative loops, save vertex in current distance.
+        std::unordered_map<ObjectId, ObjectsSet> inDist;
+        
+        // Save all path to vertex
+	    std::unordered_map<ObjectId, std::vector<ObjectId>> path;	
+	    std::set<ObjectId> visited;
+    };
     
-	bool check_vis = false;		//	VARIABLE USED FOR CHECKING VISITED NODE IN EACH ITERATION
-	bool res = false;	//	VARIABLE CHECKING IF CALCULATION IS POSSIBLE, RETURN VALUE
-	bool change = false;	//	VARIABLE USED FOR CHECKING ANY CHANGE IN ITERATION
+    std::vector<StepData> steps;
+    steps.resize(2);
+    
+	bool res    = false;	//	VARIABLE CHECKING IF CALCULATION IS POSSIBLE, RETURN VALUE
+	bool change = true;	//	VARIABLE USED FOR CHECKING ANY CHANGE IN ITERATION
 
-	std::queue<ObjectId> vertex_q;
-	for(int i = 0; i < m_pGraph->GetNodesCount(); i++)
-	{
-		ObjectId u = m_pGraph->GetNode((IndexType)i);
-		dist[u] = (WeightType)std::numeric_limits<WeightType>::max();
-		vis[u] = false;
-	}
-	ObjectId u = m_pGraph->GetNode((IndexType)0);
-	dist[m_source] = 0;
-    inDist[m_source].insert(m_source);
+    uint32_t currentStep = 0;
+    
+    {
+        auto& step = steps[currentStep];
+        for(int i = 0; i < m_pGraph->GetNodesCount(); i++)
+        {
+            ObjectId u = m_pGraph->GetNode((IndexType)i);
+            step.dist[u] = (WeightType)std::numeric_limits<WeightType>::max();
+        }
+        ObjectId u = m_pGraph->GetNode((IndexType)0);
+        step.dist[m_source] = 0;
+        step.inDist[m_source].insert(m_source);
+        step.visited.insert(m_source);
+        step.path[m_source].push_back(m_source);
+    }
+    
+    while (change)
+    {
+        change = false;
+        auto& prevStep = steps[currentStep];
+        currentStep    = 1 - currentStep;
+        auto& step     = steps[currentStep];
+        step = prevStep;
+        
+        for (auto u : prevStep.visited)
+        {
+            for (IndexType k = 0; k < m_pGraph->GetConnectedNodes(u); k++)
+            {
+                ObjectId v = m_pGraph->GetConnectedNode(u, k);
+                if (m_source == v)
+                {
+                    continue;
+                }
 
-	for(IndexType i = 0; i < m_pGraph->GetNodesCount() - 1; i++)
-	{
-		vertex_q.push(m_source);
-		while(!vertex_q.empty())
-		{
-			ObjectId u = vertex_q.front();
-			vertex_q.pop();
-			for(IndexType k = 0; k < m_pGraph->GetConnectedNodes(u); k++)
-			{
-				ObjectId v = m_pGraph->GetConnectedNode(u, k);
-				if(vis[v] == check_vis)
-				{
-					vertex_q.push(v);
-					vis[v] = !check_vis;
-				}
-				WeightType alt = m_pGraph->GetEdgeWeight(u, v);
-				if (alt + dist[u] < dist[v] && inDist[u].find(v) == inDist[u].end())
-				{
-					previous_vertex_order.insert(v);
-					previous_vertex[v] = u;
-					dist[v] = alt + dist[u];
-                    auto inPrevDistance = inDist[u];
+                WeightType alt = m_pGraph->GetEdgeWeight(u, v);
+                if (alt + prevStep.dist[u] < prevStep.dist[v] && prevStep.inDist[u].find(v) == prevStep.inDist[u].end())
+                {
+                    step.path[v] = prevStep.path[u];
+                    step.path[v].push_back(v);
+                    step.dist[v] = alt + prevStep.dist[u];
+                    auto inPrevDistance = prevStep.inDist[u];
                     inPrevDistance.insert(v);
-                    inDist[v] = inPrevDistance;
-					change = true;
-					res = true;
-				}
-			}
-		}
-		check_vis = !check_vis;
-		if(change == false)		//	IF NOTHING CHANGED IN PREVIOUS ITERATION THEN BREAK
-		{
-			break;
-		}
-		else
-		{
-			change = false;
-		}
-	}
+                    step.inDist[v] = inPrevDistance;
+                    change = true;
+                    res = true;
+                    if (step.visited.size() < m_pGraph->GetNodesCount())
+                    {
+                        step.visited.insert(v);
+                    }
+                }
+            }
+        }
+    }
+
+    // Take result from the last step
+    {
+        auto& step     = steps[currentStep];
+        paths   = step.path;
+	    visited = step.visited;
+    }
 
 	pushResult();	//	FINALLY PUSH RESULTS INTO m_path
 	return res;

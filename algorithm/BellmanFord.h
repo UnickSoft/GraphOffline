@@ -13,8 +13,8 @@ template<class WeightTypeInterface, class WeightType> class BellmanFord : public
 protected:
 	ObjectId m_source;		// OBJECT ID STORING SOURCE
 	std::vector<std::vector<ObjectId>> m_path;	//	VECTOR THAT STORES FINAL RESULT
-	std::unordered_map<ObjectId, ObjectId> previous_vertex;	//	VARIABLE USED TO STORE THE PREVIOUS ELEMENT OF SHORTEST PATH
-	std::set<ObjectId> previous_vertex_order;
+	std::unordered_map<ObjectId, std::vector<ObjectId>> paths;	//	VARIABLE USED TO STORE THE PREVIOUS ELEMENT OF SHORTEST PATH
+	std::set<ObjectId> visited;
 	const WeightTypeInterface*  m_pGraph;
 
 	void pushResult();	// UTITLITY FUNCTION TO PUSH RESULTS ON m_path

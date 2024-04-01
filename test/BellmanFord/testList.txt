@@ -15,3 +15,5 @@
 -blf graph_weight_negative.xml 0
 -blf graph_weight_4_multigraph2_negative.xml 2
 -blf graph_weight_4_multigraph_zero_and_negative.xml 0
+-blf graph_weight_negative_simple.xml 0
+-blf graph_negative_6_vertex.xml 0

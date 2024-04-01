@@ -890,7 +890,7 @@ bool Graph::IsFakeNode(ObjectId source)
     return res;
 }
 
-const char* Graph::PrintGraph()
+const char* Graph::PrintGraph() const
 {
     static std::string report;
     
