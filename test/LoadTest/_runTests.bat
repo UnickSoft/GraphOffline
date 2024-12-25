@@ -1,6 +1,10 @@
 @echo off
 
-set exePath="../../bin/Windows/Release/GraphOffline.exe"
+if "%~1"=="" (
+    set exePath="../../bin/Windows/Release/GraphOffline.exe"
+) else (
+    set exePath="%1"
+)
 
 cd /D "%~dp0"
 
