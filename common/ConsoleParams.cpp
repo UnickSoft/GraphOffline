@@ -29,6 +29,10 @@ void ConsoleParams::ParseCommandLine (const std::vector<String>& params, Paramet
             {
                 commands[GetRealParamName(*param)] = *(param + 1);
             }
+            else
+            {
+                break;
+            }
         }
     }
 }

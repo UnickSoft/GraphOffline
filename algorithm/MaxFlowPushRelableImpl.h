@@ -385,7 +385,7 @@ template<class WeightTypeInterface, typename WeightType> void MaxFlowPushRelabel
     
     _flowValue.erase(last, _flowValue.end());
     
-    for(auto element = _flowValue.begin(); element != last; element++)
+    for(auto element = _flowValue.begin(); element != _flowValue.end(); element++)
     {
         element->value = 0;
         for (auto comapare = flowValueCopy.begin(); comapare != flowValueCopy.end(); comapare++)
