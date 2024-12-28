@@ -83,9 +83,9 @@ extern "C" {
   const char* ProcessAlgorithm(const char* emscriptParams);
 }
 
+std::string res;
 const char* ProcessAlgorithm(const char* emscriptParams)
 {
-  static std::string res;
   if (strcmp(emscriptParams, EMSCRIPT_DELEMITER) == 0)
   {
     res = "test";
