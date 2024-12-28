@@ -22,7 +22,7 @@ CPPFLAGS += -std=c++17 -Wall -I. -I $(ALGORITHM_DIR) -I $(PUGIXML_DIR) -I $(REPO
 LINKFLAGS += -s EXPORTED_FUNCTIONS='_ProcessAlgorithm' -s EXPORTED_RUNTIME_METHODS=ccall,cwrap
 
 ifeq ($(DEBUG),1)
-	CPPFLAGS += -g --emit-symbol-map -sWASM=2
+	CPPFLAGS += -g --emit-symbol-map -sWASM=2 -sALLOW_MEMORY_GROWTH=true
 else
 	CPPFLAGS += -O3
 endif
