@@ -136,6 +136,7 @@ bool MaxClique::Calculate()
 {
     LogState();
 
+    // Cannot find clique for empty graph or if size less 2.
     if (m_param_upper_bound < 2 || m_pGraph->GetNodesCount() == 0)
     {
         if (m_param_upper_bound != 0 && m_pGraph->GetNodesCount() != 0)
@@ -208,10 +209,9 @@ bool MaxClique::Calculate()
         LOG_INFO("No Max Clique found for a lower bound of " << m_param_lower_bound);
     }
 
-
     std::sort(m_max_clique.begin(), m_max_clique.end());
 
-    return not m_max_clique.empty();
+    return !m_max_clique.empty();
 }
 
 IndexType MaxClique::GetResultCount() const
@@ -221,19 +221,16 @@ IndexType MaxClique::GetResultCount() const
 
 AlgorithmResult MaxClique::GetResult(IndexType index) const
 {
-    static IndexType local_index = 1;
-
     AlgorithmResult res;
     if (index == 0)
     {
-        local_index = 0;
         res.type = ART_INT;
         res.nValue = m_max_clique.size();
     }
-    else if (local_index < m_max_clique.size())
+    else if (index - 1 < m_max_clique.size())
     {
         res.type = ART_NODE_ID;
-        res.nodeId = m_max_clique[local_index++];
+        res.nodeId = m_max_clique[index - 1];
     }
 
     return res;
@@ -331,9 +328,13 @@ void MaxClique::FindMaxClique(Algorithm algorithm_type)
     pruned.reserve(m_pGraph->GetNodesCount());
 
     bool abort_search = false;
-    while (not m_vertices.empty() && not abort_search && not m_upper_bound_reached)
+    while (!m_vertices.empty() && abort_search && !m_upper_bound_reached)
     {
         std::vector<ColourType> colours = SortByGreedyColours(m_vertices);
+        if (colours.empty())
+        {
+            break;
+        }
 
         {
             std::unique_lock thread_lock(thread_mtx);
@@ -419,7 +420,7 @@ void MaxClique::FindMaxClique(Algorithm algorithm_type)
                     }
 
                     std::vector<ColourType> local_colours = SortByGreedyColours(local_neighbours);
-                    if (local_colours.back() < local_max_clique_size)
+                    if (local_colours.empty() || local_colours.back() < local_max_clique_size)
                     {
                         abort_search = true;
                         return;
@@ -466,11 +467,11 @@ void MaxClique::FindMaxCliqueOneThread(Algorithm algorithm_type)
   pruned.reserve(m_pGraph->GetNodesCount());
 
   bool abort_search = false;
-  while (not m_vertices.empty() && not abort_search && not m_upper_bound_reached)
+  while (!m_vertices.empty() && !abort_search && !m_upper_bound_reached)
   {
     std::vector<ColourType> colours = SortByGreedyColours(m_vertices);
 
-    if (m_upper_bound_reached)
+    if (m_upper_bound_reached || colours.empty())
     {
       break;
     }
@@ -481,77 +482,75 @@ void MaxClique::FindMaxCliqueOneThread(Algorithm algorithm_type)
       current_max_clique_size = m_overall_max_clique_size;
     }
 
+    ColourType current_colour = colours.back();
+    colours.pop_back();
 
-      ColourType current_colour = colours.back();
-      colours.pop_back();
-
-      if (current_colour < current_max_clique_size)
-      {
+    if (current_colour < current_max_clique_size)
+    {
         abort_search = true;
         break;
-      }
+    }
 
-      ObjectId v = m_vertices.back();
-      m_vertices.pop_back();
+    ObjectId v = m_vertices.back();
+    m_vertices.pop_back();
 
-      std::mutex read_mtx;
-      bool read_flag = false;
-      std::condition_variable reading;
-      auto calculate = [&, this](ObjectId v, IndexType local_max_clique_size) {
+    std::mutex read_mtx;
+    bool read_flag = false;
+    std::condition_variable reading;
+    auto calculate = [&, this](ObjectId v, IndexType local_max_clique_size) {
         auto thread_id = 0;
+        std::vector<ObjectId> local_neighbours;
+        local_neighbours.reserve(m_pGraph->GetConnectedNodes(v));
 
-          std::vector<ObjectId> local_neighbours;
-          local_neighbours.reserve(m_pGraph->GetConnectedNodes(v));
-
-          for (int i = 0; i < m_pGraph->GetConnectedNodes(v); ++i)
-          {
+        for (int i = 0; i < m_pGraph->GetConnectedNodes(v); ++i)
+        {
             ObjectId u = m_pGraph->GetConnectedNode(v, i);
             if (pruned.count(u) == 0)
             {
-              local_neighbours.emplace_back(u);
+                local_neighbours.emplace_back(u);
             }
-          }
-          pruned.emplace(v);
+        }
+        pruned.emplace(v);
 
-          {
+        {
             std::unique_lock read_lock(read_mtx);
             read_flag = true;
-          }
-          reading.notify_one();
+        }
+        reading.notify_one();
 
-          if (local_neighbours.empty())
-          {
+        if (local_neighbours.empty())
+        {
             abort_search = true;
             return;
-          }
+        }
 
-          std::vector<ColourType> local_colours = SortByGreedyColours(local_neighbours);
-          if (local_colours.back() < local_max_clique_size)
-          {
+        std::vector<ColourType> local_colours = SortByGreedyColours(local_neighbours);
+        if (local_colours.back() < local_max_clique_size || local_colours.empty())
+        {
             abort_search = true;
             return;
-          }
+        }
 
-          std::vector<ObjectId> local_clique;
-          if (m_param_algorithm_type == Algorithm::Heuristic)
-          {
+        std::vector<ObjectId> local_clique;
+        if (m_param_algorithm_type == Algorithm::Heuristic)
+        {
             BranchHeuristic(thread_id, v, local_neighbours, local_clique, local_max_clique_size);
-          }
-          else
-          {
+        }
+        else
+        {
             BranchExact(thread_id, v, local_neighbours, local_colours, local_clique, local_max_clique_size);
-          }
+        }
 
-          {
+        {
             std::unique_lock clique_lock(m_max_clique_mtx);
             if (local_clique.size() > m_max_clique.size() && thread_id == m_max_clique_owner_thread_id)
             {
-              m_max_clique = std::move(local_clique);
+                m_max_clique = std::move(local_clique);
             }
-          }
-      };
+        }
+    };
 
-      calculate(v, current_max_clique_size);
+    calculate(v, current_max_clique_size);
   }
 }
 
@@ -591,7 +590,7 @@ void MaxClique::BranchHeuristic(std::uint32_t thread_id, ObjectId v, std::vector
     else
     {
         std::vector<ColourType> new_colours = SortByGreedyColours(new_neighbours);
-        if (next_depth + new_colours.back() > max_clique_size)
+        if (!new_colours.empty() && next_depth + new_colours.back() > max_clique_size)
         {
             BranchHeuristic(thread_id, u, new_neighbours, clique, max_clique_size, next_depth);
         }
@@ -611,9 +610,13 @@ void MaxClique::BranchExact(std::uint32_t thread_id, ObjectId v, std::vector<Obj
         std::shared_lock clique_lock(m_max_clique_mtx);
         max_clique_size = m_overall_max_clique_size;
     }
+    if (neighbours.size() > colours.size())
+    {
+        return;
+    }
 
     const IndexType next_depth = depth + 1;
-    while (not neighbours.empty() && not m_upper_bound_reached && depth + colours.back() > max_clique_size)
+    while (!neighbours.empty() && !m_upper_bound_reached && depth + colours.back() > max_clique_size)
     {
         ObjectId u = neighbours.back();
         neighbours.pop_back();
@@ -638,8 +641,7 @@ void MaxClique::BranchExact(std::uint32_t thread_id, ObjectId v, std::vector<Obj
         else
         {
             std::vector<ColourType> new_colours = SortByGreedyColours(new_neighbours);
-
-            if (next_depth + new_colours.back() > max_clique_size)
+            if (!new_colours.empty() && next_depth + new_colours.back() > max_clique_size)
             {
                 BranchExact(thread_id, u, new_neighbours, new_colours, clique, max_clique_size, depth + 1);
             }
@@ -654,7 +656,6 @@ void MaxClique::BranchExact(std::uint32_t thread_id, ObjectId v, std::vector<Obj
 
 bool MaxClique::EnlargeClique(std::uint32_t thread_id, IndexType &max_clique_size, IndexType depth)
 {
-
     bool flag = false;
 
     std::shared_lock clique_shared_lock(m_max_clique_mtx);
