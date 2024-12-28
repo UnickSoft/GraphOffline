@@ -84,9 +84,11 @@ extern "C" {
 }
 
 std::string res;
+int counter = 0;
 const char* ProcessAlgorithm(const char* emscriptParams)
 {
-  printf("%s\n", "ProcessAlgorithm start");
+  counter++;
+  printf("%d %s %s\n", counter, "S ProcessAlgorithm", emscriptParams);
   if (strcmp(emscriptParams, EMSCRIPT_DELEMITER) == 0)
   {
     res = "test";
@@ -96,7 +98,7 @@ const char* ProcessAlgorithm(const char* emscriptParams)
   ConsoleParams consoleParams;
   consoleParams.ProcessConsoleParams(CGIProcessor::SplitString(emscriptParams, { EMSCRIPT_DELEMITER }));
   res = (const char*)consoleParams.GetReport().UTF8().Data();
-  printf("%s\n", "ProcessAlgorithm finish");
+  printf("%d %s %s\n", counter, "F ProcessAlgorithm", res.c_str());
   return res.c_str();
 }
 
