@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Graphoffline test</title>
+    <style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 50%;
+    }
+
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+  </style>
+  </head>
+  <body>
+    <table id="testTable">
+    <th>Test name</th>
+    <th>Result</th>
+    </table>
+    <div><span>Total tests:</span> <span id="TestCount"></span></div>
+
+    <script type="text/javascript" src="Graphoffline.Emscripten.js"></script>
+    <script type='text/javascript'>
+
+	function addRow(name, result, isCorrect) {
+	  let tableRef = document.getElementById("testTable");
+	  let newRow = tableRef.insertRow(-1);
+
+	  let nameCell   = newRow.insertCell(0);
+	  let resultCell = newRow.insertCell(1);
+
+          newRow.style.backgroundColor = isCorrect ? 'LightGreen' : 'LightPink';
+
+	  let nameStr = document.createTextNode(name);
+	  let resultStr   = document.createTextNode(result);
+
+	  nameCell.appendChild(nameStr);
+	  resultCell.appendChild(resultStr);
+	}  
+
+        Module['onRuntimeInitialized'] = onRuntimeInitialized;
+	var process = Module.cwrap('ProcessAlgorithm', 'string', ['string']);
+	var delimiter = "<s\\emscript_split\\s>";
+
+	function onRuntimeInitialized() {
+                var test = get_tests();
+                  
+                let totalTests = document.getElementById("TestCount");
+                totalTests.innerHTML = test.length;
+                
+                test.forEach (test => {
+                        try {
+                            var r = process(test.test).trimEnd();              
+                            var res = r == test.res;
+                            if (!res) {
+  	  		      console.error("Expect: " + test.res);
+  	  		      console.error("Actual: " + r);
+                             }
+                             addRow(test.name, res ? "Correct" : "Incorrect", res);
+                         }
+                         catch(err) {
+                             addRow(test.name, "Crash", false);
+                             console.error(err);
+                         }
+		});
+	}
+
+	function get_tests()
+    {
+PLACE_TESTS_HERE
+    }
+
+    </script>
+  </body>
+</html>
+

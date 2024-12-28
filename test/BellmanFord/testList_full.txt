@@ -1,0 +1,19 @@
+blf graph_direct.xml -start 0 console
+blf graph_shortPath.xml -start n4 console
+blf graph_shortPath_2.xml -start n0 console
+blf graph_shortPath_3.xml -start n0 console
+blf graph_weight.xml -start 3 console
+blf graph_weight_2.xml -start 0 console
+blf graph_weight_3.xml -start 0 console
+blf graph_weight_4.xml -start 3 console
+blf graph_weight_5.xml -start 0 console
+blf graph_float_weight.xml -start 0 console
+blf graph_float_weight2.xml -start 0 console
+blf graph_weight_4_multigraph.xml -start 0 console
+blf graph_weight_4_multigraph2.xml -start 0 console
+blf graph_weight_4_multigraph3.xml -start 1 console
+blf graph_weight_negative.xml -start 0
+blf graph_weight_4_multigraph2_negative.xml -start 2
+blf graph_weight_4_multigraph_zero_and_negative.xml -start 0
+blf graph_weight_negative_simple.xml -start 0
+blf graph_negative_6_vertex.xml -start 0

@@ -1,0 +1,11 @@
+mfpr graph_weight_3_no.xml -source 0 -drain 5 -report console
+mfpr graph_weight_3.xml -source 0 -drain 5 -report console
+mfpr graph_direct.xml -source 0 -drain 2 -report xml
+mfpr graph_weight_5.xml -source 0 -drain 3 -report console
+mfpr graph_shortPath.xml -source n7 -drain n0 -report xml
+mfpr graph_float_weight.xml -source 4 -drain 0 -report xml
+mfpr graph_weight_4.xml -source 0 -drain 5 -report xml
+mfpr graph_direct_2.xml -source 0 -drain 2 -report xml
+mfpr graph_direct_3.xml -source 0 -drain 3 -report xml
+mfpr graph_weight_4_negative_2.xml -source 0 -drain 5
+mfpr graph_weight_4_negative.xml -source 0 -drain 5

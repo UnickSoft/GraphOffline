@@ -1,0 +1,14 @@
+elloop graph3_no.xml
+elloop graph4_undirect.xml
+elloop graph5_undirect.xml
+elloop graph6_2_undirect.xml
+elloop graph6_undirect.xml
+elloop graph_selfloop.xml
+elloop graph4_direct.xml
+elloop graph5_direct.xml
+elloop graph6_2_direct.xml
+elloop graph6.xml
+elloop no_graph6.xml
+elloop graph7.xml
+elloop graph8.xml
+elloop graph15.xml

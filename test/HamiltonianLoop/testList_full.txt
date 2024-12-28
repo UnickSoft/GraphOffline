@@ -1,0 +1,17 @@
+hamloop graph1.xml
+hamloop graph13.xml
+hamloop graph1_no.xml
+hamloop graph5_undirect.xml
+hamloop graph6.xml
+hamloop graph6_no.xml
+hamloop graph6_no2.xml
+hamloop graph12.xml
+hamloop graph12_no.xml
+hamloop graph_disconneted.xml
+hamloop graph12_disconnected.xml
+hamloop one.xml
+hamloop graph14.xml
+hamloop graph_multigraph.xml
+hamloop graph_weight_4_multigraph.xml
+hamloop graph1_multigraph.xml
+hamloop hangs_test_small.xml

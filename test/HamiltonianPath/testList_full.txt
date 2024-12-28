@@ -1,0 +1,16 @@
+hampath graph1.xml
+hampath graph13.xml
+hampath graph1_no.xml
+hampath graph5_undirect.xml
+hampath graph6.xml
+hampath graph6_no.xml
+hampath graph6_no2.xml
+hampath graph6_no3.xml
+hampath graph12.xml
+hampath graph12_no.xml
+hampath graph_disconneted.xml
+hampath graph12_disconnected.xml
+hampath one.xml
+hampath graph_multigraph.xml
+hampath graph_weight_4_multigraph.xml
+hampath graph1_multigraph.xml

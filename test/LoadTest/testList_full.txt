@@ -1,0 +1,4 @@
+loadtest graph_weight_3_multigraph.xml -report xml
+loadtest graph1.xml -report xml
+loadtest graph3_multigraph.xml -report xml
+loadtest graph4_direct.xml -report xml

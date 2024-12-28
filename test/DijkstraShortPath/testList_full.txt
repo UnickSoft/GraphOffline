@@ -1,0 +1,18 @@
+dsp graph_direct.xml -start 0 -finish 2 -report console
+dsp graph_shortPath.xml -start n4 -finish n7 -report console
+dsp graph_shortPath_2.xml -start n0 -finish n7 -report console
+dsp graph_shortPath_3.xml -start n0 -finish n10 -report console
+dsp graph_weight.xml -start 3 -finish 0 -report console
+dsp graph_weight_2.xml -start 0 -finish 3 -report console
+dsp graph_weight_3.xml -start 0 -finish 3 -report console
+dsp graph_weight_4.xml -start 3 -finish 4 -report console
+dsp graph_weight_5.xml -start 0 -finish 1 -report console
+dsp graph_float_weight.xml -start 0 -finish 1 -report console
+dsp graph_float_weight2.xml -start 0 -finish 2 -report console
+dsp graph3_multigraph.xml -start n0 -finish n2 -report xml
+dsp graph_weight_4_multigraph.xml -start 0 -finish 4 -report xml
+dsp graph_weight_4_multigraph2.xml -start 0 -finish 4 -report xml
+dsp graph_weight_4_multigraph3.xml -start 1 -finish 0 -report xml
+dsp graph_weight_negative.xml -start 0 -finish 2
+dsp graph_weight_4_multigraph2_negative.xml -start 2 -finish 0
+dsp graph_weight_4_multigraph_zero_and_negative.xml -start 0 -finish 5

@@ -1,0 +1,16 @@
+isocheck graph6.xml -graph1 n7-n5,n5-n0,n0-n7 -graph2 n6-n5,n1-n6,n5-n1 -searchSubgraphs false -report console
+isocheck graph6_2.xml -graph1 n7-n5,n5-n0,n0-n7 -graph2 n6-n5,n1-n6,n5-n1,n7-n5,n5-n0,n0-n7 -searchSubgraphs true -report console
+isocheck graph6_3.xml -graph1 n7-n5,n5-n0,n0-n7 -graph2 n6-n5,n1-n6,n5-n1,n7-n5,n5-n0,n0-n7 -searchSubgraphs true -report xml
+isocheck graph6_direct.xml -graph1 n7-n5,n5-n0,n0-n7 -graph2 n6-n5,n6-n1,n1-n5,n7-n5,n5-n0,n0-n7 -searchSubgraphs false -report console
+isocheck graph6_direct_1.xml -graph1 n7-n5,n5-n0,n0-n7 -graph2 n5-n6,n6-n1,n1-n5,n7-n5,n5-n0,n0-n7 -searchSubgraphs true -report console
+isocheck graph6_direct_2.xml -graph1 n7-n5,n5-n0,n0-n7 -graph2 n5-n6,n6-n1,n1-n5,n7-n5,n5-n0,n0-n7 -searchSubgraphs true -report xml
+isocheck graph6_direct_3.xml -graph1 n1-n5,n5-n0,n0-n2,n2-n3,n3-n1 -graph2 n5-n6,n6-n1,n1-n5,n7-n5,n5-n0,n0-n7 -searchSubgraphs true -report xml
+isocheck graph13.xml -graph1 0-1,0-9,1-9 -graph2 8-11,8-10,10-11 -searchSubgraphs false -report xml
+isocheck graph13_1.xml -graph1 0-9,0-8,8-9,9-1 -graph2 8-9,9-10,8-10,8-7 -searchSubgraphs false -report console
+isocheck graph13_2.xml -graph1 0-9,0-8,8-9,9-1 -graph2 8-9,9-10,8-10,8-7,9-1,10-11 -searchSubgraphs true -report console
+isocheck graph13_3.xml -graph1 0-9,0-8,8-9,9-1 -graph2 8-9,9-10,8-10,8-7,9-1,10-11 -searchSubgraphs true -report xml
+isocheck graph13_direct.xml -graph1 1-0,0-9,1-9 -graph2 8-9,9-10,10-8 -searchSubgraphs false -report console
+isocheck graph13_direct_1.xml -graph1 1-0,0-9,1-9 -graph2 8-9,9-10,10-8 -searchSubgraphs true -report xml
+isocheck graph10.xml -graph1 10-9,10-11 -graph2 13-12,13-14 -searchSubgraphs false -report xml
+isocheck graph9.xml -graph1 0-1,1-2 -graph2 6-3,3-4,4-6,6-5,5-4 -searchSubgraphs true -report console
+isocheck graph8.xml -graph1 0-1,1-2 -graph2 6-3,3-4,4-6,6-5,5-4,3-5 -searchSubgraphs true -report console

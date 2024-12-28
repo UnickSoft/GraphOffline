@@ -1,0 +1,12 @@
+prnpaths graph_direct.xml -start 0 -finish 2 -report console
+prnpaths graph_shortPath.xml -start n4 -finish n7 -report console
+prnpaths graph_shortPath_2.xml -start n0 -finish n7 -report console
+prnpaths graph_shortPath_3.xml -start n0 -finish n10 -report console
+prnpaths graph_weight.xml -start 3 -finish 0 -report console
+prnpaths graph_weight_2.xml -start 0 -finish 3 -report console
+prnpaths graph_weight_3.xml -start 0 -finish 3 -report console
+prnpaths graph_weight_4.xml -start 3 -finish 4 -report console
+prnpaths graph_weight_5.xml -start 0 -finish 1 -report console
+prnpaths graph_float_weight.xml -start 0 -finish 1 -report console
+prnpaths graph_float_weight2.xml -start 0 -finish 2 -report console
+prnpaths graph_float_weight2_xmlreport.xml -start 0 -finish 2 -report xml
