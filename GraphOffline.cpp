@@ -94,7 +94,7 @@ const char* ProcessAlgorithm(const char* emscriptParams)
 
   ConsoleParams consoleParams;
   consoleParams.ProcessConsoleParams(CGIProcessor::SplitString(emscriptParams, { EMSCRIPT_DELEMITER }));
-  res = (const char*)consoleParams.GetReport().UTF8().Data();
+  //res = (const char*)consoleParams.GetReport().UTF8().Data();
   return res.c_str();
 }
 
