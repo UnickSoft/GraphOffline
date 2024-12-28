@@ -1,7 +1,11 @@
 DEBUG ?= 0
 
 # File names
-EXEC = ./bin/emscripten/Release/Graphoffline.Emscripten.js
+ifeq ($(DEBUG),1)
+	EXEC = ./bin/emscripten/Debug/Graphoffline.Emscripten.js
+else
+	EXEC = ./bin/emscripten/Release/Graphoffline.Emscripten.js
+endif
 
 LIB_DIR = ./lib
 ALGORITHM_DIR = algorithm

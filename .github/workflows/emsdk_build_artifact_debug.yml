@@ -1,0 +1,22 @@
+name: Emsdk Build Artifacts Debug
+on: workflow_dispatch
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: mymindstorm/setup-emsdk@v14
+    - name: Verify
+      run: emcc -v
+    - name: Create Release folder
+      run: mkdir ./bin/emscripten/Debug/
+    - name: make
+      run: make -f makefile-emcc DEBUG=1
+    - uses: actions/upload-artifact@v4
+      with:
+        name: Emsdk script
+        path: bin/emscripten/Debug/
+        retention-days: 14
