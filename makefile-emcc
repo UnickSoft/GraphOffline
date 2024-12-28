@@ -17,7 +17,7 @@ GRAPH_DIR = graph
 OBJ_DIR = bin/emscripten/obj
 
 # Declaration of variables
-CXX = emcc
+CXX = EMCC_DEBUG=1 emcc
 CPPFLAGS += -std=c++17 -Wall -I. -I $(ALGORITHM_DIR) -I $(PUGIXML_DIR) -I $(REPORT_DIR) -I $(COMMON_DIR) -I $(GRAPH_DIR) -I $(LIB_DIR) -DEMSCRIPT
 LINKFLAGS += -s EXPORTED_FUNCTIONS='_ProcessAlgorithm' -s EXPORTED_RUNTIME_METHODS=ccall,cwrap
 
