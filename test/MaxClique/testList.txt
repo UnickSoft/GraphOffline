@@ -6,3 +6,4 @@ graph_weight_test2.xml xml
 graph4.xml console
 graph5_undirect.xml console
 graph5_undirect2.xml xml
+advent_13.xml console

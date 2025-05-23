@@ -97,7 +97,7 @@ void MaxClique::SetParameter(const AlgorithmParam* outParamInfo)
                 break;
             }
         }
-        if (not found)
+        if (! found)
         {
             std::string str_err = std::string(outParamInfo->data.str) + " no such algorithm";
             throw std::invalid_argument(str_err.c_str());
@@ -313,7 +313,11 @@ void MaxClique::UnitTest() const
 
 void MaxClique::FindMaxClique(Algorithm algorithm_type)
 {
-    if (m_num_threads == 1) {
+#if !(defined(EMSCRIPT) || defined(CGI_MODE))
+    if (m_num_threads == 1) 
+#endif
+    {
+      // Run always single thread for CGI or emscript. 
       FindMaxCliqueOneThread(algorithm_type);
       return;
     }
@@ -478,7 +482,9 @@ void MaxClique::FindMaxCliqueOneThread(Algorithm algorithm_type)
 
     IndexType current_max_clique_size;
     {
+#if !(defined(EMSCRIPT) || defined(CGI_MODE))
       std::shared_lock clique_lock(m_max_clique_mtx);
+#endif
       current_max_clique_size = m_overall_max_clique_size;
     }
 
@@ -513,21 +519,21 @@ void MaxClique::FindMaxCliqueOneThread(Algorithm algorithm_type)
         pruned.emplace(v);
 
         {
+#if !(defined(EMSCRIPT) || defined(CGI_MODE))
             std::unique_lock read_lock(read_mtx);
+#endif
             read_flag = true;
         }
         reading.notify_one();
 
         if (local_neighbours.empty())
         {
-            abort_search = true;
             return;
         }
 
         std::vector<ColourType> local_colours = SortByGreedyColours(local_neighbours);
         if (local_colours.back() < local_max_clique_size || local_colours.empty())
         {
-            abort_search = true;
             return;
         }
 
