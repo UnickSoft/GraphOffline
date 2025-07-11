@@ -101,6 +101,7 @@
     <ClCompile Include="algorithm\IsomorphismCheck.cpp" />
     <ClCompile Include="algorithm\MaxClique.cpp" />
     <ClCompile Include="algorithm\PrintAllPaths.cpp" />
+    <ClCompile Include="algorithm\MaxIndependentSet.cpp" />
     <ClCompile Include="CGIProcessor.cpp" />
     <ClCompile Include="common\Logger.cpp" />
     <ClCompile Include="GraphOffline.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="graph\Graph.h" />
     <ClInclude Include="graph\IGraph.h" />
     <ClInclude Include="report\ReporterFactory.h" />
+    <ClInclude Include="algorithm\MaxIndependentSet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

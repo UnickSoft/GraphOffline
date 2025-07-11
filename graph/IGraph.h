@@ -28,7 +28,8 @@ enum GraphCopyType {GCT_COPY = 0,
                     GTC_REMOVE_SELF_LOOP,
                     GTC_MULTI_TO_COMMON_GRAPH_MINIMAL_EDGES,
                     GTC_MULTI_TO_COMMON_GRAPH_SUM_EDGES,
-                    GTC_REMOVE_NEGATIVE};
+                    GTC_REMOVE_NEGATIVE,
+                    GTC_COMPLEMENT};
 
 /**
  * Call back for enum nodes methods (DFS, BSF).

@@ -77,6 +77,9 @@
     <ClCompile Include="algorithm\MaxClique.cpp">
       <Filter>algorithm</Filter>
     </ClCompile>
+    <ClCompile Include="algorithm\MaxIndependentSet.cpp">
+      <Filter>algorithm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="algorithm\AlgorithmFactory.h">
@@ -188,6 +191,9 @@
     <ClInclude Include="IAlgorithmFactory.h" />
     <ClInclude Include="WeightMultiGraph.h" />
     <ClInclude Include="algorithm\MaxClique.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\MaxIndependentSet.h">
       <Filter>algorithm</Filter>
     </ClInclude>
   </ItemGroup>

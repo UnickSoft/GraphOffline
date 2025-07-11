@@ -19,6 +19,7 @@
 #include "PrintAllPaths.h"
 #include "BellmanFord.h"
 #include "MaxClique.h"
+#include "MaxIndependentSet.h"
 
 #include <iostream>
 
@@ -374,6 +375,12 @@ IAlgorithm* AlgorithmFactory::_CreateAlgorithm(IndexType index, bool bFloat) con
        {
            res = new MaxClique();
            break;
+       }
+
+       case 12:
+       {
+            res = new MaxIndependentSet();
+            break;
        }
 
     }
