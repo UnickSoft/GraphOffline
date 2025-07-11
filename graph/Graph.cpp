@@ -483,6 +483,7 @@ Graph* Graph::MakeGraphCopy(GraphCopyType type, const std::function<Graph*()> & 
         case GTC_INVERSE:          res = MakeGraphInverse(createFunction); break;
         case GTC_REMOVE_SELF_LOOP: res = MakeGraphRemoveSelfLoop(createFunction); break;
         case GTC_REMOVE_NEGATIVE:  res = MakeGraphRemoveNegative(createFunction); break;
+        case GTC_COMPLEMENT:       res = MakeGraphComplement(createFunction); break;
     }
 
     if (res)
@@ -735,6 +736,55 @@ Graph* Graph::MakeGraphRemoveNegative(const std::function<Graph*()> & createFunc
     
     return nullptr;
 }
+
+
+/**
+ * It adds all edges (<source, target> pairs) that did not occur in the original graph
+ * Sets all weights to zero
+ * All edges of the new graph are directed
+ */
+Graph* Graph::MakeGraphComplement(const std::function<Graph*()> & createFunction) const
+{
+    Graph* res = createFunction ? createFunction() : CreateGraph();
+    
+    CopyPropertiesTo(res);
+    
+    res->m_weightType = m_weightType;
+    
+    // Create all nodes.
+    for (NodePtr node : m_nodes)
+    {
+        res->m_nodes.push_back(NodePtr(new Node(node->id, node->privateId, node->fake, node->index)));
+        res->m_idToNode[node->privateId] = res->m_nodes.back();
+    }
+    
+    // Add all edges that do not exist in the original graph
+
+    for (NodePtr source : res->m_nodes) {
+        for (NodePtr target : res->m_nodes) {
+
+            // no self loop is permitted
+            if (source->privateId == target->privateId) continue;
+
+            // if the original graph does not contain the edge - add it to the copy graph
+            // pass false to IsEgdeExists to handle undirected edges correctly
+            if (!this->IsEgdeExists(source->privateId, target->privateId, false)) {
+                auto indexId = res->GetNextId();
+
+                res->AddEdge(String().FromInt(indexId),
+                            source->privateId,
+                            target->privateId,
+                            true,
+                            0,
+                            indexId);
+            }
+
+        }
+    }
+    
+    return res;
+}
+
 
 
 void Graph::RemoveEdge(ObjectId source, ObjectId target)
