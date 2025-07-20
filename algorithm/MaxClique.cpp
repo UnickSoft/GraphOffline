@@ -198,6 +198,19 @@ bool MaxClique::Calculate()
         FindMaxClique(m_param_algorithm_type);
     }
 
+    // If no clique found, we return clique with one vertex.
+    if (m_max_clique.empty())
+    {
+        if (m_pGraph->GetNodesCount() > 0 && m_param_expected_size != 0)
+        {
+            m_max_clique.emplace_back(m_pGraph->GetNode((IndexType)0));
+        } 
+        else if (m_param_expected_size == 0) 
+        {  // If expected size is 0, we return empty clique.
+            m_max_clique.clear();
+        }
+    }
+
     if (m_max_clique.size() != m_param_expected_size && m_param_expected_size != m_index_type_no_value)
     {
         LOG_WARNING("Max Clique size " << m_max_clique.size() << " is "
@@ -295,7 +308,7 @@ void MaxClique::UnitTest() const
         {
             if (u != v)
             {
-                if (not m_pGraph->AreNodesConnected(v, u))
+                if (! AreNodesConnected(v, u))
                 {
                     oss << "Invalid Clique! No edge between " << v << " and " << u;
                     throw std::runtime_error(oss.str().c_str());
@@ -693,7 +706,7 @@ std::vector<ObjectId> MaxClique::VertexNeighbours(ObjectId v, const std::vector<
 
     for (ObjectId u : neighbours)
     {
-        if (m_pGraph->AreNodesConnected(v, u))
+        if (AreNodesConnected(v, u))
         {
             new_neighbours.emplace_back(u);
         }
@@ -716,7 +729,7 @@ std::vector<MaxClique::ColourType> MaxClique::SortByGreedyColours(std::vector<Ob
     {
         ColourType colour = 0;
         while (std::any_of(colour_classes[colour].begin(), colour_classes[colour].end(),
-                           [&v, this](ObjectId u) { return m_pGraph->AreNodesConnected(u, v); }))
+                           [&v, this](ObjectId u) { return AreNodesConnected(u, v); }))
         {
             colour++;
         }

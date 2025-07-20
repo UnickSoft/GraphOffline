@@ -68,6 +68,12 @@ private:
     std::vector<ObjectId> VertexNeighbours(ObjectId v, const std::vector<ObjectId> &neighbours);
     std::vector<ColourType> SortByGreedyColours(std::vector<ObjectId> &vertices);
 
+    /* Nodes are connected if there is non-direct edge or 2 directed edges */
+    bool AreNodesConnected(ObjectId u, ObjectId v) const
+    {
+        return m_pGraph->AreNodesConnected(u, v) && m_pGraph->AreNodesConnected(v, u);
+    }
+
     std::vector<ObjectId> m_vertices;
     mutable std::vector<NodesEdge> m_max_clique_edges;
 
