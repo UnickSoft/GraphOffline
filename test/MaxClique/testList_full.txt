@@ -13,3 +13,4 @@ mc graph6_direct_non_direct.xml -report xml
 mc graph2_direct.xml -report console
 mc empty.xml -report console
 mc graph2.xml -report console
+mc graph5_direct_2.xml -report console

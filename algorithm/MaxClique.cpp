@@ -524,7 +524,7 @@ void MaxClique::FindMaxCliqueOneThread(Algorithm algorithm_type)
         for (int i = 0; i < m_pGraph->GetConnectedNodes(v); ++i)
         {
             ObjectId u = m_pGraph->GetConnectedNode(v, i);
-            if (pruned.count(u) == 0)
+            if (pruned.count(u) == 0 && AreNodesConnected(v, u))
             {
                 local_neighbours.emplace_back(u);
             }

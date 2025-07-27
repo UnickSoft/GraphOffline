@@ -13,3 +13,4 @@ graph6_direct_non_direct.xml xml
 graph2_direct.xml console
 empty.xml console
 graph2.xml console
+graph5_direct_2.xml console
