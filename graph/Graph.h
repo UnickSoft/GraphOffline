@@ -264,6 +264,8 @@ protected:
     Graph* MakeGraphRemoveSelfLoop(const std::function<Graph*()> & createFunction) const;
     // Remove negative edges
     virtual Graph* MakeGraphRemoveNegative(const std::function<Graph*()> & createFunction) const;
+    // Convert current graph to its complement
+    Graph* MakeGraphComplement(const std::function<Graph*()> & createFunction) const;
 
     bool IsDouble(double value);
 
