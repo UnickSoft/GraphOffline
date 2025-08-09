@@ -47,6 +47,7 @@
     <ClCompile Include="algorithm\HamiltonianLoop.cpp" />
     <ClCompile Include="algorithm\IsomorphismCheck.cpp" />
     <ClCompile Include="algorithm\MaxClique.cpp" />
+    <ClCompile Include="algorithm\MaxIndependentSet.cpp" />
     <ClCompile Include="algorithm\PrintAllPaths.cpp" />
     <ClCompile Include="CGIProcessor.cpp" />
     <ClCompile Include="common\CaseFunctions.cpp" />
@@ -74,6 +75,7 @@
     <ClInclude Include="algorithm\IAlgorithm.h" />
     <ClInclude Include="algorithm\IsomorphismCheck.h" />
     <ClInclude Include="algorithm\MaxClique.h" />
+    <ClInclude Include="algorithm\MaxIndependentSet.h" />
     <ClInclude Include="algorithm\MaxFlowPushRelabel.h" />
     <ClInclude Include="algorithm\MaxFlowPushRelableImpl.h" />
     <ClInclude Include="algorithm\PrintAllPaths.h" />

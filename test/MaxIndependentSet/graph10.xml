@@ -1,0 +1,11 @@
+<?xml version:"1.0" encoding="UTF-8"?>
+<graphml>
+    <key id="d0" for="node" attr.name="weight" attr.type="double">
+        <default>1</default>
+    </key>
+    <graph id="Graph" edgedefault="directed">
+        <node id="1"/>
+    </graph>
+</graphml>
+
+<!-- No edges - single vertex-->

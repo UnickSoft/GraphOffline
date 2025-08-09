@@ -66,6 +66,8 @@ set(COMMON_LIB_SOURCES
     algorithm/MaxClique.h
     algorithm/MaxFlowPushRelabel.h
     algorithm/MaxFlowPushRelableImpl.h
+    algorithm/MaxIndependentSet.cpp
+    algorithm/MaxIndependentSet.h
     algorithm/PrintAllPaths.cpp
     algorithm/PrintAllPaths.h
     algorithm/ShortestPath.h
