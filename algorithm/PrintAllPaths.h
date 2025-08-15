@@ -6,6 +6,7 @@
 #include "IGraph.h"
 #include <vector>
 #include <map>
+#include <set>
 #include <unordered_map>
 #include <stdio.h>
 
@@ -15,6 +16,9 @@ protected:
 	ObjectId m_source;		// OBJECT ID STORING SOURCE
 	ObjectId m_target;		// OBJECT ID STORING DESTINATION
 	std::vector<std::vector<ObjectId>> m_path;	//	VECTOR THAT STORES FINAL RESULT
+
+	std::set<ObjectId> m_nodes;
+	std::set<ObjectId> m_edges;
 
 	void pushResult(const std::vector<ObjectId> & path);	// UTITLITY FUNCTION TO PUSH RESULTS ON m_path
 	IndexType GetResultCountUtility() const;		// UTITLITY FUNCTION THAT COUNTS NUMBER OF ELEMENTS IN RESULT
@@ -31,6 +35,8 @@ public:
 
 	//	RETURNS SHORT NAME OF THE ALGORITHM
 	virtual const char* GetShortName() const override { return "prnpaths"; }
+
+	bool IsSupportMultiGraph() const override { return true; }
 
 	//	GET ALL THE PARAMETERS
 	virtual bool EnumParameter(IndexType index, AlgorithmParam* outParamInfo) const override;
@@ -59,6 +65,12 @@ public:
 	virtual NodesEdge GetHightlightEdge(IndexType index) const override;
 
     virtual void UnitTest() const override {}
+
+private:
+
+	bool CalculateNormalGraph();
+
+	bool CalculateMultiGraph();
 
 };
 

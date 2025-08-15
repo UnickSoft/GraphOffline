@@ -10,3 +10,6 @@
 -prnpaths graph_float_weight.xml 0 1 console
 -prnpaths graph_float_weight2.xml 0 2 console
 -prnpaths graph_float_weight2_xmlreport.xml 0 2 xml
+-prnpaths graph3_multigraph.xml n0 n2 console
+-prnpaths graph4_multigraph.xml n0 n2 xml
+-prnpaths graph_weight_4_multigraph3.xml 0 4 console

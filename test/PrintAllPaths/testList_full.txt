@@ -10,3 +10,6 @@ prnpaths graph_weight_5.xml -start 0 -finish 1 -report console
 prnpaths graph_float_weight.xml -start 0 -finish 1 -report console
 prnpaths graph_float_weight2.xml -start 0 -finish 2 -report console
 prnpaths graph_float_weight2_xmlreport.xml -start 0 -finish 2 -report xml
+prnpaths graph3_multigraph.xml -start n0 -finish n2 -report console
+prnpaths graph4_multigraph.xml -start n0 -finish n2 -report xml
+prnpaths graph_weight_4_multigraph3.xml -start 0 -finish 4 -report console

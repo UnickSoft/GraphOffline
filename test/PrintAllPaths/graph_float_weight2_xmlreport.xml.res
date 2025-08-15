@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
      <graphml>
 <graph id="G" edgedefault="undirected">
-<result count="8">
+<result count="12">
   <value type="1">2</value>
   <value type="4">0</value>
+  <value type="5">1005</value>
   <value type="4">1</value>
+  <value type="5">1006</value>
   <value type="4">2</value>
   <value type="6"></value>
   <value type="4">0</value>
+  <value type="5">1007</value>
   <value type="4">3</value>
+  <value type="5">1008</value>
   <value type="4">2</value>
 </result>
 <node id="0">
