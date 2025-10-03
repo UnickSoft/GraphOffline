@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml>
+	<key id="d0" for="node" attr.name="weight" attr.type="double">
+		<default>1</default>
+	</key>
+	<graph id="Graph" edgedefault="undirected">
+		<node id="S"/>
+		<node id="1"/>
+		<node id="2"/>
+		<node id="3"/>
+		<node id="4"/>
+		<node id="5"/>
+		<node id="6"/>
+		<node id="7"/>
+		<node id="8"/>
+		<node id="F"/>
+		<edge source="3" target="2"  id="10039">
+			<data key="d0">5</data>
+		</edge>
+		<edge source="2" target="5"  id="10040">
+			<data key="d0">5</data>
+		</edge>
+		<edge source="4" target="6"  id="10041">
+			<data key="d0">5</data>
+		</edge>
+		<edge source="5" target="4"  id="10042">
+			<data key="d0">5</data>
+		</edge>
+		<edge source="1" target="3"  id="10043">
+			<data key="d0">5</data>
+		</edge>
+		<edge source="1" target="2"  id="10044">
+			<data key="d0">5</data>
+		</edge>
+		<edge source="S" target="1"  id="10045">
+			<data key="d0">3</data>
+		</edge>
+		<edge source="S" target="2"  id="10046">
+			<data key="d0">10</data>
+		</edge>
+		<edge source="3" target="5"  id="10047">
+			<data key="d0">55</data>
+		</edge>
+		<edge source="2" target="4"  id="10048">
+			<data key="d0">3</data>
+		</edge>
+		<edge source="4" target="7"  id="10049">
+			<data key="d0">3</data>
+		</edge>
+		<edge source="7" target="6"  id="10050">
+			<data key="d0">66</data>
+		</edge>
+		<edge source="6" target="8"  id="10051">
+			<data key="d0">2</data>
+		</edge>
+		<edge source="5" target="7"  id="10052">
+			<data key="d0">4</data>
+		</edge>
+		<edge source="7" target="F"  id="10053">
+			<data key="d0">23</data>
+		</edge>
+		<edge source="F" target="8"  id="10054">
+			<data key="d0">5</data>
+		</edge>
+		<edge source="3" target="7"  id="10055">
+			<data key="d0">5</data>
+		</edge>
+		<edge source="2" target="6"  id="10056">
+			<data key="d0">2</data>
+		</edge>
+		<edge source="8" target="7"  id="10057">
+			<data key="d0">5</data>
+		</edge>
+	</graph>
+</graphml>

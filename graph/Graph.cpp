@@ -121,8 +121,8 @@ protected:
     std::unordered_set<ObjectId> processedEdge;
 };
 
-// 0 is invalid value. 1000 - because it is not the same as index.
-IndexType Graph::m_autoIncIndex = 1000;
+// 0 is invalid value. 10000 - because it is not the same as index.
+IndexType Graph::m_autoIncIndex = 10000;
 
 Graph::Graph(void)
 {
