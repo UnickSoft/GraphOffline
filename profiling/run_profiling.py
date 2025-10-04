@@ -4,9 +4,12 @@ import os
 import time
 import sys
 
-test_files = ["graph_10.graphml", "graph_15.graphml", "graph_20.graphml", "graph_30.graphml", "graph_45.graphml",
-               "graph_90.graphml", "graph_150.graphml", "graph_200.graphml", "graph_500.graphml"]
-
+test_files = ["graph_10_edges_19.graphml", 
+              "graph_15_edges_14.graphml", "graph_15_edges_33.graphml", "graph_15_edges_50.graphml", "graph_15_edges_105.graphml", 
+              "graph_20_edges_19.graphml", "graph_20_edges_30.graphml", "graph_20_edges_50.graphml", "graph_20_edges_100.graphml" , "graph_20_edges_190.graphml", 
+              "graph_30_edges_29.graphml", "graph_30_edges_50.graphml", "graph_30_edges_78.graphml", 
+              "graph_45_edges_120.graphml",
+              "graph_90_edges_252.graphml", "graph_150.graphml", "graph_200.graphml", "graph_500.graphml"]
 
 def run_and_measure(command, insert_param=None):
     # If we need to insert a custom parameter after the first argument
