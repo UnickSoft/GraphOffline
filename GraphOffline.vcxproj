@@ -102,6 +102,7 @@
     <ClCompile Include="algorithm\MaxClique.cpp" />
     <ClCompile Include="algorithm\PrintAllPaths.cpp" />
     <ClCompile Include="algorithm\MaxIndependentSet.cpp" />
+    <ClCompile Include="algorithm\SalesmanProblem.cpp" />
     <ClCompile Include="CGIProcessor.cpp" />
     <ClCompile Include="common\Logger.cpp" />
     <ClCompile Include="GraphOffline.cpp" />
@@ -128,6 +129,7 @@
     <ClInclude Include="algorithm\MaxFlowPushRelableImpl.h" />
     <ClInclude Include="algorithm\BellmanFordImpl.h" />
     <ClInclude Include="algorithm\PrintAllPaths.h" />
+    <ClInclude Include="algorithm\SalesmanProblem.h" />
     <ClInclude Include="CGIProcessor.h" />
     <ClInclude Include="common\Logger.h" />
     <ClInclude Include="graph\MultiGraph.h" />

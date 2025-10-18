@@ -49,6 +49,7 @@
     <ClCompile Include="algorithm\MaxClique.cpp" />
     <ClCompile Include="algorithm\MaxIndependentSet.cpp" />
     <ClCompile Include="algorithm\PrintAllPaths.cpp" />
+    <ClCompile Include="algorithm\SalesmanProblem.cpp" />
     <ClCompile Include="CGIProcessor.cpp" />
     <ClCompile Include="common\CaseFunctions.cpp" />
     <ClCompile Include="common\ConsoleParams.cpp" />
@@ -80,6 +81,7 @@
     <ClInclude Include="algorithm\MaxFlowPushRelableImpl.h" />
     <ClInclude Include="algorithm\PrintAllPaths.h" />
     <ClInclude Include="algorithm\ShortestPath.h" />
+    <ClInclude Include="algorithm\SalesmanProblem.h" />
     <ClInclude Include="CGIProcessor.h" />
     <ClInclude Include="common\Buffer.h" />
     <ClInclude Include="common\CaseFunctions.h" />
