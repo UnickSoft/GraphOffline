@@ -71,6 +71,8 @@ set(COMMON_LIB_SOURCES
     algorithm/PrintAllPaths.cpp
     algorithm/PrintAllPaths.h
     algorithm/ShortestPath.h
+    algorithm/SalesmanProblem.h
+    algorithm/SalesmanProblem.cpp
     bin/emscripten/DebugTest.html
     bin/emscripten/ReleaseTest.html
     common/Buffer.h

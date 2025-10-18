@@ -197,7 +197,7 @@ public:
     NodePtr FindNode(const String& id) const;
 
     // Fake node
-    bool IsFakeNode(ObjectId source) override;
+    bool IsFakeNode(ObjectId source) const override;
 
     // Has multi graph
     bool IsMultiGraph() const override;

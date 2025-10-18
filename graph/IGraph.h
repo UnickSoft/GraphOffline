@@ -121,7 +121,7 @@ public:
     // Add node
     virtual ObjectId AddNode(bool fake) = 0;
     // Is fake node or not.
-    virtual bool IsFakeNode(ObjectId source) = 0;
+    virtual bool IsFakeNode(ObjectId source) const = 0;
     // Return graph struct
     virtual const char* PrintGraph() const = 0;
     // Remove node and all connected edges.

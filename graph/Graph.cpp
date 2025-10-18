@@ -3,7 +3,7 @@
 #include "Graph.h"
 #include "pugixml.hpp"
 #include <algorithm>
-#include <math.h>
+#include <cmath>
 #include "Logger.h"
 #include <unordered_set>
 
@@ -926,7 +926,7 @@ ObjectId Graph::AddNode(const String& idNode, IndexType privateId, bool fake)
     return m_nodes.back()->privateId;
 }
 
-bool Graph::IsFakeNode(ObjectId source)
+bool Graph::IsFakeNode(ObjectId source) const
 {
     bool res = false;
     NodePtr nodePtr;

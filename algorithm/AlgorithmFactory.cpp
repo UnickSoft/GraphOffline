@@ -20,6 +20,7 @@
 #include "BellmanFord.h"
 #include "MaxClique.h"
 #include "MaxIndependentSet.h"
+#include "SalesmanProblem.h"
 
 #include <iostream>
 
@@ -383,6 +384,17 @@ IAlgorithm* AlgorithmFactory::_CreateAlgorithm(IndexType index, bool bFloat) con
             break;
        }
 
+       case 13:
+       {
+            res = new SalesmanProblem(bFloat, false);
+            break;
+       }
+
+       case 14:
+       {
+            res = new SalesmanProblem(bFloat, true);
+            break;
+       }
     }
 
     return res;

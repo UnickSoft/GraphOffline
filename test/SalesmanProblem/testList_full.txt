@@ -1,0 +1,22 @@
+slsmen graph_direct_2.xml
+slsmen graph_float_weight_3.xml
+slsmen graph_shortPath_3.xml
+slsmen graph_float_weight.xml
+slsmen graph_float_weight_no_loop.xml
+slsmen graph_two.xml
+slsmen graph_direct.xml
+slsmen graph_float_weight_2.xml
+slsmen graph_one.xml
+slsmen graph_float_weight_3_xml.xml -report xml
+slsmen graph_two.xml.xml -report xml
+slsmen graph_two_connected.xml -report xml
+slsmen graph_float_weight_4.xml
+slsmenpath graph_direct_2_path.xml -start 0
+slsmenpath graph_float_weight_3_path.xml -start 0
+slsmenpath graph_shortPath_3_path.xml -start 0
+slsmenpath graph_float_weight_path.xml -start 0
+slsmenpath graph_float_weight_no_loop_path.xml -start 0
+slsmenpath graph_two.xml -start 0
+slsmenpath graph_direct_path.xml -start 0
+slsmenpath graph_float_weight_2_path.xml -start 0
+slsmenpath graph_one.xml -start 0

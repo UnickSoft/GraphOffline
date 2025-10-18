@@ -29,20 +29,43 @@ public:
         String result;
 
         char tempBuffer[MAX_REPORT] = {0};
-        auto res0 = pAlgorithm->GetResult(0);
-        if (res0.type == ART_INT)
+        uint32_t first_path = 0;
+        for (first_path = 0; first_path < pAlgorithm->GetResultCount(); first_path++)
         {
-            sprintf(tempBuffer, "Result is %d (", res0.nValue);
-        }
-        else if (res0.type == ART_FLOAT)
-        {
-            sprintf(tempBuffer, "Result is %f (", res0.fValue);
+            auto res0 = pAlgorithm->GetResult(first_path);
+            if (res0.type == ART_INT)
+            {
+                if (first_path == 0)
+                {
+                    sprintf(tempBuffer, "Result is %d", res0.nValue);
+                }
+                else
+                {
+                    sprintf(tempBuffer, ", %d", res0.nValue);
+                }
+            }
+            else if (res0.type == ART_FLOAT)
+            {
+                if (first_path == 0)
+                {
+                    sprintf(tempBuffer, "Result is %f", res0.fValue);
+                }
+                else
+                {
+                    sprintf(tempBuffer, ", %f", res0.fValue);
+                }
+            }
+            else
+            {
+                break;
+            }
+            result += String(tempBuffer);
         }
 
-        result = String(tempBuffer);
+        result += String(" (");
 
         int pathElementIndex = 0;
-        for (int i = 1; i < pAlgorithm->GetResultCount(); i++)
+        for (int i = first_path; i < pAlgorithm->GetResultCount(); i++)
         {
             AlgorithmResult node = pAlgorithm->GetResult(i);
 

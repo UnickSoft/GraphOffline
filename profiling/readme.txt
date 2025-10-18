@@ -24,3 +24,5 @@ vertex=90, edge=4000
 Ok
 12. python .\run_profiling.py ..\build\vscode\cmake\Release\GraphOffline.exe -prnpaths -start S -finish F
 vertex=50, edge=40
+13. python .\run_profiling.py ..\build\vscode\cmake\Release\GraphOffline.exe -slsmen -start S
+vertex=16, edge=50

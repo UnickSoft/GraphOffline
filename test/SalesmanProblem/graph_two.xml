@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml>
+    <key id="d1" for="edge" attr.name="weight" attr.type="double">
+        <default>1</default>
+    </key>
+
+	<graph id="Graph" edgedefault="directed">
+		<node id="0"/>
+        <node id="1"/>
+	</graph>
+</graphml>
+
