@@ -1,31 +1,59 @@
-# @echo off
+#!/bin/bash
 
-isFaild=0;
+# Initialize failure flag
+isFailed=0
 
-rm *.test &>/dev/null
+# Remove old test output files
+rm -f *.test &>/dev/null
 
-while IFS=$' ' read -r command xmlFile; do
+# Read each line from testList.txt
+while read -r line; do
+  # Split the line into an array of arguments
+  args=($line)
 
-  if [ "$2" == "-debug" ]; then
-    echo "$exePath ${command} ./${xmlFile} > ${xmlFile}.test"
+  command="${args[0]}"
+  xmlFile=""
+  extraArgs=()
+
+  # Find the first argument ending with ".xml"
+  for ((i=1; i<${#args[@]}; i++)); do
+    if [[ "${args[i]}" == *.xml ]]; then
+      xmlFile="${args[i]}"
+      # Everything after the XML file is considered extra arguments
+      extraArgs=("${args[@]:i+1}")
+      break
+    fi
+  done
+
+  # If no XML file found, skip this line
+  if [[ -z "$xmlFile" ]]; then
+    echo "No XML file found in line: $line"
+    continue
   fi
 
-  $exePath ${command} ./${xmlFile} > ${xmlFile}.test
+  # Print debug information if "-debug" flag is passed as script argument
+  if [[ "$2" == "-debug" ]]; then
+    echo "$exePath $command ./$xmlFile ${extraArgs[*]} > ${xmlFile}.test"
+  fi
 
-  if diff --ignore-all-space ${xmlFile}.res ${xmlFile}.test >/dev/null ; then
-    continue;
+  # Execute the command and redirect output to a .test file
+  $exePath "$command" "./$xmlFile" "${extraArgs[@]}" > "${xmlFile}.test"
+
+  # Compare the result with the expected .res file
+  if diff --ignore-all-space "${xmlFile}.res" "${xmlFile}.test" >/dev/null; then
+    continue
   else
-    isFaild=1;
+    isFailed=1
     echo "${xmlFile} failed."
-    break;
+    break
   fi
 done < "testList.txt"
 
-if [ $isFaild -eq 1 ]; then
-  echo "Failed";
-  exit 1;
+# Final status output
+if [ $isFailed -eq 1 ]; then
+  echo "Failed"
+  exit 1
 else
   echo "OK"
-  rm *.test &>/dev/null
+  rm -f *.test &>/dev/null
 fi
-
